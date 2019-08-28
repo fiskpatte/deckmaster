@@ -11,11 +11,21 @@ class Header extends Component {
     render() {
 
         const currentPath = this.props.history.location.pathname
-        
+
         return (
-            <Menu color="blue" inverted >
-                <Menu.Item name='Deck officer' path='/deckofficer' active={currentPath.includes('/deckofficer')} onClick={this.handleItemClick}/>
-                <Menu.Item name='Tugmaster' path='/tugmaster' active={currentPath.includes('/tugmaster')} onClick={this.handleItemClick}/>
+            <Menu color="blue" inverted icon='labeled' >
+                <Menu.Item 
+                    path='/deckofficer' 
+                    active={currentPath.includes('/deckofficer') || currentPath === "/"} 
+                    onClick={this.handleItemClick}>
+                        Deck officer
+                        </Menu.Item>
+                <Menu.Item 
+                    path='/tugmaster' 
+                    active={currentPath.includes('/tugmaster')} 
+                    onClick={this.handleItemClick}>
+                        Tugmaster
+                    </Menu.Item>
             </Menu>
         )
     }

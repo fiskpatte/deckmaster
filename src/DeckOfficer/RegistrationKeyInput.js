@@ -17,8 +17,9 @@ export default class RegistrationKeyInput extends Component {
     render() {
         return (
             <div >
+                <h4>Vehicle registration number</h4>
                 <Input autoFocus ref={ref => this.inputRef = ref} onChange={(event) => this.onChange(event)}/>
-                <Button primary onClick={() => this.props.onSubmit(this.state.registrationKey)}>Continue</Button>
+                <Button positive disabled={!this.state.registrationKey || this.state.registrationKey === ""} onClick={() => this.props.onSubmit(this.state.registrationKey)}>Continue</Button>
             </div>
         )
     }

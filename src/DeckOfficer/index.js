@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Step, Modal, Button } from 'semantic-ui-react';
+import { Step, Modal, Button, Segment } from 'semantic-ui-react';
 import RegistrationKeyInput from './RegistrationKeyInput'
 import { DECK_OFFICER_STEP } from './../utils/constants'
 import DeckPicker from './DeckPicker'
 import LanePicker from './LanePicker'
+import VehicleModal from './VehicleModal/VehicleModal';
 export default class DeckOfficer extends Component {
 
     constructor(props){
@@ -14,14 +15,17 @@ export default class DeckOfficer extends Component {
           laneNumber:"",
           frameNumber:"",
           modalOpen: false,
-          currentStep:DECK_OFFICER_STEP.REGISTRATION_KEY_INPUT
+          currentStep:DECK_OFFICER_STEP.REGISTRATION_KEY_INPUT,
+          vehicleModalOpen: false
         }
 
         this.handleClick = this.handleClick.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.vehicleModalConfirm = this.vehicleModalConfirm.bind(this)
+        this.vehicleModalCancel = this.vehicleModalCancel.bind(this)
 
         this.steps = [
-            {id:DECK_OFFICER_STEP.REGISTRATION_KEY_INPUT, title:'Registration'},
+            {id:DECK_OFFICER_STEP.REGISTRATION_KEY_INPUT, title:'Reg nr'},
             {id:DECK_OFFICER_STEP.DECK_PICKER, title:'Deck'},
             {id:DECK_OFFICER_STEP.LANE_PICKER, title:'Lane'}
         ]
@@ -41,11 +45,21 @@ export default class DeckOfficer extends Component {
     }
 
     handleSubmit(firstInput,secondInput = ""){
+        console.log("kommer hit! this: ", this)
+
         if(firstInput === "") return
+        console.log("kommer hitasd! this: ", this)
+
         switch(this.state.currentStep){
             case DECK_OFFICER_STEP.REGISTRATION_KEY_INPUT:
-                this.setState({currentStep:DECK_OFFICER_STEP.DECK_PICKER,registrationKey:firstInput})
+                
+                this.setState({vehicleModalOpen: true, registrationKey: firstInput, currentStep: DECK_OFFICER_STEP.REGISTRATION_KEY_CONFIRM})
+
                 break;
+            case DECK_OFFICER_STEP.REGISTRATION_KEY_CONFIRM:
+                this.setState({currentStep:DECK_OFFICER_STEP.DECK_PICKER})
+                break;
+
             case DECK_OFFICER_STEP.DECK_PICKER:
                 this.setState({currentStep:DECK_OFFICER_STEP.LANE_PICKER,deckNumber:firstInput})
                 break;
@@ -118,43 +132,70 @@ export default class DeckOfficer extends Component {
                 frameNumber:"",
                 modalOpen:false
             })
-        }else{
+        } else{
             this.setState({modalOpen:false})
         }
     }
+
+    vehicleModalCancel(){
+        this.setState({
+            vehicleModalOpen: false,
+            currentStep: 1,
+            registrationKey: ""
+        })
+    }
+
+    vehicleModalConfirm(){
+        this.setState({
+            vehicleModalOpen: false
+        })
+        this.handleSubmit(this.state.registrationKey)
+    }
+
     render() {
-        let {currentStep,registrationKey,deckNumber,frameNumber,laneNumber, modalOpen} = this.state
+        let {currentStep,registrationKey,deckNumber,frameNumber,laneNumber, modalOpen, vehicleModalOpen} = this.state
         return (
             <React.Fragment>
-                <Step.Group>
-                    {this.steps.map((step,ix) => 
-                        <Step   key={ix}
-                                step={step.id}
-                                active={currentStep === step.id}
-                                disabled={this.isStepDisabled(step.id)}
-                                onClick={this.handleClick}
-                            >
-                            <Step.Content>
-                                <Step.Title>{step.title}</Step.Title>
-                                <Step.Description>{this.stepDescription(step.id)}</Step.Description>
-                            </Step.Content>
-                        </Step>
-                    )}                    
-                </Step.Group>
-                {this.renderStepComponent()}
-                <Modal open={modalOpen}>
-                    <Modal.Header>Confirm</Modal.Header>
-                    <Modal.Content>
-                        <p>{`Registration Key: ${registrationKey}`}</p>
-                        <p>{`Deck: ${deckNumber}`}</p>
-                        <p>{`Lane: ${laneNumber}`}</p>
-                        <p>{`Frame: ${frameNumber}`}</p>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <Button negative onClick={() => this.closeModal(false)}>Cancel</Button>
-                        <Button positive onClick={() => this.closeModal(true)}>Confirm</Button>
-                    </Modal.Actions>
-                </Modal>
+                <Segment>
+
+                    <Step.Group>
+                        {this.steps.map((step,ix) => 
+                            <Step   key={ix}
+                                    step={step.id}
+                                    active={currentStep === step.id}
+                                    disabled={this.isStepDisabled(step.id)}
+                                    onClick={this.handleClick}
+                                >
+                                <Step.Content>
+                                    <Step.Title>{step.title}</Step.Title>
+                                    <Step.Description>{this.stepDescription(step.id)}</Step.Description>
+                                </Step.Content>
+                            </Step>
+                        )}                    
+                    </Step.Group>
+                    {this.renderStepComponent()}
+                    <Modal open={modalOpen} centered={false}>
+                        <Modal.Header>Confirm</Modal.Header>
+                        <Modal.Content>
+                            <p>{`Registration number: ${registrationKey}`}</p>
+                            <p>{`Deck: ${deckNumber}`}</p>
+                            <p>{`Lane: ${laneNumber}`}</p>
+                            <p>{`Frame: ${frameNumber}`}</p>
+                        </Modal.Content>
+                        <Modal.Actions>
+                            <Button negative onClick={() => this.closeModal(false)}>Cancel</Button>
+                            <Button positive onClick={() => this.closeModal(true)}>Confirm</Button>
+                        </Modal.Actions>
+                    </Modal>
+
+                    <Modal open={vehicleModalOpen} centered={false}>
+                        <VehicleModal 
+                            registrationKey={this.state.registrationKey} 
+                            cancel={this.vehicleModalCancel}
+                            confirm={this.vehicleModalConfirm} />
+                    </Modal>
+                </Segment>
+
             </React.Fragment>
         )
     }
