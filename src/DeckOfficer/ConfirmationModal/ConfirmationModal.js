@@ -7,7 +7,7 @@ export default class ConfirmationModal extends Component {
         let {open,centered,registrationKey,deckNumber,laneNumber,frameNumber,handleAction} = this.props
         return (
             <Modal open={open} centered={centered}>
-                <Modal.Header>Confirm</Modal.Header>
+                <Modal.Header>Confirm vehicle</Modal.Header>
                 <Modal.Content>
                     <p>{`Registration number: ${registrationKey}`}</p>
                     <p>{`Deck: ${deckNumber}`}</p>

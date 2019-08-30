@@ -10,3 +10,6 @@
 .FrameSelected{
     background-color: #cfffb3;
 }
+.FrameLast{
+    border-right: 0px;
+}

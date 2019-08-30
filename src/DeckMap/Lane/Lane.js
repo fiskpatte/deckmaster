@@ -51,7 +51,8 @@ export default class Lane extends Component {
                         {frames.map((frame,ix) => {
                             let vehicleInFrame = vehicles.find(v => v.frameNumber === frame)
                             return (
-                                <Frame  key={ix} 
+                                <Frame  key={ix}
+                                        frames={frames} 
                                         frame={frame} 
                                         selectedFrame={selectedFrame} 
                                         vehicle={vehicleInFrame} 
