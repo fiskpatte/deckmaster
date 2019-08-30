@@ -1,0 +1,12 @@
+.Frame{
+    align-items: center;
+    flex:1;
+    border-right: 1px solid;
+    /* border-color: inherit; */
+}
+.FrameOccupied{
+    background-color: #f15156;
+}
+.FrameSelected{
+    background-color: #cfffb3;
+}

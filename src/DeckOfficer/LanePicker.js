@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Input, Menu } from 'semantic-ui-react';
 
-const lanes = ["1","2","3","4","5"]
-
 export default class LanePicker extends Component {
     constructor(props){
         super(props);
@@ -38,20 +36,20 @@ export default class LanePicker extends Component {
             default: break
         }
         this.setState({laneNumber: lane, frameNumber: suggestion})
-        document.getElementById("FrameInput").value = suggestion
-        document.getElementById("FrameInput").focus()
-
+        this.props.updateLaneNumber(lane)
+        this.inputRef.inputRef.current.value = suggestion
     }
+
     render() {
         let {laneNumber, frameNumber} = this.state
         return (
             <React.Fragment>
                 <h4>Lane</h4>
                 <Menu secondary>
-                    {lanes.map((lane,ix) => {return <Menu.Item className="LaneMenuItem" name={lane} key={ix} active={laneNumber === lane} onClick={() => this.onClick(lane)}/>})}
+                    {this.props.lanes.map((lane,ix) => {return <Menu.Item className="LaneMenuItem" name={lane} key={ix} active={laneNumber === lane} onClick={() => this.onClick(lane)}/>})}
                 </Menu>
                 <h4>Frame</h4>
-                <Input id="FrameInput" ref={ref => this.inputRef = ref} onChange={(event) => this.onChange(event)}/>
+                <Input id="FrameInput" autoFocus ref={ref => this.inputRef = ref} onChange={(event) => this.onChange(event)}/>
                 <Button positive onClick={() => this.props.onSubmit(laneNumber, frameNumber)}>Continue</Button>
             </React.Fragment>
         )

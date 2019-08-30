@@ -4,13 +4,14 @@ import './VehicleModal.css'
 
 export default class VehicleModal extends Component {
     render() {
+        let {open,centered,registrationKey,handleAction} = this.props
         return (
-            <React.Fragment>
+            <Modal open={open} centered={centered}>
                 <Modal.Header>Vehicle info</Modal.Header>
                 <Modal.Content>
                     <Table celled>
                         <Table.Body>
-                            <InfoRow label={"Registration number"} value={this.props.registrationKey} />
+                            <InfoRow label={"Registration number"} value={registrationKey} />
                             <InfoRow label={"Type"} value={"Truck"} />
                             <InfoRow label={"Length"} value={"8.0 m"} />
                             <InfoRow label={"Width"} value={"2.1 m"} />
@@ -20,10 +21,10 @@ export default class VehicleModal extends Component {
                     </Table>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button negative onClick={() => this.props.cancel()}>Cancel</Button>
-                    <Button positive onClick={() => this.props.confirm()}>OK</Button>
+                    <Button negative onClick={() => handleAction(false)}>Cancel</Button>
+                    <Button positive onClick={() => handleAction(true)}>Confirm</Button>
                 </Modal.Actions>
-            </React.Fragment>
+            </Modal>
         )
     }
 }
