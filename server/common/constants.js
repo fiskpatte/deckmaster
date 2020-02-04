@@ -17,7 +17,7 @@ const ERROR_TYPE = {
 
 const VOYAGE_STATUS = {
     LOADING: "10",
-    DEPARTED: "20",
+    IN_TRANSIT: "20",
     OFFLOADING: "30",
     FINISHED: "100"
 }
