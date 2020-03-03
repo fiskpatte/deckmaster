@@ -9,15 +9,6 @@ export const CargoSchema = new mongoose.Schema({
     type: Number
 })
 
-// export interface Cargo extends mongoose.Document {
-//     id: string;
-//     registrationNumber: string;
-//     length: number;
-//     width: number;
-//     height: number;
-//     type: CargoType;
-// }
-
 export interface Cargo extends mongoose.Document {
     id: string;
     registrationNumber: string;
@@ -26,7 +17,6 @@ export interface Cargo extends mongoose.Document {
     height: number;
     type: CargoType;
 }
-
 
 export function transformDbCargo(dbCargo){
     return {

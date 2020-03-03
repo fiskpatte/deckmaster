@@ -27,12 +27,14 @@ export class CargoController {
     @Body('height') height: number,
     @Body('type') type: CargoType,
   ){
-    const id = await this.cargoService.addCargo(registrationNumber,
-      length,
-      width,height,type);
-    return {
-      id
-    }
+    const cargo = await this.cargoService.addCargo(registrationNumber, length, width,height,type);
+    return cargo
+  }
+
+  @Post('mock')
+  async devMockCargo(){
+    const cargo = await this.cargoService.mockCargo();
+    return cargo;
   }
 
   @Patch(':id')

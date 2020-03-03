@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {Model} from 'mongoose';
+import {Chance} from 'chance';
 import { Cargo, transformDbCargo } from './cargo.model';
 import { CargoType } from 'src/utils/enums';
 
@@ -18,7 +19,7 @@ export class CargoService {
       type
     });
     const result = await newCargo.save();
-    return result.id as string;
+    return transformDbCargo(result);
   }
 
   async getCargo(cargoId: string){
@@ -67,6 +68,24 @@ export class CargoService {
       await this.cargoModel.deleteOne({_id: cargoId}).exec();
     } catch (error){
       throw new NotFoundException("Cargo not found")
+    }
+  }
+
+  async mockCargo(){
+    try{
+      const chance = new Chance();
+      const registrationNumber = `${chance.string({length: 3})} ${chance.string({length: 3, pool: '1234567890'})}`;
+      const length = chance.floating({ min: 10, max: 14, fixed: 1 });
+      const width = chance.floating({ min: 2.1, max: 2.6, fixed: 1 });
+      const height = chance.floating({ min: 2.8, max: 3.2, fixed: 1 });
+      const type = chance.integer({ min: 1, max: 2 }) * 10;
+
+      const cargo = await this.addCargo(registrationNumber, length, width, height, type);
+      return cargo;
+
+    } catch(error){
+      console.log(error);
+      throw "Failed to mock cargo";
     }
   }
 
