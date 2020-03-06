@@ -5,6 +5,13 @@ enum CargoType {
     Other = 100
 }
 
+enum LoadingType {
+    Lane = 10,
+    Grid = 20,
+    Free = 30
+}
+
 export {
-    CargoType
+    CargoType,
+    LoadingType
 }
