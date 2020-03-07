@@ -1,6 +1,5 @@
 import {  Get, Controller, Post, Body, Param, Patch, Delete } from '@nestjs/common';
 import { CargoService } from './cargo.services';
-import { CargoType } from 'src/utils/enums';
 import { CargoDTO } from './cargo.dtos';
 import { PlaceCargoDTO } from './cargo.dtos';
 
@@ -12,6 +11,12 @@ export class CargoController {
   async getAllCargo(){
     const allCargo = await this.cargoService.getAllCargo();
     return allCargo;
+  }
+
+  @Get('placedCargos')
+  async getPlacedCargos(){
+    const result = await this.cargoService.getCargoPlacements()
+    return result;
   }
 
   @Get(':id')
@@ -36,11 +41,6 @@ export class CargoController {
   async updateCargo(
     @Param('id') cargoId: string,
     @Body() dto: CargoDTO)
-    // @Body('registrationnumber') registrationNumber: string,
-    // @Body('length') length: number,
-    // @Body('width') width: number,
-    // @Body('height') height: number,
-    // @Body('type') type: CargoType,
   {
     await this.cargoService.updateCargo(cargoId, dto);
     return null;
@@ -52,9 +52,11 @@ export class CargoController {
     return null
   }
 
-  @Post()
+  @Post('place')
   async placeCargo(@Body() placeCargoDTO: PlaceCargoDTO){
-    //await this.cargoService.
+    await this.cargoService.placeCargo(placeCargoDTO);
   }
+
+
 
 }

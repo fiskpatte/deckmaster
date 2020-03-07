@@ -2,16 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {Chance} from 'chance';
-import { Cargo, transformDbCargo, CreateCargoDTO } from './cargo.model';
-import { CargoType } from 'src/utils/enums';
-import { CargoDTO } from './cargo.dtos';
+import { Cargo, transformDbCargo } from './cargo.model';
+import { CargoDTO, PlaceCargoDTO } from './cargo.dtos';
+import { CargoPlacement, transformDbCargoPlacement } from './cargoPlacement.model';
 
 @Injectable()
 export class CargoService {
 
-  constructor(@InjectModel('Cargo') private readonly cargoModel: Model<Cargo>) {}
+  constructor(@InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
+               @InjectModel('PlaceCargo') private readonly cargoPlacementModel: Model<CargoPlacement>) {}
 
-  async addCargo(createCargoDTO: CreateCargoDTO){
+  async addCargo(createCargoDTO: CargoDTO){
     const newCargo = new this.cargoModel({
       registrationNumber : createCargoDTO.registrationNumber,
       length: createCargoDTO.length,
@@ -83,13 +84,12 @@ export class CargoService {
       const height = chance.floating({ min: 2.8, max: 3.2, fixed: 1 });
       const type = chance.integer({ min: 1, max: 2 }) * 10;
 
-      const dto = new CreateCargoDTO({
-        registrationNumber, 
-        length, 
-        width, 
-        height, 
-        type
-      });
+      const dto = new CargoDTO();
+      dto.registrationNumber = registrationNumber;
+      dto.length = length;
+      dto.width = width;
+      dto.height = height;
+      dto.type = type;
 
       const cargo = await this.addCargo(dto);
       return cargo;
@@ -100,7 +100,32 @@ export class CargoService {
     }
   }
 
-  async placeCargo()
+  async placeCargo(dto: PlaceCargoDTO){
+    try{
+      const newCargoPlacement = new this.cargoPlacementModel({
+        cargoId : dto.cargoId,
+        loadingType: dto.loadingType,
+        deckId: dto.deckId,
+        laneId: dto.laneId,
+        gridId: dto.gridId
+      });
+
+      const createdPlaceCargo = await newCargoPlacement.save();
+      return transformDbCargoPlacement(createdPlaceCargo)
+    } catch(error){
+      throw "Failed to place cargo";
+    }
+  }
+
+  async getCargoPlacements(){
+    try{
+      const allCargoPlacement = await this.cargoPlacementModel.find().exec();
+      return allCargoPlacement.map(transformDbCargoPlacement) as CargoPlacement[];
+
+    } catch(error){
+      throw error;
+    }
+  }
 
   private async findCargo(id: string): Promise<Cargo> {
     try{
