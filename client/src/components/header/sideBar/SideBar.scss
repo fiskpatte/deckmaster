@@ -1,0 +1,42 @@
+@import "../../../shared/styles/colors.scss";
+@import "../../../shared/styles/layouts.scss";
+
+.SideBar {
+  position: absolute;
+  top: 0;
+  width: $sideBarWidth;
+  height: 100vh;
+  z-index: $overlayZIndex + 1;
+  background-color: $secondaryBlue;
+  color: white;
+  .Header {
+    border: 0;
+    .MenuTitle {
+      font-size: 4vw;
+    }
+  }
+  .Body {
+    background-color: $lightBlue;
+    height: 100vh-$headerHeight;
+    a {
+      text-decoration: inherit;
+      color: inherit;
+    }
+    a.active {
+      .NavItem {
+        background-color: $primaryBlue;
+      }
+    }
+    .NavItem {
+      border-bottom: 1px solid $primaryBlue;
+      box-sizing: border-box;
+      padding: 2vh 2vw;
+      @include flexStart();
+      font-size: 3vw;
+    }
+  }
+}
+
+:export {
+  sideBarWidth: $sideBarWidth;
+}

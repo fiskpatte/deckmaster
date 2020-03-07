@@ -1,0 +1,61 @@
+@import "../../styles/layouts.scss";
+
+.Loader {
+    position: absolute;
+    z-index: $overlayZIndex;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-100%) translateY(-50%);
+    width: 3em;
+    height: 3em;
+}
+
+.Loader::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 500rem;
+    border: .2em solid rgba(0, 0, 0, .1);
+}
+
+.Loader::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    animation: loader .6s linear;
+    animation-iteration-count: infinite;
+    border-radius: 500rem;
+    border-color: #767676 transparent transparent;
+    border-style: solid;
+    border-width: .2em;
+    box-shadow: 0 0 0 1px transparent;
+}
+
+.Loader .text {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: .2em solid rgba(0, 0, 0, 0);
+    padding-top: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+@keyframes loader {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

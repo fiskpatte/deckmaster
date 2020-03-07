@@ -1,0 +1,14 @@
+export const DECK_MAP = {
+    X_MARGIN: 5,
+    Y_MARGIN: 2,
+    X_SCALE: 1,
+    Y_SCALE: 2,
+    LANE_SEPARATION: 1,
+    GRID_RADIUS: 0.4
+}
+
+export const ACTION_TYPES = {
+    SET_DECK_MAP: "SET_DECK_MAP",
+    SET_CURRENT_DECK: "SET_CURRENT_DECK",
+    SET_CURRENT_CARGO: "SET_CURRENT_CARGO"
+}
