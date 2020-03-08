@@ -1,4 +1,4 @@
-import { CargoType, LoadingType } from "src/utils/enums";
+import { CargoType } from "src/utils/enums";
 
 export class CargoDTO {
     id: string;
@@ -7,13 +7,4 @@ export class CargoDTO {
     width: number;
     height: number;
     type: CargoType;
-    
-}
-
-export class PlaceCargoDTO {
-    cargoId: string;
-	loadingType: LoadingType;
-	deckId: string;
-	laneId: string;
-	gridId: string;
 }

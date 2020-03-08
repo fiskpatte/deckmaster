@@ -3,14 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {Chance} from 'chance';
 import { Cargo, transformDbCargo } from './cargo.model';
-import { CargoDTO, PlaceCargoDTO } from './cargo.dtos';
-import { CargoPlacement, transformDbCargoPlacement } from './cargoPlacement.model';
+import { CargoDTO } from './cargo.dtos';
 
 @Injectable()
 export class CargoService {
 
-  constructor(@InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
-               @InjectModel('PlaceCargo') private readonly cargoPlacementModel: Model<CargoPlacement>) {}
+  constructor(@InjectModel('Cargo') private readonly cargoModel: Model<Cargo>) {}
 
   async addCargo(createCargoDTO: CargoDTO){
     const newCargo = new this.cargoModel({
@@ -78,7 +76,7 @@ export class CargoService {
     try{
       const chance = new Chance();
       
-      const registrationNumber = `${chance.string({length: 3})} ${chance.string({length: 3, pool: '1234567890'})}`;
+      const registrationNumber = `${chance.string({length: 3, casing: 'upper', alpha: true, numeric: false})} ${chance.string({length: 3, pool: '1234567890'})}`;
       const length = chance.floating({ min: 10, max: 14, fixed: 1 });
       const width = chance.floating({ min: 2.1, max: 2.6, fixed: 1 });
       const height = chance.floating({ min: 2.8, max: 3.2, fixed: 1 });
@@ -97,33 +95,6 @@ export class CargoService {
     } catch(error){
       console.log(error);
       throw "Failed to mock cargo";
-    }
-  }
-
-  async placeCargo(dto: PlaceCargoDTO){
-    try{
-      const newCargoPlacement = new this.cargoPlacementModel({
-        cargoId : dto.cargoId,
-        loadingType: dto.loadingType,
-        deckId: dto.deckId,
-        laneId: dto.laneId,
-        gridId: dto.gridId
-      });
-
-      const createdPlaceCargo = await newCargoPlacement.save();
-      return transformDbCargoPlacement(createdPlaceCargo)
-    } catch(error){
-      throw "Failed to place cargo";
-    }
-  }
-
-  async getCargoPlacements(){
-    try{
-      const allCargoPlacement = await this.cargoPlacementModel.find().exec();
-      return allCargoPlacement.map(transformDbCargoPlacement) as CargoPlacement[];
-
-    } catch(error){
-      throw error;
     }
   }
 

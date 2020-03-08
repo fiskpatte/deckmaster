@@ -28,3 +28,11 @@ export function transformDbCargoPlacement(dbPlaceCargo){
         gridId: dbPlaceCargo.gridId
     }
 }
+
+export class CargoPlacementDto {
+    cargoId: string;
+	loadingType: LoadingType;
+	deckId: string;
+	laneId: string;
+	gridId: string;
+}
