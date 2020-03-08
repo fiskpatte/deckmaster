@@ -1,0 +1,22 @@
+$overlayZIndex: 100;
+$sideBarWidth: 25vw;
+$headerHeight: 10vh;
+
+@mixin flexRow() {
+  display: flex;
+  flex-direction: row;
+}
+@mixin flexColumn() {
+  display: flex;
+  flex-direction: column;
+}
+@mixin flexCenter(){
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+@mixin flexStart(){
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+}

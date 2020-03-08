@@ -1,0 +1,18 @@
+@import "../../shared/styles/colors.scss";
+@import "../../shared/styles/layouts.scss";
+
+.Header {
+  display: flex;
+  height: $headerHeight;
+  border-bottom: 1px solid $gray80;
+  justify-content: space-between;
+  .HeaderItem {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 2vh 2vw;
+    @include flexCenter();
+  }
+  .ViewTitle{
+      font-size: 4vw;
+  }
+}
