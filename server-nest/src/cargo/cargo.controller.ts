@@ -1,7 +1,10 @@
-import {  Get, Controller, Post, Body, Param, Patch, Delete } from '@nestjs/common';
+import {  Get, Controller, Post, Body, Param, Patch, Delete, UseGuards } from '@nestjs/common';
 import { CargoService } from './cargo.services';
 import { CargoDTO } from './cargo.dtos';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+// Uncomment this line to prevent unauthorized access to controller
+//@UseGuards(JwtAuthGuard)
 @Controller('cargo')
 export class CargoController {
   constructor(private readonly cargoService: CargoService) {}

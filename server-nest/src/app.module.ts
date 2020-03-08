@@ -1,3 +1,5 @@
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import { CargoPlacementModule } from './cargoPlacement/cargoplacement.module';
 import { Module } from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose';
@@ -7,6 +9,8 @@ import {CargoModule} from './cargo/cargo.module'
 
 @Module({
   imports: [
+        UsersModule, 
+        AuthModule, 
         CargoPlacementModule, 
         CargoModule, 
         MongooseModule.forRoot('mongodb+srv://dbUser:0cP6knNISFBnrwoC@loadmaster-przxq.mongodb.net/test?retryWrites=true&w=majority')
