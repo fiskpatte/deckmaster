@@ -2,9 +2,9 @@ export const DECK_MAP = {
     X_MARGIN: 5,
     Y_MARGIN: 2,
     X_SCALE: 1,
-    Y_SCALE: 2,
+    Y_SCALE: 2.5,
     LANE_SEPARATION: 1,
-    GRID_RADIUS: 0.4
+    GRID_RADIUS: 0.2
 }
 
 export const ACTION_TYPES = {

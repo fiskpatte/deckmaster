@@ -12,3 +12,11 @@ export const toggleFullScreen = () => {
         cancelFullScreen.call(doc);
     }
 }
+
+// translate page coordinate to SVG coordinate
+export const svgPoint = (svgElement, fromElement, x, y) => {
+    var pt = svgElement.createSVGPoint();
+    pt.x = x;
+    pt.y = y;
+    return pt.matrixTransform(fromElement.getScreenCTM().inverse());
+}

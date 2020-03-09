@@ -1,0 +1,14 @@
+@import "../../shared/styles/colors.scss";
+@import "../../shared/styles/layouts.scss";
+
+.DeckMap {
+  height: 100vh-$headerHeight;
+  background-color: $backgroundGray;
+  .Header {
+    border: 0;
+  }
+  .BoundingBox {
+    fill: none;
+    stroke: none;
+  }
+}

@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { arrayMin, arrayMax } from '../../shared/functions/math';
 import { DECK_MAP } from '../../shared/constants';
-import Lanes from './Lanes';
-import Grids from './Grids';
-
-// translate page to SVG co-ordinate
-const svgPoint = (svgElement, element, x, y) => {
-    var pt = svgElement.createSVGPoint();
-    pt.x = x;
-    pt.y = y;
-    return pt.matrixTransform(element.getScreenCTM().inverse());
-}
+import Lanes from './Lanes/Lanes';
+import Grids from './Grids/Grids';
+import { svgPoint } from '../../shared/functions/layout';
+import './DeckMap.scss'
+import CargoDetails from './CargoDetails';
+import DeckSelectorButtons from './DeckSelectorButtons';
 
 const groupStyle = { "fill": "white", "stroke": "black", "strokeWidth": "0.1", "pointerEvents": "visible" };//bounding-box
 
@@ -39,8 +35,8 @@ const DeckMap = (props) => {
     }, [dragging, initialCoords, currentPosition])
 
     const { currentDeck, currentCargo } = props;
-    
-    if(!currentDeck) return null;
+
+    if (!currentDeck) return null;
 
     const getViewBoxOriginX = () => {
         return arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2)) * DECK_MAP.X_SCALE - DECK_MAP.X_MARGIN / 2;
@@ -143,8 +139,11 @@ const DeckMap = (props) => {
     let viewBoxOriginY = getViewBoxOriginY();
     // console.log(groupBoundingRect)
     return (
-        <div style={{ height: "100%" }}>
-            <div style={{ height: '10%', padding: '1%' }}>{currentDeck.Deck}</div>
+        <div className="DeckMap">
+            <div className="Header">
+                <CargoDetails />
+                <DeckSelectorButtons />
+            </div>
             <svg
                 style={{ width: '100%', height: '65%' }}
                 viewBox={`${viewBoxOriginX} ${viewBoxOriginY} ${viewBoxSizeX} ${viewBoxSizeY}`}
@@ -160,11 +159,11 @@ const DeckMap = (props) => {
                     onMouseUp={ev => stopDrag(ev)}
                     ref={groupRef}>
                     <rect
+                        className="BoundingBox"
                         x={viewBoxOriginX / DECK_MAP.X_SCALE + DECK_MAP.X_MARGIN / 2}
                         y={viewBoxOriginY / DECK_MAP.Y_SCALE}
                         width={viewBoxSizeX - DECK_MAP.X_MARGIN}
-                        height={viewBoxSizeY}
-                        style={{ "fill": "none", "stroke": "none" }} />
+                        height={viewBoxSizeY} />
                     <Lanes lanes={currentDeck.lanes} />
                     <Grids grids={currentDeck.grids} />
                     {currentPosition ?

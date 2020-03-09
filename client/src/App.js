@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import DeckMap from './components/deckMap/DeckMap';
 import { parseLoadPlan } from './shared/functions/loadPlanParser';
 import loadPlans from './assets/data/LoadPlans.dat';
@@ -23,9 +23,9 @@ const App = () => {
       //
       setLoading(false);
     });
-
-    window.document.body.addEventListener('touchstart', (e) => e.preventDefault(), { "passive": false });
-    return () => window.document.body.removeEventListener('touchstart', (e) => e.preventDefault(), { "passive": false });
+    // NOT NEEDED FOR NOW
+    // window.document.body.addEventListener('touchstart', (e) => e.preventDefault(), { "passive": false });
+    // return () => window.document.body.removeEventListener('touchstart', (e) => e.preventDefault(), { "passive": false });
   },[]);
 
   if (loading) {
