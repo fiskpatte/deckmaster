@@ -1,7 +1,9 @@
 import React from 'react';
 
 const DeckSelectorButtons = () => {
-    return null;
+    return (
+        <div>Buttons</div>
+    );
 };
 
 export default DeckSelectorButtons;

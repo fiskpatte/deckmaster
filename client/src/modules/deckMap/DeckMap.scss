@@ -6,9 +6,26 @@
   background-color: $backgroundGray;
   .Header {
     border: 0;
+    height: 20vh;
+  }
+  .svgBody {
+    width: 100%;
+    height: 65%;
   }
   .BoundingBox {
     fill: none;
     stroke: none;
   }
+  .GridItem {
+    fill: $gray30;
+    stroke: none;
+  }
+}
+
+.Hidden{
+    visibility: hidden;
+}
+
+.Shadow{
+    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
 }

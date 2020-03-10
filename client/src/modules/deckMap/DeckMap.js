@@ -19,19 +19,19 @@ const DeckMap = (props) => {
     const svgRef = useRef();
 
     useEffect(() => {
-        let options = { "passive": false };
+        // let options = { "passive": false };
         let ref = groupRef.current;
         if (ref) {
-            ref.addEventListener('touchstart', startDrag, options);
-            ref.addEventListener('touchmove', drag, options);
-            ref.addEventListener('touchend', stopDrag, options);
-            ref.addEventListener('touchcancel', cancelDrag, options);
-            return () => {
-                ref.removeEventListener('touchstart', startDrag, options)
-                ref.removeEventListener('touchmove', drag, options);
-                ref.removeEventListener('touchend', stopDrag, options);
-                ref.removeEventListener('touchcancel', cancelDrag, options);
-            }
+            // ref.addEventListener('touchstart', startDrag, options);
+            // ref.addEventListener('touchmove', drag, options);
+            // ref.addEventListener('touchend', stopDrag, options);
+            // ref.addEventListener('touchcancel', cancelDrag, options);
+            // return () => {
+            //     ref.removeEventListener('touchstart', startDrag, options)
+            //     ref.removeEventListener('touchmove', drag, options);
+            //     ref.removeEventListener('touchend', stopDrag, options);
+            //     ref.removeEventListener('touchcancel', cancelDrag, options);
+            // }
         }
     }, [dragging, initialCoords, currentPosition])
 
@@ -40,7 +40,7 @@ const DeckMap = (props) => {
     if (!currentDeck) return null;
 
     const getViewBoxOriginX = () => {
-        return arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2)) * DECK_MAP.X_SCALE - DECK_MAP.X_MARGIN / 2;
+        return arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2)) * DECK_MAP.X_SCALE - DECK_MAP.X_MARGIN;
     }
 
     const getViewBoxOriginY = () => {
@@ -50,7 +50,7 @@ const DeckMap = (props) => {
     const getViewBoxSizeX = () => {
         let xMax = arrayMax(currentDeck.lanes.map(lane => lane.LCG + lane.length / 2));
         let xMin = arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2));
-        return xMax - xMin + DECK_MAP.X_MARGIN;
+        return xMax - xMin + DECK_MAP.X_MARGIN + 2 * DECK_MAP.LANE_BUTTON_WIDTH;
     }
 
     const getViewBoxSizeY = () => {
@@ -149,7 +149,7 @@ const DeckMap = (props) => {
                 <DeckSelectorButtons />
             </div>
             <svg
-                style={{ width: '100%', height: '65%' }}
+                className="svgBody"
                 viewBox={`${viewBoxOriginX} ${viewBoxOriginY} ${viewBoxSizeX} ${viewBoxSizeY}`}
                 preserveAspectRatio="xMidYMin"
                 ref={svgRef}>
@@ -157,17 +157,17 @@ const DeckMap = (props) => {
                     style={groupStyle}
                     transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
                     // onClick={ev => placeCurrentVehicle(ev)}
-                    onMouseDown={ev => startDrag(ev)}
-                    onMouseMove={ev => drag(ev)}
-                    onMouseOut={ev => cancelDrag(ev)}
-                    onMouseUp={ev => stopDrag(ev)}
+                    // onMouseDown={ev => startDrag(ev)}
+                    // onMouseMove={ev => drag(ev)}
+                    // onMouseOut={ev => cancelDrag(ev)}
+                    // onMouseUp={ev => stopDrag(ev)}
                     ref={groupRef}>
-                    <rect
+                    {/* <rect
                         className="BoundingBox"
                         x={viewBoxOriginX / DECK_MAP.X_SCALE + DECK_MAP.X_MARGIN / 2}
                         y={viewBoxOriginY / DECK_MAP.Y_SCALE}
                         width={viewBoxSizeX - DECK_MAP.X_MARGIN}
-                        height={viewBoxSizeY} />
+                        height={viewBoxSizeY} /> */}
                     <Lanes lanes={currentDeck.lanes} />
                     <Grids grids={currentDeck.grids} />
                     {currentPosition ?
