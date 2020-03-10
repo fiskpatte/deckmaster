@@ -7,6 +7,7 @@ import { svgPoint } from '../../shared/functions/layout';
 import './DeckMap.scss'
 import CargoDetails from './CargoDetails';
 import DeckSelectorButtons from './DeckSelectorButtons';
+import LoginScreen from '../loginScreen/LoginScreen'
 
 const groupStyle = { "fill": "white", "stroke": "black", "strokeWidth": "0.1", "pointerEvents": "visible" };//bounding-box
 
@@ -138,6 +139,9 @@ const DeckMap = (props) => {
     let viewBoxOriginX = getViewBoxOriginX();
     let viewBoxOriginY = getViewBoxOriginY();
     // console.log(groupBoundingRect)
+
+    return <LoginScreen />
+
     return (
         <div className="DeckMap">
             <div className="Header">
