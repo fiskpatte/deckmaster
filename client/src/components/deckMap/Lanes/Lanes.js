@@ -1,19 +1,17 @@
 import React from 'react';
+import Lane from './Lane';
+import './Lane.scss'
 
 const Lanes = ({ lanes }) => {
-    const Lane = ({ lane, ...rest }) => {
-        let originX = lane.LCG - lane.length / 2;
-        let originY = lane.TCG - lane.width / 2;
-        return (
-            <rect {...rest} x={originX} y={originY} width={lane.length} height={lane.width} rx="0.5" ry="0.5" />
-        )
-    };
 
     return (
         <>
             {lanes.map((lane, ix) => {
                 return (
-                    <Lane key={ix} lane={lane} style={{ pointerEvents: "none" }} />
+                    <Lane key={ix}
+                        lane={lane}
+                        className="Lane"
+                        onClick={(ev) => { ev.stopPropagation(); console.log("lane clicked"); }} />
                 )
             })}
         </>

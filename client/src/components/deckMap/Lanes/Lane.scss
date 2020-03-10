@@ -1,0 +1,16 @@
+@import "../../../shared/styles/colors.scss";
+
+.Lane {
+}
+
+.LaneButton {
+  fill: $successGreen;
+  stroke: none;
+}
+
+.LaneName {
+  fill: $gray20;
+  stroke: none;
+  font-family: FoundrySterlingLight;
+  dominant-baseline: central;
+}
