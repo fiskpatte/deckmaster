@@ -17,6 +17,9 @@ const App = () => {
   useEffect(() => {
     parseLoadPlan(loadPlans).then(res => {
       //THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
+      res.unshift({deck:"Lower Hold",lanes:[],grids:[]},
+      {deck:"Main Deck",lanes:[],grids:[]},
+      {deck:"Upper Deck",lanes:[],grids:[]})
       dispatch(appActions.setDeckMap(res));
       dispatch(appActions.setCurrentDeck(res[0]));
       dispatch(appActions.setCurrentCargo({ length: 14, width: 2.5 }));
@@ -43,7 +46,7 @@ const App = () => {
             <div>TEST</div>
           </Route>
           <Route path="/loading" >
-            <DeckMap currentDeck={currentDeck} currentCargo={currentCargo} />
+            <DeckMap />
           </Route>
           <Route path="/overview" >
             <div>Overview</div>
