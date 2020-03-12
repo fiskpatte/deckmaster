@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import BlueBackground from '../../shared/components/blueBackground/BlueBackground'
 import {login} from  '../../api/index'
+import jwt_decode from 'jwt-decode';
 export default function LoginScreen() {
     const [username, setUsername] = useState('Pontus2');
     const [password, setPassword] = useState('testtest')
@@ -20,6 +21,7 @@ export default function LoginScreen() {
         try {
             const accessToken = await login(username, password);
             console.log("accessToken: ", accessToken);
+            console.log("decoded: ", jwt_decode(accessToken))
         } catch(error){
             setError('Login failed'); 
         }
