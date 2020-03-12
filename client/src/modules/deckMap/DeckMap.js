@@ -140,7 +140,7 @@ const DeckMap = (props) => {
     let viewBoxOriginY = getViewBoxOriginY();
     // console.log(groupBoundingRect)
 
-    return <LoginScreen />
+//    return <LoginScreen />
 
     return (
         <div className="DeckMap">

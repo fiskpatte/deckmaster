@@ -42,6 +42,9 @@ const App = () => {
           <Route path="/" exact>
             <div>TEST</div>
           </Route>
+          <Route path="/login" exact>
+            <div>Login</div>
+          </Route>
           <Route path="/loading" >
             <DeckMap currentDeck={currentDeck} currentCargo={currentCargo} />
           </Route>
