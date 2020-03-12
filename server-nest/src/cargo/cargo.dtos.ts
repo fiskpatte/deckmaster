@@ -7,4 +7,5 @@ export class CargoDTO {
     width: number;
     height: number;
     type: CargoType;
+    weight: number;
 }

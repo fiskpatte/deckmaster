@@ -6,7 +6,8 @@ export const CargoSchema = new mongoose.Schema({
     length: Number,
     width: Number,
     height: Number,
-    type: Number
+    type: Number,
+    weight: Number
 })
 
 export interface Cargo extends mongoose.Document {
@@ -16,6 +17,7 @@ export interface Cargo extends mongoose.Document {
     width: number;
     height: number;
     type: CargoType;
+    weight: number
 }
 
 export function transformDbCargo(dbCargo){
@@ -25,6 +27,7 @@ export function transformDbCargo(dbCargo){
         length: dbCargo.length,
         width: dbCargo.width,
         height: dbCargo.height,
-        type: dbCargo.type
+        type: dbCargo.type,
+        weight: dbCargo.weight
     }
 }
