@@ -8,6 +8,7 @@ import Header from './modules/header/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import appActions from './store/actions/appActions'
 import Loader from './shared/components/loader/Loader';
+import LoginScreen from './modules/loginScreen/LoginScreen';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -46,7 +47,7 @@ const App = () => {
             <div>TEST</div>
           </Route>
           <Route path="/login" exact>
-            <div>Login</div>
+            <LoginScreen />
           </Route>
           <Route path="/loading" >
             <DeckMap />

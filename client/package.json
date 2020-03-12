@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "framer-motion": "^1.9.0",
     "node-sass": "^4.13.1",
@@ -16,12 +17,12 @@
     "react-scripts": "3.4.0",
     "redux": "^4.0.5"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
+  "scripts": {  
+    "start": "react-app-rewired start",  
+    "build": "react-app-rewired build",  
+    "test": "react-app-rewired test --env=jsdom",  
+    "eject": "react-scripts eject"  
+},
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -36,5 +37,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
+    "customize-cra": "^0.9.1",
+    "react-app-rewired": "^2.1.5"
   }
 }
