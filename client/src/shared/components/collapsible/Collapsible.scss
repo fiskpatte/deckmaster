@@ -1,0 +1,11 @@
+@import "../../styles/layouts.scss";
+
+.Collapsible {
+  width: 100%;
+  @include flexColumn();
+  @include flexCenter();
+  .childrenContainer {
+    width: 100%;
+    overflow: hidden;
+  }
+}

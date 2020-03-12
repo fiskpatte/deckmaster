@@ -17,12 +17,12 @@
     "react-scripts": "3.4.0",
     "redux": "^4.0.5"
   },
-  "scripts": {  
-    "start": "react-app-rewired start",  
-    "build": "react-app-rewired build",  
-    "test": "react-app-rewired test --env=jsdom",  
-    "eject": "react-scripts eject"  
-},
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
