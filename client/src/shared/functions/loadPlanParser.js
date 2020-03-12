@@ -46,19 +46,19 @@ const setFieldMode = (value) => {
 const setData = (data, dataElement) => {
     switch (fieldMode) {
         case PARSER_FIELD_MODE.DECK_NAME:
-            data.push({ "deck": dataElement[0], "lanes": [], "grids": [] });
+            data.push({ deck: dataElement[0], lanes: [], grids: [] });
             break;
         case PARSER_FIELD_MODE.LANE:
         case PARSER_FIELD_MODE.GRID:
             let prop = fieldMode === PARSER_FIELD_MODE.LANE ? "lanes" : "grids";
             let newElem = {
-                "name": dataElement[0].trim().replace("-", ""),
-                "length": Number(dataElement[1].replace(",", ".")),
-                "width": Number(dataElement[2].replace(",", ".")),
-                "LCG": Number(dataElement[3].replace(",", ".")),
-                "TCG": -Number(dataElement[4].replace(",", ".")),
-                "VCG": Number(dataElement[5].replace(",", ".")),
-                "partial": false
+                name: dataElement[0].trim().replace("-", ""),
+                length: Number(dataElement[1].replace(",", ".")),
+                width: Number(dataElement[2].replace(",", ".")),
+                LCG: Number(dataElement[3].replace(",", ".")),
+                TCG: -Number(dataElement[4].replace(",", ".")),
+                VCG: Number(dataElement[5].replace(",", ".")),
+                partial: false
             };
             let lastData = data[data.length - 1];
             handlePartialLanes(lastData, newElem);

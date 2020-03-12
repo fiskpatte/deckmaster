@@ -1,7 +1,7 @@
 import React from 'react';
 import { DECK_MAP } from './../../../shared/constants';
 import ArrowIcon from './ArrowIcon';
-// import { ReactComponent as ArrowIcon } from '../../../assets/icons/arrowIcon.svg';
+
 const LaneButton = ({ lane, onClick }) => {
     const buttonHeight = lane.width * DECK_MAP.LANE_BUTTON_HEIGHT_RATIO;
     const originX = lane.LCG - lane.length / 2 - DECK_MAP.LANE_BUTTON_WIDTH / 2;
