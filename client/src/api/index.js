@@ -10,17 +10,30 @@ export const login = async (username, password) => {
       username,
       password
     });
+
     if (result?.data?.access_token) {
       const token = result.data.access_token;
       localStorage.setItem("jwtToken", token);
       setAuthorizationToken(token);
-
-      return token;
+      return result.data.access_token;
     } else {
-      throw new Error("Login failed");
+        throw new Error("Login failed");
     }
   } catch (error) {
-    console.log("error: ", error);
     throw error;
-  }
-};
+    }
+}
+
+
+export const getMockCargo = async () => {
+    try {
+        const result = await axios.post(`${serverPrefix}cargo/mock`);
+        if (result?.data) {
+            return result.data;
+        } else {
+            throw new Error("Failed to get mock cargo");
+        }
+    } catch (error) {
+        throw error;
+    }
+}

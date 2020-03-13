@@ -10,6 +10,7 @@ import appActions from "./store/actions/appActions";
 import Loader from "./shared/components/loader/Loader";
 import LoginScreen from "./modules/loginScreen/LoginScreen";
 import PrivateRoute from "./PrivateRoute";
+import { getMockCargo } from './api';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -18,17 +19,18 @@ const App = () => {
 
   useEffect(() => {
     parseLoadPlan(loadPlans).then(res => {
-      //THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
-      res.unshift(
-        { deck: "Lower Hold", lanes: [], grids: [] },
+
+      //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
+      res.unshift({ deck: "Lower Hold", lanes: [], grids: [] },
         { deck: "Main Deck", lanes: [], grids: [] },
-        { deck: "Upper Deck", lanes: [], grids: [] }
-      );
+        { deck: "Upper Deck", lanes: [], grids: [] })
       dispatch(appActions.setDeckMap(res));
       dispatch(appActions.setCurrentDeck(res[0]));
-      dispatch(appActions.setCurrentCargo({ length: 14, width: 2.5 }));
+      getMockCargo().then(res => {
+        dispatch(appActions.setCurrentCargo(res));
+        setLoading(false);
+      })
       //
-      setLoading(false);
     });
     // NOT NEEDED FOR NOW
     // window.document.body.addEventListener('touchstart', (e) => e.preventDefault(), { "passive": false });
@@ -36,7 +38,9 @@ const App = () => {
   }, []);
 
   if (loading) {
-    return <Loader />;
+    return (
+      <Loader />
+    );
   }
 
   return (
@@ -68,7 +72,6 @@ const App = () => {
           <Route path="/logout">
             <div>Logout</div>
           </Route>
-          {/* <DeckMap currentDeck={currentDeck} currentCargo={currentCargo} /> */}
         </Switch>
       </div>
     </Router>

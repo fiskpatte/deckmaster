@@ -16,7 +16,8 @@ export class CargoService {
       length: createCargoDTO.length,
       width: createCargoDTO.width,
       height: createCargoDTO.height,
-      type: createCargoDTO.type
+      type: createCargoDTO.type,
+      weight: createCargoDTO.weight
     });
 
     const result = await newCargo.save();
@@ -57,6 +58,9 @@ export class CargoService {
       if(dto.type){
         cargo.type = dto.type;
       }
+      if(dto.weight){
+        cargo.weight = dto.weight;
+      }
      cargo.save();
 
     } catch(error){
@@ -81,6 +85,7 @@ export class CargoService {
       const width = chance.floating({ min: 2.1, max: 2.6, fixed: 1 });
       const height = chance.floating({ min: 2.8, max: 3.2, fixed: 1 });
       const type = chance.integer({ min: 1, max: 2 }) * 10;
+      const weight = chance.integer({ min: 15, max: 20 });
 
       const dto = new CargoDTO();
       dto.registrationNumber = registrationNumber;
@@ -88,6 +93,7 @@ export class CargoService {
       dto.width = width;
       dto.height = height;
       dto.type = type;
+      dto.weight = weight;
 
       const cargo = await this.addCargo(dto);
       return cargo;

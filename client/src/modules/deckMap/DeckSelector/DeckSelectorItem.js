@@ -1,14 +1,16 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentDeck } from './../../../store/actions/appActions';
+import Card from './../../../shared/components/card/Card';
+
 const DeckSelectorItem = ({ deck, isCurrent }) => {
     const dispatch = useDispatch();
     const onClick = () => { dispatch(setCurrentDeck(deck)) };
-    
+
     return (
-        <div className={`DeckSelectorItem ${isCurrent ? "Selected" : ""}`} onClick={onClick}>
+        <Card className={`DeckSelectorItem ${isCurrent ? "Selected" : ""}`} onClick={onClick}>
             {deck.deck}
-        </div>
+        </Card>
     );
 }
 

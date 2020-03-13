@@ -6,25 +6,48 @@
   background-color: $backgroundGray;
   .Header {
     border: 0;
-    // height: 20vh;
+    height: auto;
     .DeckSelector {
       @include flexRow();
       margin: 2vh 2vw;
+      height: min-content;
       .DeckSelectorItem {
-        box-sizing: border-box;
-        padding: 1vh 1vw;
-        margin: 5px;
-        border-radius: 6px;
-        background-color: white;
         font-size: 2vw;
-        @include flexCenter();
-        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
         cursor: pointer;
       }
       .Selected {
         background-color: $primaryBlue;
         color: white;
         box-shadow: 0px 0px 0px;
+      }
+    }
+    .CargoDetails {
+      @include flexRow();
+      margin: 2vh 2vw;
+      font-size: 1.5vw;
+      .Card {
+        @include flexColumn();
+      }
+      .Button {
+        background-color: $gray80;
+        margin: 2vh 0.5vw;
+        font-family: FoundrySterlingMedium;
+        color: transparentize($gray20, 0.2);
+      }
+      .CargoDetailItem {
+        @include flexStart();
+        width: 100%;
+        white-space: nowrap;
+        > div {
+          margin: 0vh 0.5vw;
+          box-sizing: border-box;
+          min-width: 6vw;
+        }
+        .Label {
+        }
+        .Value {
+          font-family: FoundrySterlingMedium;
+        }
       }
     }
   }
