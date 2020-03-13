@@ -53,10 +53,9 @@ const App = () => {
           <Route path="/loading">
             <DeckMap />
           </Route>
-          <PrivateRoute
-            path="/overview"
-            component={<h1>Protected overview</h1>}
-          />
+          <PrivateRoute path="/overview">
+            <DeckMap />
+          </PrivateRoute>
           <Route path="/discharge">
             <div>Discharge</div>
           </Route>

@@ -14,7 +14,6 @@ export const login = async (username, password) => {
       const token = result.data.access_token;
       localStorage.setItem("jwtToken", token);
       setAuthorizationToken(token);
-      //setJwtExpirationDate(token);
 
       return token;
     } else {

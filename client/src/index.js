@@ -9,7 +9,6 @@ import { setAuthorizationToken } from "./shared/functions/axios";
 
 if (localStorage.jwtToken) {
   setAuthorizationToken(localStorage.jwtToken);
-  //setJwtExpirationDate(localStorage.jwtToken);
 }
 
 ReactDOM.render(
