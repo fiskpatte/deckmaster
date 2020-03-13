@@ -5,6 +5,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux';
 import store from './store/store';
+import { setAuthorizationToken } from './shared/functions/axios';
+
+setAuthorizationToken(localStorage.jwtToken);
 
 ReactDOM.render(
     <Provider store={store}>
