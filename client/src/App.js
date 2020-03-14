@@ -10,7 +10,7 @@ import appActions from "./store/actions/appActions";
 import Loader from "./shared/components/loader/Loader";
 import LoginScreen from "./modules/loginScreen/LoginScreen";
 import PrivateRoute from "./PrivateRoute";
-import { getMockCargo } from './api';
+import { getMockCargo } from './api/endpoints';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ const App = () => {
             <DeckMap />
           </Route>
           <PrivateRoute path="/overview">
-            <DeckMap />
+            <h1>Protected overview</h1>
           </PrivateRoute>
           <Route path="/discharge">
             <div>Discharge</div>
