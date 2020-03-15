@@ -1,6 +1,7 @@
 import React from 'react';
+import { CargoDetailsItemProps } from '../types';
 
-const CargoDetailItem = ({ label, value }) => {
+const CargoDetailsItem: React.FC<CargoDetailsItemProps> = ({ label, value }) => {
     return (
         <div className="CargoDetailItem">
             <div className="Label">
@@ -13,4 +14,4 @@ const CargoDetailItem = ({ label, value }) => {
     );
 }
 
-export default CargoDetailItem
+export default CargoDetailsItem

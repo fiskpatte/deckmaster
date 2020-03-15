@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const setAuthorizationToken = token => {
-    if(token){
+export const setAuthorizationToken = (token?: string) => {
+    if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         localStorage.setItem('jwtToken', token)
     } else {

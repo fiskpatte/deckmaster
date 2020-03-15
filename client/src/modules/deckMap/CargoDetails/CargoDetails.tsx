@@ -1,10 +1,11 @@
 import React from 'react';
-import Card from './../../../shared/components/card/Card';
-import CargoDetailItem from './CargoDetailItem';
+import Card from '../../../shared/components/card/Card';
+import CargoDetailItem from './CargoDetailsItem';
 import Collapsible from '../../../shared/components/collapsible/Collapsible';
-import './CargoDetails.scss'
+import './CargoDetails.scss';
+import {CargoDetailsProps} from '../types';
 
-const CargoDetails = ({ currentCargo }) => {
+const CargoDetails:React.FC<CargoDetailsProps> = ({ currentCargo }) => {
     const { registrationNumber, length, width, height, weight } = currentCargo;
     return (
         <div className="CargoDetails">

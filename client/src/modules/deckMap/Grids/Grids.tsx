@@ -1,7 +1,8 @@
 import React from 'react';
 import Grid from './Grid';
+import { GridsProps } from '../types';
 
-const Grids = ({ grids }) => {
+const Grids: React.FC<GridsProps> = ({ grids }) => {
 
     return (
         <>

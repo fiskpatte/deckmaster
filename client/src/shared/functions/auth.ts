@@ -5,7 +5,7 @@ export const isLoggedIn = () => {
   if (!token) {
     return false;
   }
-
-  const expirationDate = new Date(jwt_decode(token).exp * 1000);
+  const decoded: any = jwt_decode(token);
+  const expirationDate = new Date(decoded.exp * 1000);
   return new Date() < expirationDate;
 };

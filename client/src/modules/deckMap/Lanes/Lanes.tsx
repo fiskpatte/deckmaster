@@ -1,8 +1,9 @@
 import React from 'react';
 import Lane from './Lane';
 import './Lane.scss'
+import { LanesProps } from '../types';
 
-const Lanes = ({ lanes }) => {
+const Lanes:React.FC<LanesProps> = ({ lanes }) => {
 
     return (
         <>
@@ -10,7 +11,6 @@ const Lanes = ({ lanes }) => {
                 return (
                     <Lane key={ix}
                         lane={lane}
-                        className="Lane"
                         onClick={(ev) => { ev.stopPropagation(); console.log("lane clicked"); }} />
                 )
             })}

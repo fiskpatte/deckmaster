@@ -1,17 +1,20 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { DECK_MAP } from '../../../shared/constants';
+import { LaneNameProps } from '../types';
 
-const LaneName = ({ lane, y }) => {
+const LaneName: React.FC<LaneNameProps> = ({ lane }) => {
     const originX = lane.LCG + lane.length / 2 + DECK_MAP.X_MARGIN / 2;
-    const textRef = useRef();
+    const textRef = useRef<SVGTextElement>(null);
     const scaleRef = useRef(1);
     const [scale, setScale] = useState(1);
     useEffect(() => {
-        let textBBox = textRef.current.getBBox();
-        let widthScale = DECK_MAP.LANE_NAME_WIDTH / textBBox.width;
-        let heightScale = lane.width / textBBox.height;
-        scaleRef.current = DECK_MAP.LANE_NAME_FONT_SIZE * Math.min(widthScale, heightScale);
-        setScale(scaleRef.current);
+        if (textRef.current) {
+            let textBBox = textRef.current.getBBox();
+            let widthScale = DECK_MAP.LANE_NAME_WIDTH / textBBox.width;
+            let heightScale = lane.width / textBBox.height;
+            scaleRef.current = DECK_MAP.LANE_NAME_FONT_SIZE * Math.min(widthScale, heightScale);
+            setScale(scaleRef.current);
+        }
     }, [lane.width])
     return (
         <text className={`LaneName ${lane.partial ? "Hidden" : ""}`}

@@ -1,10 +1,11 @@
-import { PARSER_FIELD_MODE } from './../constants';
+import { PARSER_FIELD_MODE } from '../constants';
+import { Deck, Lane } from '../../types';
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
 
-export const parseLoadPlan = async (file) => {
+export const parseLoadPlan = async (file: any) => {
     let rawFile = new XMLHttpRequest();
-    let data = [];
+    let data: Array<Deck> = [];
     rawFile.open("GET", file, false);
     rawFile.onreadystatechange = () => {
         if (rawFile.readyState === 4) {
@@ -27,7 +28,7 @@ export const parseLoadPlan = async (file) => {
     return data;
 }
 
-const setFieldMode = (value) => {
+const setFieldMode = (value: string): boolean => {
     switch (value) {
         case "deck":
             fieldMode = PARSER_FIELD_MODE.DECK_NAME;
@@ -43,14 +44,13 @@ const setFieldMode = (value) => {
     }
 }
 
-const setData = (data, dataElement) => {
+const setData = (data: Array<Deck>, dataElement: string[]) => {
     switch (fieldMode) {
         case PARSER_FIELD_MODE.DECK_NAME:
             data.push({ deck: dataElement[0], lanes: [], grids: [] });
             break;
         case PARSER_FIELD_MODE.LANE:
         case PARSER_FIELD_MODE.GRID:
-            let prop = fieldMode === PARSER_FIELD_MODE.LANE ? "lanes" : "grids";
             let newElem = {
                 name: dataElement[0].trim().replace("-", ""),
                 length: Number(dataElement[1].replace(",", ".")),
@@ -58,18 +58,22 @@ const setData = (data, dataElement) => {
                 LCG: Number(dataElement[3].replace(",", ".")),
                 TCG: -Number(dataElement[4].replace(",", ".")),
                 VCG: Number(dataElement[5].replace(",", ".")),
-                partial: false
             };
             let lastData = data[data.length - 1];
-            handlePartialLanes(lastData, newElem);
-            lastData[prop].push(newElem);
+            if (fieldMode === PARSER_FIELD_MODE.LANE) {
+                let lane = { ...newElem, partial: false }
+                handlePartialLanes(lastData, lane);
+                lastData.lanes.push(lane);
+            } else {
+                lastData.grids.push(newElem);
+            }
             break;
         default:
             break;
     }
 }
 
-const handlePartialLanes = (lastData, newElem) => {
+const handlePartialLanes = (lastData: Deck, newElem: Lane) => {
     if (fieldMode === PARSER_FIELD_MODE.LANE && lastData.lanes.some(l => l.name === newElem.name)) {
         let updated = lastData.lanes.reduce((r, l) => {
             if (l.name === newElem.name && l.LCG < newElem.LCG) {

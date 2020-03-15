@@ -1,9 +1,10 @@
 import React from 'react';
 import LaneButton from './LaneButton';
-import { DECK_MAP } from './../../../shared/constants';
+import { DECK_MAP } from '../../../shared/constants';
 import LaneName from './LaneName';
+import { LaneProps } from './../types';
 
-const Lane = ({ lane, ...rest }) => {
+const Lane: React.FC<LaneProps> = ({ lane, ...rest }) => {
     const originX = lane.LCG - lane.length / 2;
     const originY = lane.TCG - lane.width / 2;
 

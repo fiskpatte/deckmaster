@@ -1,10 +1,11 @@
 import React from 'react';
 import GridItem from './GridItem';
 import { DECK_MAP } from '../../../shared/constants';
+import { GridProps } from '../types';
 
 const radius = DECK_MAP.GRID_RADIUS * Math.max(DECK_MAP.X_SCALE, DECK_MAP.Y_SCALE);
 const boundingBoxRadius = radius * 8;
-const Grid = ({ grid, visible, onClick, ...rest }) => {
+const Grid: React.FC<GridProps> = ({ grid, visible, onClick, ...rest }) => {
     if (!visible) return null;
     return (
         <g onClick={onClick}>

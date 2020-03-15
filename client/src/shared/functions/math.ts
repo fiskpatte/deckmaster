@@ -1,4 +1,4 @@
-export const arrayMin = (arr) => {
+export const arrayMin = (arr: Array<number>) => {
     let len = arr.length, min = Infinity;
     while (len--) {
         if (arr[len] < min) {
@@ -8,7 +8,7 @@ export const arrayMin = (arr) => {
     return min;
 };
 
-export const arrayMax = (arr) => {
+export const arrayMax = (arr: Array<number>) => {
     let len = arr.length, max = -Infinity;
     while (len--) {
         if (arr[len] > max) {

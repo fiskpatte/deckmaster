@@ -20,7 +20,9 @@ export interface Grid extends DeckMapElement {
 }
 
 export interface Cargo extends DeckMapElement {
-    registrationNumber: string
+    registrationNumber: string,
+    height: number,
+    weight: number
 }
 
 export const emptyDeck = (): Deck => ({
@@ -30,9 +32,11 @@ export const emptyDeck = (): Deck => ({
 })
 export const emptyCargo = (): Cargo => ({
     registrationNumber: "",
-    length: -1,
-    width: -1,
+    length: 0,
+    width: 0,
     LCG: 0,
     TCG: 0,
-    VCG: 0
+    VCG: 0,
+    height: 0,
+    weight: 0
 })

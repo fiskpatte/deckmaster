@@ -7,7 +7,7 @@ const NavItemLogout: React.FC<NavItemProps> = ({ label, path }) => {
     const history = useHistory();
 
     const logout = () => {
-        setAuthorizationToken(null);
+        setAuthorizationToken(undefined);
         history.push(path)
     }
 

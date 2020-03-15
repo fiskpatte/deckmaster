@@ -1,7 +1,8 @@
 import React from 'react';
 import { DECK_MAP } from '../../../shared/constants';
+import { GridItemProps } from '../types';
 
-const GridItem = ({ grid, upper, radius, ...rest }) => {
+const GridItem: React.FC<GridItemProps> = ({ grid, upper, radius, ...rest }) => {
     let cy = 0;
     const borderMargin = 3 * radius;
     if (upper) {
