@@ -1,5 +1,6 @@
 import React from 'react';
 import DeckSelectorItem from './DeckSelectorItem';
+import './DeckSelector.scss'
 
 const DeckSelector = ({ deckMap, currentDeck }) => {
     return (

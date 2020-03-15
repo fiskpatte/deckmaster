@@ -6,52 +6,7 @@
   background-color: $backgroundGray;
   .Header {
     border: 0;
-    height: auto;
-    .DeckSelector {
-      @include flexRow();
-      margin: 2vh 2vw;
-      height: min-content;
-      .DeckSelectorItem {
-        font-size: 2vw;
-        cursor: pointer;
-      }
-      .Selected {
-        background-color: $primaryBlue;
-        color: white;
-        box-shadow: 0px 0px 0px;
-      }
-    }
-    .CargoDetails {
-      @include flexRow();
-      margin: 2vh 2vw;
-      font-size: 1.5vw;
-      height: min-content;
-      z-index: 5;
-      .Card {
-        @include flexColumn();
-      }
-      .Button {
-        background-color: $gray80;
-        margin: 2vh 0.5vw;
-        font-family: FoundrySterlingMedium;
-        color: transparentize($gray20, 0.2);
-      }
-      .CargoDetailItem {
-        @include flexStart();
-        width: 100%;
-        white-space: nowrap;
-        > div {
-          margin: 0vh 0.5vw;
-          box-sizing: border-box;
-          min-width: 6vw;
-        }
-        .Label {
-        }
-        .Value {
-          font-family: FoundrySterlingMedium;
-        }
-      }
-    }
+    height: auto;        
   }
   .svgBody {
     width: 100%;
