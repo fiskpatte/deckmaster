@@ -8,4 +8,9 @@
     width: 100%;
     overflow: hidden;
   }
+  .iconContainer {
+    width: 100%;
+    @include flexCenter();
+    padding: 0.5vh 0;
+  }
 }

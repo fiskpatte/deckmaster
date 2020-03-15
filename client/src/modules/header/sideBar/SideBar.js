@@ -7,7 +7,7 @@ const SideBar = ({ sideBarOpen, closeSideBar }) => {
 
     return (
         <>
-            <Overlay visible={sideBarOpen} />
+            <Overlay visible={sideBarOpen} onClick={closeSideBar} />
             <NavMenu sideBarOpen={sideBarOpen} closeSideBar={closeSideBar} />
         </>
     );

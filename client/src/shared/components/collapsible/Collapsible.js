@@ -21,7 +21,7 @@ const Collapsible = ({ children }) => {
             <motion.div className="childrenContainer" initial={"hidden"} animate={isCollapsed ? "hidden" : "visible"} variants={contentVariants}>
                 {children}
             </motion.div>
-            <motion.div initial={"down"} animate={isCollapsed ? "down" : "up"} variants={iconVariants} onClick={() => setIsCollapsed(!isCollapsed)}>
+            <motion.div className="iconContainer" initial={"down"} animate={isCollapsed ? "down" : "up"} variants={iconVariants} onClick={() => setIsCollapsed(!isCollapsed)}>
                 <ArrowDownIcon />
             </motion.div>
         </div>

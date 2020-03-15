@@ -25,6 +25,8 @@
       @include flexRow();
       margin: 2vh 2vw;
       font-size: 1.5vw;
+      height: min-content;
+      z-index: 5;
       .Card {
         @include flexColumn();
       }
