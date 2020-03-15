@@ -3,6 +3,7 @@ import { ReactComponent as CloseMenuIcon } from '../../../assets/icons/closeMenu
 import { motion } from 'framer-motion';
 import variables from './SideBar.scss';
 import NavItem from './NavItem';
+import NavItemLogout from './NavItemLogout';
 
 const NavMenu = ({ sideBarOpen, closeSideBar }) => {
 
@@ -29,7 +30,7 @@ const NavMenu = ({ sideBarOpen, closeSideBar }) => {
                 <NavItem path="/discharge" label="Discharge" />
                 <NavItem path="/history" label="History" />
                 <NavItem path="/settings" label="Settings" />
-                <NavItem path="/logout" label="Logout" />
+                <NavItemLogout label="Logout" />
             </nav>
         </motion.div>
     );

@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.scss';
-import DeckMap from './modules/deckMap/DeckMap';
-import { parseLoadPlan } from './shared/functions/loadPlanParser';
-import loadPlans from './assets/data/LoadPlans.dat';
-import Header from './modules/header/Header';
-import { useDispatch } from 'react-redux';
-import appActions from './store/actions/appActions'
-import Loader from './shared/components/loader/Loader';
-import LoginScreen from './modules/loginScreen/LoginScreen';
-import { getMockCargo } from './api';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import "./App.scss";
+import DeckMap from "./modules/deckMap/DeckMap";
+import { parseLoadPlan } from "./shared/functions/loadPlanParser";
+import loadPlans from "./assets/data/LoadPlans.dat";
+import Header from "./modules/header/Header";
+import { useDispatch, useSelector } from "react-redux";
+import appActions from "./store/actions/appActions";
+import Loader from "./shared/components/loader/Loader";
+import LoginScreen from "./modules/loginScreen/LoginScreen";
+import PrivateRoute from "./PrivateRoute";
+import { getMockCargo } from './api/endpoints';
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -17,6 +18,7 @@ const App = () => {
 
   useEffect(() => {
     parseLoadPlan(loadPlans).then(res => {
+
       //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
       res.unshift({ deck: "Lower Hold", lanes: [], grids: [] },
         { deck: "Main Deck", lanes: [], grids: [] },
@@ -51,28 +53,28 @@ const App = () => {
           <Route path="/login" exact>
             <LoginScreen />
           </Route>
-          <Route path="/loading" >
+          <Route path="/loading">
             <DeckMap />
           </Route>
-          <Route path="/overview" >
-            <div>Overview</div>
-          </Route>
-          <Route path="/discharge" >
+          <PrivateRoute path="/overview">
+            <h1>Protected overview</h1>
+          </PrivateRoute>
+          <Route path="/discharge">
             <div>Discharge</div>
           </Route>
-          <Route path="/history" >
+          <Route path="/history">
             <div>History</div>
           </Route>
-          <Route path="/settings" >
+          <Route path="/settings">
             <div>Settings</div>
           </Route>
-          <Route path="/logout" >
+          <Route path="/logout">
             <div>Logout</div>
           </Route>
         </Switch>
       </div>
     </Router>
   );
-}
+};
 
 export default App;
