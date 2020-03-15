@@ -1,5 +1,4 @@
-@import "../../../shared/styles/layouts.scss";
-@import "../../../shared/styles/colors.scss";
+@import "../../../shared/styles/main.scss";
 
 .CargoDetails {
     @include flexRow();
@@ -24,8 +23,6 @@
         margin: 0vh 0.5vw;
         box-sizing: border-box;
         min-width: 6vw;
-      }
-      .Label {
       }
       .Value {
         font-family: FoundrySterlingMedium;
