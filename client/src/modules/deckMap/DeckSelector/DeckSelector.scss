@@ -1,0 +1,17 @@
+@import "../../../shared/styles/layouts.scss";
+@import "../../../shared/styles/colors.scss";
+
+.DeckSelector {
+    @include flexRow();
+    margin: 2vh 2vw;
+    height: min-content;
+    .DeckSelectorItem {
+      font-size: 2vw;
+      cursor: pointer;
+    }
+    .Selected {
+      background-color: $primaryBlue;
+      color: white;
+      box-shadow: 0px 0px 0px;
+    }
+  }

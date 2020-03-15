@@ -2,6 +2,7 @@ import React from 'react';
 import Card from './../../../shared/components/card/Card';
 import CargoDetailItem from './CargoDetailItem';
 import Collapsible from '../../../shared/components/collapsible/Collapsible';
+import './CargoDetails.scss'
 
 const CargoDetails = ({ currentCargo }) => {
     const { registrationNumber, length, width, height, weight } = currentCargo;
