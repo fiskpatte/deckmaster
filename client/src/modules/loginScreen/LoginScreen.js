@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import BlueBackground from '../../shared/components/blueBackground/BlueBackground'
 import {login} from  '../../api/endpoints'
 import { useHistory } from 'react-router-dom';
+import InputContainer from './InputContainer';
 
 export default function LoginScreen() {
     const [username, setUsername] = useState('Pontus2');
@@ -28,13 +29,13 @@ export default function LoginScreen() {
 
     return (
         <BlueBackground>
-            <h1>Login</h1>
-            <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
-            <br></br>
-            <input value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"/>
-            <br></br>
-            <button onClick={onLoginButtonClick}>Log in</button>
-            <h4 style={{color: 'red'}}>{error}</h4>
+            <InputContainer 
+                username={username}
+                setUsername={setUsername}
+                password ={password}
+                setPassword ={setPassword}
+                onLoginButtonClick ={onLoginButtonClick}
+                error={error} />
         </BlueBackground>
     )
 }
