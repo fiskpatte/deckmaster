@@ -1,7 +1,10 @@
 import React from 'react';
 import './Loader.scss'
 
-const Loader = ({ content = "" }) => {
+interface Props {
+    content?: string
+}
+const Loader: React.FC<Props> = ({ content }) => {
     return (
         <>
             <div className="Loader" >

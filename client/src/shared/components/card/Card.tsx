@@ -1,12 +1,12 @@
 import React from 'react';
 import './Card.scss';
 
-const Card = ({ children, className, ...rest }) => {
+interface Props {
+    children: React.ReactNode,
+    className?: string,
+}
+const Card: React.FC<Props> = ({ children, className = "", ...rest }) => {
 
-    if(!children) return null;
-
-    className = className ? className : "";
-    
     return (
         <div className={`Card ${className}`} {...rest}>
             {children}

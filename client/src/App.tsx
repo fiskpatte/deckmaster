@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
-import DeckMap from "./modules/deckMap/DeckMap";
+import DeckMapContainer from "./modules/deckMap/DeckMap.container";
 import { parseLoadPlan } from "./shared/functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
 import Header from "./modules/header/Header";
@@ -12,7 +12,7 @@ import LoginScreen from "./modules/loginScreen/LoginScreen";
 import PrivateRoute from "./PrivateRoute";
 import { getMockCargo } from './api/endpoints';
 
-const App = () => {
+const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
@@ -54,7 +54,7 @@ const App = () => {
             <LoginScreen />
           </Route>
           <Route path="/loading">
-            <DeckMap />
+            <DeckMapContainer />
           </Route>
           <PrivateRoute path="/overview">
             <h1>Protected overview</h1>

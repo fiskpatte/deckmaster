@@ -3,7 +3,10 @@ import { ReactComponent as ArrowDownIcon } from '../../../assets/icons/arrowDown
 import './Collapsible.scss';
 import { motion } from 'framer-motion';
 
-const Collapsible = ({ children }) => {
+interface Props {
+    children: React.ReactNode
+}
+const Collapsible: React.FC<Props> = ({ children }) => {
     const [isCollapsed, setIsCollapsed] = useState(true);
 
     const contentVariants = {
@@ -28,4 +31,4 @@ const Collapsible = ({ children }) => {
     );
 }
 
-export default Collapsible
+export default Collapsible;

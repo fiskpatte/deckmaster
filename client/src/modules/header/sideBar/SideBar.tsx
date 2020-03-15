@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import variables from './SideBar.scss';
 import NavItem from './NavItem';
 import NavItemLogout from './NavItemLogout';
+import { SideBarProps } from './types';
 
-const NavMenu = ({ sideBarOpen, closeSideBar }) => {
+const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
 
     const hiddenWidth = -1 * variables.sideBarWidth.slice(0, -2);
 
@@ -30,10 +31,10 @@ const NavMenu = ({ sideBarOpen, closeSideBar }) => {
                 <NavItem path="/discharge" label="Discharge" />
                 <NavItem path="/history" label="History" />
                 <NavItem path="/settings" label="Settings" />
-                <NavItemLogout label="Logout" />
+                <NavItemLogout path="/login" label="Logout" />
             </nav>
         </motion.div>
     );
 }
 
-export default NavMenu;
+export default SideBar;

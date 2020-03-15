@@ -1,8 +1,10 @@
 import React from 'react';
 import { ReactComponent as MenuIcon } from '../../assets/icons/menuIcon.svg';
 
-const MenuButton = ({ navMenuOpen, onClick }) => {
-
+interface Props {
+    onClick: () => void
+}
+const MenuButton: React.FC<Props> = ({ onClick }) => {
     return (
         <div className="HeaderItem MenuButton" onClick={onClick}>
             <MenuIcon />

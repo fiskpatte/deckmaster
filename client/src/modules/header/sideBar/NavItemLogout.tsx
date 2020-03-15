@@ -1,15 +1,16 @@
 import React from 'react';
 import { setAuthorizationToken } from '../../../shared/functions/axios';
 import { useHistory } from 'react-router-dom';
+import { NavItemProps } from './types';
 
-const NavItemLogout = ({ label }) => {
+const NavItemLogout: React.FC<NavItemProps> = ({ label, path }) => {
     const history = useHistory();
 
     const logout = () => {
         setAuthorizationToken(null);
-        history.push('/login')
+        history.push(path)
     }
-    
+
     return (
         <div className="NavItem" onClick={logout}>
             {label}

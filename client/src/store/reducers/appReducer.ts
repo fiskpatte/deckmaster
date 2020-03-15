@@ -1,9 +1,13 @@
 import { ACTION_TYPES } from '../../shared/constants'
-const appReducer = (state = {
+import { AppState } from '../types';
+import { emptyCargo, emptyDeck } from './../../types';
+
+const initialState: AppState = {
     deckMap: [],
-    currentDeck: null,
-    currentCargo: {}
-}, action) => {
+    currentDeck: emptyDeck(),
+    currentCargo: emptyCargo()
+}
+const appReducer = (state = initialState, action: any): AppState => {
     switch (action.type) {
         case ACTION_TYPES.SET_DECK_MAP:
             return {

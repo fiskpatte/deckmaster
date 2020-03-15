@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ViewTitle = () => {
+const ViewTitle: React.FC = () => {
     return (
         <div className="HeaderItem ViewTitle">
             Title

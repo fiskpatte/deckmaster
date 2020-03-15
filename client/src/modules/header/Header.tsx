@@ -5,36 +5,36 @@ import ViewTitle from './ViewTitle';
 import DetailsButton from './DetailsButton';
 import NotificationsButton from './NotificationsButton';
 import Logo from './Logo';
-import SideBar from './sideBar/SideBar';
+import SideBarContainer from './sideBar/SideBar.container';
 import { useLocation } from 'react-router-dom';
 
-const Header = () => {
+const Header: React.FC = () => {
     const [sideBarOpen, setSideBarOpen] = useState(false);
     const location = useLocation();
-    const closeSideBar = () =>  setSideBarOpen(false);
-    
+    const closeSideBar = () => setSideBarOpen(false);
+
     useEffect(() => {
         closeSideBar()
     }, [location])
 
-    if(location.pathname.includes('login')){
+    if (location.pathname.includes('login')) {
         return null;
     }
 
     return (
         <>
             <div className="Header">
-                <div style={{ display: "flex" }}>
+                <div className="FlexContainer">
                     <MenuButton onClick={() => setSideBarOpen(true)} />
                     <ViewTitle />
                 </div>
-                <div style={{ display: "flex" }}>
+                <div className="FlexContainer">
                     <DetailsButton />
                     <NotificationsButton />
                     <Logo />
                 </div>
             </div>
-            <SideBar sideBarOpen={sideBarOpen} closeSideBar={closeSideBar} />
+            <SideBarContainer sideBarOpen={sideBarOpen} closeSideBar={closeSideBar} />
         </>
     )
 }
