@@ -1,9 +1,9 @@
 import React from 'react';
 import { DECK_MAP } from '../../../shared/constants';
 import ArrowIcon from './ArrowIcon';
-import { LaneProps } from '../types';
+import { LaneButtonProps } from '../types';
 
-const LaneButton: React.FC<LaneProps> = ({ lane, onClick }) => {
+const LaneButton: React.FC<LaneButtonProps> = ({ lane, onClick }) => {
     const buttonHeight = lane.width * DECK_MAP.LANE_BUTTON_HEIGHT_RATIO;
     const originX = lane.LCG - lane.length / 2 - DECK_MAP.LANE_BUTTON_WIDTH / 2;
     const originY = lane.TCG - buttonHeight / 2;

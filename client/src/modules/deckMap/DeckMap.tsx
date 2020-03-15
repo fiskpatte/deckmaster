@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DECK_MAP } from '../../shared/constants';
-import { arrayMin, arrayMax } from '../../shared/functions/math';
 import Lanes from './Lanes/Lanes';
 import Grids from './Grids/Grids';
 // import { svgPoint } from '../../shared/functions/layout';
 import { DeckMapProps } from './types';
+import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY } from './DeckMap.functions';
 
 const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
-    const [currentPosition, {}] = useState(null);
-    const [initialCoords, {}] = useState(null);
-    const [dragging, {}] = useState(false);
+    const [currentPosition, { }] = useState(null);
+    const [initialCoords, { }] = useState(null);
+    const [dragging, { }] = useState(false);
     const groupRef = useRef(null);
-    const svgRef = useRef(null);
+    const svgRef = useRef<SVGSVGElement>(null);
 
     useEffect(() => {
         // let options = { "passive": false };
@@ -29,25 +29,7 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
             // }
         }
     }, [dragging, initialCoords, currentPosition])
-    const getViewBoxOriginX = () => {
-        return arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2)) * DECK_MAP.X_SCALE - DECK_MAP.X_MARGIN;
-    }
 
-    const getViewBoxOriginY = () => {
-        return arrayMin(currentDeck.lanes.map(lane => lane.TCG - lane.width / 2)) * DECK_MAP.Y_SCALE - DECK_MAP.Y_MARGIN / 2;
-    }
-
-    const getViewBoxSizeX = () => {
-        let xMax = arrayMax(currentDeck.lanes.map(lane => lane.LCG + lane.length / 2));
-        let xMin = arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2));
-        return xMax - xMin + DECK_MAP.X_MARGIN + 2 * DECK_MAP.LANE_BUTTON_WIDTH;
-    }
-
-    const getViewBoxSizeY = () => {
-        let yMax = arrayMax(currentDeck.lanes.map(lane => lane.TCG + lane.width / 2));
-        let yMin = arrayMin(currentDeck.lanes.map(lane => lane.TCG - lane.width / 2));
-        return yMax - yMin + DECK_MAP.Y_MARGIN;
-    }
     // const startDrag = (event) => {
     //     event.preventDefault();
     //     if (event.nativeEvent || (event.touches && event.touches.length === 1)) {
@@ -122,10 +104,10 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
     //     return { x, y };
     // }
     // let groupBoundingRect = groupRef.current && groupRef.current.getBoundingClientRect();
-    let viewBoxSizeX = getViewBoxSizeX();
-    let viewBoxSizeY = getViewBoxSizeY();
-    let viewBoxOriginX = getViewBoxOriginX();
-    let viewBoxOriginY = getViewBoxOriginY();
+    let viewBoxSizeX = getViewBoxSizeX(currentDeck);
+    let viewBoxSizeY = getViewBoxSizeY(currentDeck);
+    let viewBoxOriginX = getViewBoxOriginX(currentDeck);
+    let viewBoxOriginY = getViewBoxOriginY(currentDeck);
     return (
         <svg
             className="svgBody"
@@ -141,13 +123,7 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
                 // onMouseOut={ev => cancelDrag(ev)}
                 // onMouseUp={ev => stopDrag(ev)}
                 ref={groupRef}>
-                {/* <rect
-                className="BoundingBox"
-                x={viewBoxOriginX / DECK_MAP.X_SCALE + DECK_MAP.X_MARGIN / 2}
-                y={viewBoxOriginY / DECK_MAP.Y_SCALE}
-                width={viewBoxSizeX - DECK_MAP.X_MARGIN}
-                height={viewBoxSizeY} /> */}
-                <Lanes lanes={currentDeck.lanes} />
+                <Lanes lanes={currentDeck.lanes} svgRef={svgRef} rightOrigin={viewBoxSizeX + viewBoxOriginX} />
                 <Grids grids={currentDeck.grids} />
                 {currentPosition ?
                     <rect

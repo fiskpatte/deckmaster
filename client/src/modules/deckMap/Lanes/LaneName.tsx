@@ -2,8 +2,9 @@ import React, { useRef, useEffect, useState } from 'react';
 import { DECK_MAP } from '../../../shared/constants';
 import { LaneNameProps } from '../types';
 
-const LaneName: React.FC<LaneNameProps> = ({ lane }) => {
-    const originX = lane.LCG + lane.length / 2 + DECK_MAP.X_MARGIN / 2;
+const LaneName: React.FC<LaneNameProps> = ({ lane, rightOrigin }) => {
+    console.log(rightOrigin)
+    const originX = rightOrigin - 3 * DECK_MAP.X_MARGIN / 2;
     const textRef = useRef<SVGTextElement>(null);
     const scaleRef = useRef(1);
     const [scale, setScale] = useState(1);

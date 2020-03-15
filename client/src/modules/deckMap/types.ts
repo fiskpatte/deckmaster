@@ -6,16 +6,27 @@ export interface DeckMapProps {
 }
 
 export interface LanesProps {
-    lanes: Array<Lane>
+    lanes: Array<Lane>,
+    svgRef: React.RefObject<SVGSVGElement>,
+    rightOrigin: number
 }
 
 export interface LaneProps {
+    lane: Lane,
+    svgRef: React.RefObject<SVGSVGElement>,
+    rightOrigin: number
+    onClick: (event: React.MouseEvent<SVGElement>) => void
+}
+
+export interface LaneButtonProps {
     lane: Lane,
     onClick: (event: React.MouseEvent<SVGElement>) => void
 }
 
 export interface LaneNameProps {
-    lane: Lane
+    lane: Lane,
+    rightOrigin: number,
+    svgRef: React.RefObject<SVGSVGElement>
 }
 
 export interface ArrowIconProps {
