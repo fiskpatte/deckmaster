@@ -17,6 +17,10 @@ const Header = () => {
         closeSideBar()
     }, [location])
 
+    if(location.pathname.includes('login')){
+        return null;
+    }
+
     return (
         <>
             <div className="Header">

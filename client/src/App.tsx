@@ -5,7 +5,7 @@ import DeckMap from "./modules/deckMap/DeckMap";
 import { parseLoadPlan } from "./shared/functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
 import Header from "./modules/header/Header";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import appActions from "./store/actions/appActions";
 import Loader from "./shared/components/loader/Loader";
 import LoginScreen from "./modules/loginScreen/LoginScreen";
