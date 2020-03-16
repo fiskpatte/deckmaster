@@ -1,8 +1,8 @@
-@import "../../styles/layouts.scss";
+@import "../../styles/main.scss";
 
 .Loader {
     position: absolute;
-    z-index: $overlayZIndex;
+    z-index: 5;
     top: 50%;
     left: 50%;
     transform: translateX(-100%) translateY(-50%);

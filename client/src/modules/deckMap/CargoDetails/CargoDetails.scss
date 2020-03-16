@@ -5,7 +5,7 @@
     margin: 2vh 2vw;
     font-size: 1.5vw;
     height: min-content;
-    z-index: 5;
+    z-index: $cargoDetailsOverlayZIndex + 1;
     .Card {
       @include flexColumn();
     }
@@ -28,4 +28,8 @@
         font-family: FoundrySterlingMedium;
       }
     }
+  }
+
+  :export {
+    cargoDetailsOverlayZIndex: $cargoDetailsOverlayZIndex;
   }

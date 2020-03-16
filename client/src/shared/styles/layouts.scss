@@ -1,6 +1,7 @@
-$overlayZIndex: 100;
+$sideBarOverlayZIndex: 100;
 $sideBarWidth: 25vw;
 $headerHeight: 10vh;
+$cargoDetailsOverlayZIndex: 50;
 
 @mixin flexRow() {
   display: flex;

@@ -1,11 +1,15 @@
-@import "../../styles/colors.scss";
-@import "../../styles/layouts.scss";
+@import "../../styles/main.scss";
 
 .Overlay {
   position: absolute;
   top: 0;
-  z-index: $overlayZIndex;
+  left: 0;
+  z-index: 5;
   width: 100vw;
   height: 100vh;
   background-color: #333;
+  opacity: 0.7;
+}
+.Transparent {
+  opacity: 0;
 }

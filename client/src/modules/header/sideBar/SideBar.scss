@@ -5,7 +5,7 @@
   top: 0;
   width: $sideBarWidth;
   height: 100vh;
-  z-index: $overlayZIndex + 1;
+  z-index: $sideBarOverlayZIndex + 1;
   background-color: $secondaryBlue;
   color: white;
   .Header {
@@ -38,4 +38,5 @@
 
 :export {
   sideBarWidth: $sideBarWidth;
+  sideBarOverlayZIndex: $sideBarOverlayZIndex;
 }
