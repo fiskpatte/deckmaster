@@ -11,6 +11,7 @@ import Loader from "./shared/components/loader/Loader";
 import LoginScreen from "./modules/loginScreen/LoginScreen";
 import PrivateRoute from "./PrivateRoute";
 import { getMockCargo } from './api/endpoints';
+import EnterCargoScreen from "./modules/enterCargoScreen/EnterCargoScreen";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,9 @@ const App: React.FC = () => {
           <Route path="/login" exact>
             <LoginScreen />
           </Route>
+          <PrivateRoute path="/placecargo">
+            <EnterCargoScreen />
+          </PrivateRoute>
           <Route path="/loading">
             <DeckMapContainer />
           </Route>
