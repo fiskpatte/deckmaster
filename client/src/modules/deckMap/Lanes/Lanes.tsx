@@ -3,7 +3,7 @@ import Lane from './Lane';
 import './Lane.scss'
 import { LanesProps } from '../types';
 
-const Lanes:React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin }) => {
+const Lanes: React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin, onClick }) => {
 
     return (
         <>
@@ -11,7 +11,7 @@ const Lanes:React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin }) => {
                 return (
                     <Lane key={ix}
                         lane={lane}
-                        onClick={(ev) => { ev.stopPropagation(); console.log("lane clicked"); }} 
+                        onClick={onClick}
                         rightOrigin={rightOrigin}
                         svgRef={svgRef} />
                 )

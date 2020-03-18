@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DECK_MAP } from '../../shared/constants';
 import Lanes from './Lanes/Lanes';
 import Grids from './Grids/Grids';
-// import { svgPoint } from '../../shared/functions/layout';
-import { DeckMapProps } from './types';
-import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY } from './DeckMap.functions';
+import { DeckMapProps, Coords } from './types';
+import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY, placeCargoFromEvent } from './DeckMap.functions';
+import CargoIcon from './CargoIcon';
 
 const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
-    const [currentPosition, { }] = useState(null);
+    const [currentPosition, setCurrentPosition] = useState<Coords | null>(null);
     const [initialCoords, { }] = useState(null);
     const [dragging, { }] = useState(false);
     const groupRef = useRef(null);
@@ -82,27 +82,11 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
     //         coords.y > groupBoundingRect.y && coords.y < groupBoundingRect.y + groupBoundingRect.height
     //     );
     // }
-    // const placeCurrentVehicle = (coords) => {
-    //     let center = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y)
-    //     let corner = { x: center.x - currentCargo.length / 2, y: center.y - currentCargo.width / 2 }
-    //     setCurrentPosition(corner)
-    // }
 
-    // const getCoordinates = (event) => {
-    //     let x = 0;
-    //     let y = 0;
-    //     if (event.touches && event.touches.length === 1) {
-    //         let touch = event.touches[0];
-    //         x = touch.clientX;
-    //         y = touch.clientY
-    //     } else if (event.nativeEvent) {
-    //         x = event.nativeEvent.clientX;
-    //         y = event.nativeEvent.clientY;
-    //     } else {
-    //         return null;
-    //     }
-    //     return { x, y };
-    // }
+    const placeCargo = (event: React.MouseEvent | React.TouchEvent) => {
+        placeCargoFromEvent(event, svgRef, currentCargo, setCurrentPosition);
+    }
+
     // let groupBoundingRect = groupRef.current && groupRef.current.getBoundingClientRect();
     let viewBoxSizeX = getViewBoxSizeX(currentDeck);
     let viewBoxSizeY = getViewBoxSizeY(currentDeck);
@@ -117,15 +101,21 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
             <g
                 className="containerGroup"
                 transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
-                // onClick={ev => placeCurrentVehicle(ev)}
+                onClick={ev => placeCargo(ev)}
                 // onMouseDown={ev => startDrag(ev)}
                 // onMouseMove={ev => drag(ev)}
                 // onMouseOut={ev => cancelDrag(ev)}
                 // onMouseUp={ev => stopDrag(ev)}
                 ref={groupRef}>
-                <Lanes lanes={currentDeck.lanes} svgRef={svgRef} rightOrigin={viewBoxSizeX + viewBoxOriginX} />
+                <Lanes lanes={currentDeck.lanes} svgRef={svgRef} rightOrigin={viewBoxSizeX + viewBoxOriginX} onClick={(ev) => placeCargo(ev)} />
                 <Grids grids={currentDeck.grids} />
                 {currentPosition ?
+                    <CargoIcon x={currentPosition.x / DECK_MAP.X_SCALE}
+                        y={currentPosition.y / DECK_MAP.Y_SCALE}
+                        width={currentCargo.length}
+                        height={currentCargo.width} />
+                    : null}
+                {/* {currentPosition ?
                     <rect
                         // x={currentPosition.x / DECK_MAP.X_SCALE}
                         // y={currentPosition.y / DECK_MAP.Y_SCALE}
@@ -134,7 +124,7 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo }) => {
                         fill="green"
                         style={{ pointerEvents: "none" }} /> :
                     null
-                }
+                } */}
             </g>
         </svg>
     );

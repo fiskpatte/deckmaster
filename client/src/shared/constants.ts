@@ -5,6 +5,12 @@ export const PARSER_FIELD_MODE = {
   GRID: 3
 };
 
+export const DECK_MAP_MODE = {
+  OVERVIEW: 1,
+  PLACE_CARGO: 2,
+  DISCHARGE: 3
+}
+
 export const DECK_MAP = {
   X_MARGIN: 8,
   Y_MARGIN: 2,

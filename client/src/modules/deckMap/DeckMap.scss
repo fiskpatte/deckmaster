@@ -24,6 +24,12 @@
       fill: $gray30;
       stroke: none;
     }
+    .CargoIcon{
+      fill:$gray20;
+      stroke-width:1;
+      stroke:$gray20;
+      pointer-events:none;
+    }
   }
 }
 

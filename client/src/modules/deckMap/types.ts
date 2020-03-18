@@ -8,7 +8,8 @@ export interface DeckMapProps {
 export interface LanesProps {
     lanes: Array<Lane>,
     svgRef: React.RefObject<SVGSVGElement>,
-    rightOrigin: number
+    rightOrigin: number,
+    onClick: (event: React.MouseEvent | React.TouchEvent) => void
 }
 
 export interface LaneProps {
@@ -30,6 +31,13 @@ export interface LaneNameProps {
 }
 
 export interface ArrowIconProps {
+    x: number,
+    y: number,
+    height: number,
+    width: number
+}
+
+export interface CargoIconProps {
     x: number,
     y: number,
     height: number,
@@ -69,4 +77,9 @@ export interface DeckSelectorProps {
 export interface DeckSelectorItemProps {
     deck: Deck,
     isCurrent: boolean
+}
+
+export interface Coords {
+    x: number,
+    y: number
 }
