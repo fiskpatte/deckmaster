@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { Size } from './../../types';
+import { Size } from '../types/util';
 
 //Adapts the size of an object based on a reference object.
 const useReferenceScale = (reference: React.RefObject<any>, size: Size) => {

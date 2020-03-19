@@ -5,7 +5,7 @@ import Grids from './Grids/Grids';
 import { DeckMapProps } from './DeckMap.types';
 import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY, placeCargoFromEvent, placeCargoFromSVGCoords } from './DeckMap.functions';
 import CargoIcon from './CargoIcon';
-import { Coords } from './../../types';
+import { Coords } from '../../shared/types/util';
 import { useDispatch } from 'react-redux';
 import { setCurrentPosition } from '../../store/actions/appActions';
 

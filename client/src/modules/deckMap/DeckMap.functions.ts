@@ -1,6 +1,7 @@
 import { arrayMax, arrayMin } from "../../shared/functions/math";
 import { DECK_MAP } from "../../shared/constants";
-import { Deck, Cargo, Coords } from "../../types";
+import { Deck, Cargo } from "../../shared/types/deckMap";
+import { Coords } from '../../shared/types/util';
 
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
     return arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2)) * DECK_MAP.X_SCALE - DECK_MAP.X_MARGIN;

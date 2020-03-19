@@ -1,11 +1,11 @@
 import { ACTION_TYPES } from '../../shared/constants'
 import { AppState } from '../store.types';
-import { emptyCargo, emptyDeck } from './../../types';
+import { cargoFactory, deckFactory } from '../../shared/types/deckMap';
 
 const initialState: AppState = {
     deckMap: [],
-    currentDeck: emptyDeck(),
-    currentCargo: emptyCargo(),
+    currentDeck: deckFactory(),
+    currentCargo: cargoFactory(),
     currentPosition: null
 }
 const appReducer = (state = initialState, action: any): AppState => {

@@ -1,5 +1,6 @@
 import { ACTION_TYPES } from '../../shared/constants'
-import { Cargo, Deck, Coords } from '../../types';
+import { Cargo, Deck } from '../../shared/types/deckMap';
+import { Coords } from '../../shared/types/util';
 
 export const setCurrentCargo = (cargo: Cargo) => {
     return {

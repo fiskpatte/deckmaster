@@ -1,5 +1,5 @@
 import { PARSER_FIELD_MODE } from '../constants';
-import { Deck, Lane } from '../../types';
+import { Deck, Lane } from '../types/deckMap';
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
 

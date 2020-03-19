@@ -1,4 +1,5 @@
-import { Deck, Cargo, Grid, Lane, Coords } from '../../types';
+import {Cargo, Deck, Lane, Grid } from '../../shared/types/deckMap';
+import { Coords } from '../../shared/types/util';
 
 export interface DeckMapProps {
     currentDeck: Deck,
