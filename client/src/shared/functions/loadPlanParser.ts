@@ -3,28 +3,20 @@ import { Deck, Lane } from '../types/deckMap';
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
 
-export const parseLoadPlan = async (file: any) => {
-    let rawFile = new XMLHttpRequest();
+export const parseLoadPlan = async (file: string) => {
     let data: Array<Deck> = [];
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = () => {
-        if (rawFile.readyState === 4) {
-            if (rawFile.status === 200 || rawFile.status === 0) {
-                let allText = rawFile.responseText;
-                let allTextByRows = allText.split("\r\n");
-                let allTextSplitted = allTextByRows.map(r => r.split("\t"));
-                let switched = false;
-                for (let index = 0; index < allTextSplitted.length; index++) {
-                    let element = allTextSplitted[index];
-                    if (!element[0]) continue;
-                    switched = setFieldMode(element[0].toLowerCase())
-                    if (switched) continue;
-                    setData(data, element);
-                }
-            }
+    await fetch(file).then(response => response.text()).then(allText => {
+        const allTextByRows = allText.split(/\r?\n/);
+        const allTextSplitted = allTextByRows.map(r => r.split("\t"));
+        let switched = false;
+        for (let index = 0; index < allTextSplitted.length; index++) {
+            let element = allTextSplitted[index];
+            if (!element[0]) continue;
+            switched = setFieldMode(element[0].toLowerCase())
+            if (switched) continue;
+            setData(data, element);
         }
-    };
-    rawFile.send(null);
+    })
     return data;
 }
 

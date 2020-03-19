@@ -18,23 +18,18 @@ const App: React.FC = () => {
 
   useEffect(() => {
     parseLoadPlan(loadPlans).then(res => {
-
       //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
       res.unshift({ deck: "Lower Hold", lanes: [], grids: [] },
         { deck: "Main Deck", lanes: [], grids: [] },
         { deck: "Upper Deck", lanes: [], grids: [] })
       dispatch(appActions.setDeckMap(res));
-      dispatch(appActions.setCurrentDeck(res[0]));
+      dispatch(appActions.setCurrentDeck(res[3]));
       getMockCargo().then(res => {
         dispatch(appActions.setCurrentCargo(res));
         setLoading(false);
       })
-      //
     });
-    // NOT NEEDED FOR NOW
-    // window.document.body.addEventListener('touchstart', (e) => e.preventDefault(), { "passive": false });
-    // return () => window.document.body.removeEventListener('touchstart', (e) => e.preventDefault(), { "passive": false });
-  }, []);
+  });
 
   if (loading) {
     return (
