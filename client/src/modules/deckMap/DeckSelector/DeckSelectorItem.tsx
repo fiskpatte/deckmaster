@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentDeck } from '../../../store/actions/appActions';
 import Card from '../../../shared/components/card/Card';
-import { DeckSelectorItemProps } from '../types';
+import { DeckSelectorItemProps } from '../DeckMap.types';
 
 const DeckSelectorItem: React.FC<DeckSelectorItemProps> = ({ deck, isCurrent }) => {
     const dispatch = useDispatch();

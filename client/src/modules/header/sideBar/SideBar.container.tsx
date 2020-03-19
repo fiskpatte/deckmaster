@@ -1,7 +1,7 @@
 import React from 'react';
 import Overlay from '../../../shared/components/overlay/Overlay';
 import SideBar from './SideBar';
-import { SideBarProps } from './types';
+import { SideBarProps } from './SideBar.types';
 import variables from './SideBar.scss';
 
 const SideBarContainer: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {

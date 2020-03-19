@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as MenuIcon } from '../../assets/icons/menuIcon.svg';
+import { ReactComponent as MenuIcon } from '../../../assets/icons/menuIcon.svg';
 
 interface Props {
     onClick: () => void

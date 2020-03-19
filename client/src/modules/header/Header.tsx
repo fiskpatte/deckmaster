@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './Header.scss'
-import MenuButton from './MenuButton';
-import ViewTitle from './ViewTitle';
-import DetailsButton from './DetailsButton';
-import NotificationsButton from './NotificationsButton';
-import Logo from './Logo';
+import MenuButton from './components/MenuButton';
+import ViewTitle from './components/ViewTitle';
+import DetailsButton from './components/DetailsButton';
+import NotificationsButton from './components/NotificationsButton';
+import Logo from './components/Logo';
 import SideBarContainer from './sideBar/SideBar.container';
 import { useLocation } from 'react-router-dom';
 

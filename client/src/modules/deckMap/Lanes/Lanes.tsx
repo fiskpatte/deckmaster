@@ -1,9 +1,9 @@
 import React from 'react';
 import Lane from './Lane';
 import './Lane.scss'
-import { LanesProps } from '../types';
+import { LanesProps } from '../DeckMap.types';
 
-const Lanes: React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin, onClick }) => {
+const Lanes: React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin, onClick, onButtonClick }) => {
 
     return (
         <>
@@ -12,6 +12,7 @@ const Lanes: React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin, onClick }) =>
                     <Lane key={ix}
                         lane={lane}
                         onClick={onClick}
+                        onButtonClick={onButtonClick}
                         rightOrigin={rightOrigin}
                         svgRef={svgRef} />
                 )

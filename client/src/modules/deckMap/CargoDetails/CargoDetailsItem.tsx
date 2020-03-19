@@ -1,5 +1,5 @@
 import React from 'react';
-import { CargoDetailsItemProps } from '../types';
+import { CargoDetailsItemProps } from '../DeckMap.types';
 
 const CargoDetailsItem: React.FC<CargoDetailsItemProps> = ({ label, value }) => {
     return (

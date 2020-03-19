@@ -4,7 +4,7 @@ import CargoDetailItem from './CargoDetailsItem';
 import Collapsible from '../../../shared/components/collapsible/Collapsible';
 import './CargoDetails.scss';
 import variables from './CargoDetails.scss';
-import { CargoDetailsProps } from '../types';
+import { CargoDetailsProps } from '../DeckMap.types';
 import Overlay from './../../../shared/components/overlay/Overlay';
 
 const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {

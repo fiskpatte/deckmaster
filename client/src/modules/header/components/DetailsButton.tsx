@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as DetailsIcon } from '../../assets/icons/detailsIcon.svg';
+import { ReactComponent as DetailsIcon } from '../../../assets/icons/detailsIcon.svg';
 
 const DetailsButton: React.FC = () => {
     return (

@@ -2,9 +2,9 @@ import React from 'react';
 import { ReactComponent as CloseMenuIcon } from '../../../assets/icons/closeMenuIcon.svg';
 import { motion } from 'framer-motion';
 import variables from './SideBar.scss';
-import NavItem from './NavItem';
-import NavItemLogout from './NavItemLogout';
-import { SideBarProps } from './types';
+import NavItem from './navItem/NavItem';
+import NavItemLogout from './navItem/NavItemLogout';
+import { SideBarProps } from './SideBar.types';
 
 const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
 

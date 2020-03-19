@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import appActions from "./store/actions/appActions";
 import Loader from "./shared/components/loader/Loader";
 import LoginScreen from "./modules/loginScreen/LoginScreen";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./shared/components/PrivateRoute";
 import { getMockCargo } from './api/endpoints';
 
 const App: React.FC = () => {

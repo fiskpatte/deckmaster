@@ -5,11 +5,11 @@
   background-color: $backgroundGray;
   .Header {
     border: 0;
-    height: auto;        
+    height: auto;
   }
   .svgBody {
     width: 100%;
-    height: 65%;
+    height: 50%;
     .containerGroup {
       fill: white;
       stroke: black;
@@ -24,12 +24,15 @@
       fill: $gray30;
       stroke: none;
     }
-    .CargoIcon{
-      fill:$gray20;
-      stroke-width:1;
-      stroke:$gray20;
-      pointer-events:none;
+    .CargoIcon {
+      fill: $successGreen;
+      stroke-width: 1;
+      stroke: $gray20;
+      pointer-events: none;
     }
+  }
+  .Footer {
+    @include flexCenter();
   }
 }
 
@@ -39,4 +42,9 @@
 
 .Shadow {
   filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+}
+
+.Placed {
+  pointer-events: auto;
+  fill: $gray20;
 }

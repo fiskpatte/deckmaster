@@ -1,22 +1,25 @@
-import { Deck, Cargo, Grid, Lane } from './../../types';
+import { Deck, Cargo, Grid, Lane, Coords } from '../../types';
 
 export interface DeckMapProps {
     currentDeck: Deck,
-    currentCargo: Cargo
+    currentCargo: Cargo,
+    currentPosition: Coords|null
 }
 
 export interface LanesProps {
     lanes: Array<Lane>,
     svgRef: React.RefObject<SVGSVGElement>,
     rightOrigin: number,
-    onClick: (event: React.MouseEvent | React.TouchEvent) => void
+    onClick: (event: React.MouseEvent | React.TouchEvent) => void,
+    onButtonClick: (position: Coords) => void
 }
 
 export interface LaneProps {
     lane: Lane,
     svgRef: React.RefObject<SVGSVGElement>,
     rightOrigin: number
-    onClick: (event: React.MouseEvent<SVGElement>) => void
+    onClick: (event: React.MouseEvent<SVGElement>) => void,
+    onButtonClick: (position: Coords) => void
 }
 
 export interface LaneButtonProps {
@@ -41,17 +44,19 @@ export interface CargoIconProps {
     x: number,
     y: number,
     height: number,
-    width: number
+    width: number,
+    placed?: boolean
 }
 
 export interface GridsProps {
-    grids: Array<Grid>
+    grids: Array<Grid>,
+    onClick: (position: Coords) => void
 }
 
 export interface GridProps {
     grid: Grid,
     visible: boolean,
-    onClick: (event: React.MouseEvent<SVGElement>) => void
+    onClick: (position: Coords) => void
 }
 
 export interface GridItemProps {
@@ -77,9 +82,4 @@ export interface DeckSelectorProps {
 export interface DeckSelectorItemProps {
     deck: Deck,
     isCurrent: boolean
-}
-
-export interface Coords {
-    x: number,
-    y: number
 }

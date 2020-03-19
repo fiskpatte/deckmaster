@@ -1,6 +1,6 @@
 import React from 'react';
 import { DECK_MAP } from '../../../shared/constants';
-import { GridItemProps } from '../types';
+import { GridItemProps } from '../DeckMap.types';
 
 const GridItem: React.FC<GridItemProps> = ({ grid, upper, radius, ...rest }) => {
     let cy = 0;

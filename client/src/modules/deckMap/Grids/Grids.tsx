@@ -1,8 +1,8 @@
 import React from 'react';
 import Grid from './Grid';
-import { GridsProps } from '../types';
+import { GridsProps } from '../DeckMap.types';
 
-const Grids: React.FC<GridsProps> = ({ grids }) => {
+const Grids: React.FC<GridsProps> = ({ grids,onClick }) => {
 
     return (
         <>
@@ -11,7 +11,7 @@ const Grids: React.FC<GridsProps> = ({ grids }) => {
                     return (
                         <Grid grid={grid}
                             visible={true}
-                            onClick={(ev) => { ev.stopPropagation(); console.log("Grid click"); }}
+                            onClick={onClick}
                             key={ix} />
                     )
                 })

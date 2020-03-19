@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
-import { isLoggedIn } from "./shared/functions/auth";
+import { isLoggedIn } from "../functions/auth";
 
 interface PrivateRouteProps {
   children: React.ReactNode,

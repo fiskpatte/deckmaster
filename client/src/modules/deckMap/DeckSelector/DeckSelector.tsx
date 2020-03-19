@@ -1,7 +1,7 @@
 import React from 'react';
 import DeckSelectorItem from './DeckSelectorItem';
 import './DeckSelector.scss'
-import { DeckSelectorProps } from '../types';
+import { DeckSelectorProps } from '../DeckMap.types';
 
 const DeckSelector: React.FC<DeckSelectorProps> = ({ deckMap, currentDeck }) => {
     return (

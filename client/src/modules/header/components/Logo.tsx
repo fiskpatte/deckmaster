@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as DeckmasterLogo } from '../../assets/icons/deckmasterLogo.svg';
+import { ReactComponent as DeckmasterLogo } from '../../../assets/icons/deckmasterLogo.svg';
 
 const Logo: React.FC = () => {
     return (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { NavItemProps } from './types';
+import { NavItemProps } from '../SideBar.types';
 
 const NavItem: React.FC<NavItemProps> = ({ label, path }) => {
     return (

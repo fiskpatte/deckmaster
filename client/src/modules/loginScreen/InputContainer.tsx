@@ -1,6 +1,6 @@
 import React from 'react';
 import './LoginScreen.scss';
-import Logo from '../header/Logo';
+import { ReactComponent as DeckmasterLogo } from '../../assets/icons/deckmasterLogo.svg';
 
 interface Props {
     username: string,
@@ -16,7 +16,7 @@ const InputContainer: React.FC<Props> = ({ username, setUsername, password, setP
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
 
                 <div></div>
-                <Logo />
+                <DeckmasterLogo />
             </div>
             <div>
                 <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />

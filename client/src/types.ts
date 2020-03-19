@@ -1,3 +1,7 @@
+export interface Size {
+    width: number,
+    height: number
+}
 export interface Deck {
     deck: string,
     lanes: Array<Lane>,
@@ -23,6 +27,11 @@ export interface Cargo extends DeckMapElement {
     registrationNumber: string,
     height: number,
     weight: number
+}
+
+export interface Coords {
+    x: number,
+    y: number
 }
 
 export const emptyDeck = (): Deck => ({
