@@ -1,11 +1,10 @@
 import { ACTION_TYPES } from '../../shared/constants'
 import { AppState } from '../types';
-import { emptyCargo, emptyDeck } from './../../types';
+import { emptyDeck } from './../../types';
 
 const initialState: AppState = {
     deckMap: [],
-    currentDeck: emptyDeck(),
-    currentCargo: emptyCargo()
+    currentDeck: emptyDeck()
 }
 const appReducer = (state = initialState, action: any): AppState => {
     switch (action.type) {
@@ -19,11 +18,6 @@ const appReducer = (state = initialState, action: any): AppState => {
                 ...state,
                 currentDeck: action.payload
             };
-        case ACTION_TYPES.SET_CURRENT_CARGO:
-            return {
-                ...state,
-                currentCargo: action.payload
-            }
         default:
             return state;
     }

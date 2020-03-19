@@ -1,6 +1,7 @@
 import React from 'react';
 import './LoginScreen.scss';
 import Logo from '../header/Logo';
+import Paper from '../../shared/components/paper/Paper';
 
 interface Props {
     username: string,
@@ -12,13 +13,15 @@ interface Props {
 }
 const InputContainer: React.FC<Props> = ({ username, setUsername, password, setPassword, onLoginButtonClick, error }) => {
     return (
-        <div className="InputContainer">
+        <Paper>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
 
-                <div></div>
+                <div>
+                    
+                </div>
                 <Logo />
             </div>
-            <div>
+                <div>
                 <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
                 <br></br>
                 <input value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
@@ -26,8 +29,8 @@ const InputContainer: React.FC<Props> = ({ username, setUsername, password, setP
                 <button onClick={onLoginButtonClick}>Log in</button>
                 <h4 style={{ color: 'red' }}>{error}</h4>
             </div>
+        </Paper>
 
-        </div>
     )
 }
 export default InputContainer;

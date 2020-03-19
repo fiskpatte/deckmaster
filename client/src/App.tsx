@@ -12,6 +12,7 @@ import LoginScreen from "./modules/loginScreen/LoginScreen";
 import PrivateRoute from "./PrivateRoute";
 import { getMockCargo } from './api/endpoints';
 import EnterCargoScreen from "./modules/enterCargoScreen/EnterCargoScreen";
+import cargoActions from "./store/actions/cargoActions";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ const App: React.FC = () => {
       dispatch(appActions.setDeckMap(res));
       dispatch(appActions.setCurrentDeck(res[0]));
       getMockCargo().then(res => {
-        dispatch(appActions.setCurrentCargo(res));
+        dispatch(cargoActions.setCurrentCargo(res));
         setLoading(false);
       })
       //

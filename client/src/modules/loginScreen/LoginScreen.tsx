@@ -11,6 +11,7 @@ const LoginScreen: React.FC = () => {
     const history = useHistory();
 
     const onLoginButtonClick = async () => {
+        console.log("sads")
         if (!username || !password) {
             return;
         }
@@ -20,6 +21,7 @@ const LoginScreen: React.FC = () => {
         }
 
         try {
+            console.log("sad")
             await login(username, password);
             history.push("/placecargo");
         } catch (error) {

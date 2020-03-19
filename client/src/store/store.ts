@@ -1,8 +1,10 @@
 import { createStore, combineReducers } from "redux";
 import appReducer from './reducers/appReducer';
+import cargoReducer from './reducers/cargoReducer';
 
 const rootReducer = combineReducers({
-    appReducer
+    appReducer,
+    cargoReducer
 });
 export type RootState = ReturnType<typeof rootReducer>
 
