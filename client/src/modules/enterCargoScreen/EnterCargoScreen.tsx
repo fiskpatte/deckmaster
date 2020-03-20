@@ -16,6 +16,7 @@ export default function EnterCargoScreen() {
             if(error){
                 setError('');
             }
+            console.log(input);
             const cargo = await getMockCargo()
             console.log("cargo: ", cargo)
             setCurrentCargo(cargo);

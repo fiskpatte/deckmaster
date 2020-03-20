@@ -4,7 +4,7 @@ import Paper from '../../shared/components/paper/Paper'
 import ErrorMessage from '../../shared/components/errorMessage/ErrorMessage';
 
 export default function EnterCargoScreen() {
-    const [input, setInput] = useState('');
+    // const [input, setInput] = useState('');
     const [error] = useState('');
 
     const onNextButtonClick = async () => {
