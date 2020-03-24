@@ -5,6 +5,7 @@
   height: $headerHeight;
   border-bottom: 1px solid $gray80;
   justify-content: space-between;
+  z-index: 10;
   .HeaderItem {
     height: 100%;
     box-sizing: border-box;

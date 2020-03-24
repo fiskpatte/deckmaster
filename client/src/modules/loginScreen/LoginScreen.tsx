@@ -21,7 +21,7 @@ const LoginScreen: React.FC = () => {
 
         try {
             await login(username, password);
-            history.push("/loading");
+            history.push("/placecargo");
         } catch (error) {
             setError('Login failed');
         }

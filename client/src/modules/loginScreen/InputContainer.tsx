@@ -1,6 +1,7 @@
 import React from 'react';
 import './LoginScreen.scss';
 import { ReactComponent as DeckmasterLogo } from '../../assets/icons/deckmasterLogo.svg';
+import Paper from '../../shared/components/paper';
 
 interface Props {
     username: string,
@@ -12,9 +13,8 @@ interface Props {
 }
 const InputContainer: React.FC<Props> = ({ username, setUsername, password, setPassword, onLoginButtonClick, error }) => {
     return (
-        <div className="InputContainer">
+        <Paper>
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-
                 <div></div>
                 <DeckmasterLogo />
             </div>
@@ -27,7 +27,7 @@ const InputContainer: React.FC<Props> = ({ username, setUsername, password, setP
                 <h4 style={{ color: 'red' }}>{error}</h4>
             </div>
 
-        </div>
+            </Paper>
     )
 }
 export default InputContainer;
