@@ -11,6 +11,8 @@ import Loader from "./shared/components/loader/Loader";
 import LoginScreen from "./modules/loginScreen/LoginScreen";
 import PrivateRoute from "./shared/components/PrivateRoute";
 import { getMockCargo } from './api/endpoints';
+import EnterCargoScreen from "./modules/enterCargoScreen";
+import cargoActions from "./store/actions/cargoActions";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -24,8 +26,8 @@ const App: React.FC = () => {
         { deck: "Upper Deck", lanes: [], grids: [] })
       dispatch(appActions.setDeckMap(res));
       dispatch(appActions.setCurrentDeck(res[3]));
-      getMockCargo().then(res => {
-        dispatch(appActions.setCurrentCargo(res));
+      getMockCargo().then(cargo => {
+        dispatch(cargoActions.setCurrentCargo(cargo));
         setLoading(false);
       })
     });
@@ -48,6 +50,9 @@ const App: React.FC = () => {
           <Route path="/login" exact>
             <LoginScreen />
           </Route>
+          <PrivateRoute path="/placecargo">
+            <EnterCargoScreen />
+          </PrivateRoute>
           <Route path="/loading">
             <DeckMapContainer />
           </Route>

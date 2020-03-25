@@ -7,7 +7,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store'
 
 const DeckMapContainer: React.FC = () => {
-    const { currentDeck, currentCargo, deckMap, currentPosition } = useSelector((state: RootState) => state.appReducer)
+    const { currentDeck, deckMap, currentPosition } = useSelector((state: RootState) => state.appReducer)
+    const {currentCargo} = useSelector((state: RootState) => state.cargoReducer)
     const headerRef = useRef<HTMLDivElement>(null);
     const [headerFixedHeight, setHeaderFixedHeight] = useState("auto");
     useEffect(() => {

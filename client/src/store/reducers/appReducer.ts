@@ -1,11 +1,10 @@
 import { ACTION_TYPES } from '../../shared/constants'
 import { AppState } from '../store.types';
-import { cargoFactory, deckFactory } from '../../shared/types/deckMap';
+import { deckFactory } from '../../shared/types/deckMap';
 
 const initialState: AppState = {
     deckMap: [],
     currentDeck: deckFactory(),
-    currentCargo: cargoFactory(),
     currentPosition: null
 }
 const appReducer = (state = initialState, action: any): AppState => {
@@ -20,11 +19,6 @@ const appReducer = (state = initialState, action: any): AppState => {
                 ...state,
                 currentDeck: action.payload
             };
-        case ACTION_TYPES.SET_CURRENT_CARGO:
-            return {
-                ...state,
-                currentCargo: action.payload
-            }
         case ACTION_TYPES.SET_CURRENT_POSITION:
             return {
                 ...state,

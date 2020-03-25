@@ -3,6 +3,9 @@ import { Coords } from '../shared/types/util';
 export interface AppState {
     deckMap: Array<Deck>,
     currentDeck: Deck,
-    currentCargo: Cargo,
     currentPosition: Coords | null
+}
+
+export interface CargoState {
+    currentCargo: Cargo
 }

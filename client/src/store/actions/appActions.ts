@@ -1,13 +1,6 @@
 import { ACTION_TYPES } from '../../shared/constants'
-import { Cargo, Deck } from '../../shared/types/deckMap';
+import {  Deck } from '../../shared/types/deckMap';
 import { Coords } from '../../shared/types/util';
-
-export const setCurrentCargo = (cargo: Cargo) => {
-    return {
-        type: ACTION_TYPES.SET_CURRENT_CARGO,
-        payload: cargo
-    }
-};
 
 export const setDeckMap = (deckMap: Array<Deck>) => {
     return {
@@ -31,7 +24,6 @@ export const setCurrentPosition = (position: Coords | null) => {
 }
 
 const appActions = {
-    setCurrentCargo,
     setCurrentDeck,
     setDeckMap,
     setCurrentPosition
