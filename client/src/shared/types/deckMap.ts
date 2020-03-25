@@ -30,7 +30,8 @@ const deckMapElementFactory = (): DeckMapElement => {
 
 export interface Lane extends DeckMapElement {
     name: string,
-    partial: boolean
+    partial: boolean,
+    grids: Array<Grid>
 }
 
 export const laneFactory = (): Lane => {

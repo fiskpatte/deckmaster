@@ -1,5 +1,5 @@
 import { PARSER_FIELD_MODE } from '../constants';
-import { Deck, Lane } from '../types/deckMap';
+import { Deck, Lane, Grid } from '../types/deckMap';
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
 
@@ -17,6 +17,7 @@ export const parseLoadPlan = async (file: string) => {
             setData(data, element);
         }
     })
+    console.log(data)
     return data;
 }
 
@@ -53,10 +54,11 @@ const setData = (data: Array<Deck>, dataElement: string[]) => {
             };
             let lastData = data[data.length - 1];
             if (fieldMode === PARSER_FIELD_MODE.LANE) {
-                let lane = { ...newElem, partial: false }
+                let lane = { ...newElem, partial: false, grids: [] } as Lane
                 handlePartialLanes(lastData, lane);
                 lastData.lanes.push(lane);
             } else {
+                assignLane(lastData.lanes, newElem as Grid);
                 lastData.grids.push(newElem);
             }
             break;
@@ -66,7 +68,7 @@ const setData = (data: Array<Deck>, dataElement: string[]) => {
 }
 
 const handlePartialLanes = (lastData: Deck, newElem: Lane) => {
-    if (fieldMode === PARSER_FIELD_MODE.LANE && lastData.lanes.some(l => l.name === newElem.name)) {
+    if (lastData.lanes.some(l => l.name === newElem.name)) {
         let updated = lastData.lanes.reduce((r, l) => {
             if (l.name === newElem.name && l.LCG < newElem.LCG) {
                 l.partial = true;
@@ -76,4 +78,17 @@ const handlePartialLanes = (lastData: Deck, newElem: Lane) => {
         }, 0)
         if (updated === 0) newElem.partial = true;
     }
+}
+
+const assignLane = (lanes: Array<Lane>, grid: Grid) => {
+    let laneName = grid.name.substr(0, 4);
+    let possibleLanes = lanes.filter(l => l.name === laneName && grid.LCG > l.LCG - l.length / 2);
+    if (possibleLanes.length === 1) {
+        possibleLanes[0].grids.push(grid);
+        return;
+    }
+    let lane = possibleLanes.reduce((r: Lane | null, l) => {
+        return r?.LCG && r.LCG > l.LCG - l.length / 2 ? r : l;
+    }, null);
+    lane?.grids.push(grid);
 }

@@ -29,7 +29,7 @@ const App: React.FC = () => {
         setLoading(false);
       })
     });
-  });
+  },[dispatch]);
 
   if (loading) {
     return (

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { DECK_MAP } from '../../shared/constants';
 import Lanes from './Lanes/Lanes';
-import Grids from './Grids/Grids';
+// import Grids from './Grids/Grids';
 import { DeckMapProps } from './DeckMap.types';
 import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY, placeCargoFromEvent, placeCargoFromSVGCoords } from './DeckMap.functions';
 import CargoIcon from './CargoIcon';
@@ -37,7 +37,7 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo, currentPos
                 transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
                 onClick={ev => placeCargoFromClick(ev)} >
                 <Lanes lanes={currentDeck.lanes} svgRef={svgRef} rightOrigin={viewBoxSizeX + viewBoxOriginX} onClick={(ev) => placeCargoFromClick(ev)} onButtonClick={(position) => placeCargoFromFrontPosition(position)} />
-                <Grids grids={currentDeck.grids} onClick={(position) => placeCargoFromFrontPosition(position)} />
+                {/* <Grids grids={currentDeck.grids} onClick={(position) => placeCargoFromFrontPosition(position)} /> */}
                 {currentPosition ?
                     <CargoIcon x={currentPosition.x}
                         y={currentPosition.y}
