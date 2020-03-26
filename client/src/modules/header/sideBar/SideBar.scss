@@ -10,8 +10,9 @@
   color: white;
   .Header {
     border: 0;
+    overflow: hidden;
     .MenuTitle {
-      font-size: 4vw;
+      font-size: $titleFont;
     }
   }
   .Body {
@@ -31,7 +32,7 @@
       box-sizing: border-box;
       padding: 2vh 2vw;
       @include flexStart();
-      font-size: 3vw;
+      font-size: $subTitleFont;
     }
   }
 }

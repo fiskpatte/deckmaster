@@ -1,7 +1,12 @@
 $sideBarOverlayZIndex: 100;
-$sideBarWidth: 25vw;
+$sideBarWidth: 25vmax;
 $headerHeight: 10vh;
 $cargoDetailsOverlayZIndex: 50;
+
+$titleFont: calc(32px + 1vw);
+$subTitleFont: calc(22px + 0.7vw);
+$standardFont: calc(20px + 0.4vw);
+$smallFont: calc(12px + 0.3vw);
 
 @mixin flexRow() {
   display: flex;
@@ -11,13 +16,13 @@ $cargoDetailsOverlayZIndex: 50;
   display: flex;
   flex-direction: column;
 }
-@mixin flexCenter(){
-    display:flex;
-    justify-content: center;
-    align-items: center;
+@mixin flexCenter() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-@mixin flexStart(){
-    display:flex;
-    justify-content: flex-start;
-    align-items: center;
+@mixin flexStart() {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
