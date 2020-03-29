@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
-import DeckMapContainer from "./modules/deckMap/DeckMap.container";
+import { DeckMapContainer } from "./modules/deckMap";
 import { parseLoadPlan } from "./shared/functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
-import Header from "./modules/header/Header";
+import {Header} from "./modules/header";
 import { useDispatch } from "react-redux";
 import appActions from "./store/actions/appActions";
 import Loader from "./shared/components/loader/Loader";
@@ -31,7 +31,7 @@ const App: React.FC = () => {
         setLoading(false);
       })
     });
-  },[dispatch]);
+  }, [dispatch]);
 
   if (loading) {
     return (

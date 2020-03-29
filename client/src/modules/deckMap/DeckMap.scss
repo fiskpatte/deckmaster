@@ -1,11 +1,11 @@
 @import "../../shared/styles/main.scss";
 
 .DeckMap {
-  height: 100vh-$headerHeight;
+  height: 100%-$headerHeight;
   background-color: $backgroundGray;
   .Header {
     border: 0;
-    height: auto;
+    height: 20%;
   }
   .svgBody {
     width: 99%;
@@ -34,6 +34,15 @@
   }
   .Footer {
     @include flexCenter();
+    height: 25%;
+    .ConfirmButton{
+      font-size: $standardFont;
+      font-family: FoundrySterlingMedium;
+      cursor: pointer;
+      color: white;
+      background-color: $successGreen;
+      padding: 1vh 2vw;
+    }
   }
 }
 

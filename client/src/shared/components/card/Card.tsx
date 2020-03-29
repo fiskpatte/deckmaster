@@ -6,7 +6,7 @@ interface Props {
     className?: string,
     onClick?: () => void
 }
-const Card: React.FC<Props> = ({ children, className = "", ...rest }) => {
+export const Card: React.FC<Props> = ({ children, className = "", ...rest }) => {
 
     return (
         <div className={`Card ${className}`} {...rest}>

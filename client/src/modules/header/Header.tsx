@@ -5,10 +5,10 @@ import ViewTitle from './components/ViewTitle';
 import DetailsButton from './components/DetailsButton';
 import NotificationsButton from './components/NotificationsButton';
 import Logo from './components/Logo';
-import SideBarContainer from './sideBar/SideBar.container';
+import { SideBarContainer } from './sideBar';
 import { useLocation } from 'react-router-dom';
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
     const [sideBarOpen, setSideBarOpen] = useState(false);
     const location = useLocation();
     const closeSideBar = () => setSideBarOpen(false);
