@@ -4,7 +4,7 @@ import './Loader.scss'
 interface Props {
     content?: string
 }
-const Loader: React.FC<Props> = ({ content }) => {
+export const Loader: React.FC<Props> = ({ content }) => {
     return (
         <>
             <div className="Loader" >

@@ -10,7 +10,7 @@ const DeckSelectorItem: React.FC<DeckSelectorItemProps> = ({ deck, isCurrent }) 
 
     return (
         <Card className={`DeckSelectorItem ${isCurrent ? "Selected" : ""}`} onClick={onClick}>
-            {deck.deck}
+            {deck.name}
         </Card>
     );
 }

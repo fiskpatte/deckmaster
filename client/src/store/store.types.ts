@@ -1,11 +1,11 @@
-import { Deck, Cargo } from '../shared/types/deckMap';
-import { Coords } from '../shared/types/util';
+import { Deck, Cargo, DeckMapType } from '../shared/types/deckMap';
+import { Placement } from '../shared/types/util';
 export interface AppState {
-    deckMap: Array<Deck>,
+    deckMap: DeckMapType,
     currentDeck: Deck,
-    currentPosition: Coords | null
 }
 
 export interface CargoState {
-    currentCargo: Cargo
+    currentCargo: Cargo,
+    currentPlacement: Placement | null
 }

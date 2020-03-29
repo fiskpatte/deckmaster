@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from './Grid';
 import { GridsProps } from '../DeckMap.types';
 
-const Grids: React.FC<GridsProps> = ({ grids,onClick }) => {
+export const Grids: React.FC<GridsProps> = ({ grids,onClick }) => {
 
     return (
         <>

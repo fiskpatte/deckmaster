@@ -1,10 +1,11 @@
 import { PARSER_FIELD_MODE } from '../constants';
-import { Deck, Lane, Grid } from '../types/deckMap';
+import { Deck, Lane, Grid, DeckMapType } from '../types/deckMap';
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
-
+let currentKey = "";
+let count = 1;
 export const parseLoadPlan = async (file: string) => {
-    let data: Array<Deck> = [];
+    let data: DeckMapType = {};
     await fetch(file).then(response => response.text()).then(allText => {
         const allTextByRows = allText.split(/\r?\n/);
         const allTextSplitted = allTextByRows.map(r => r.split("\t"));
@@ -37,14 +38,16 @@ const setFieldMode = (value: string): boolean => {
     }
 }
 
-const setData = (data: Array<Deck>, dataElement: string[]) => {
+const setData = (data: DeckMapType, dataElement: string[]) => {
     switch (fieldMode) {
         case PARSER_FIELD_MODE.DECK_NAME:
-            data.push({ deck: dataElement[0], lanes: [], grids: [] });
+            currentKey = dataElement[0]
+            data[currentKey] = { name: currentKey, lanes: [], grids: [], sortOrder: 4 };
             break;
         case PARSER_FIELD_MODE.LANE:
         case PARSER_FIELD_MODE.GRID:
             let newElem = {
+                id: count,
                 name: dataElement[0].trim().replace("-", ""),
                 length: Number(dataElement[1].replace(",", ".")),
                 width: Number(dataElement[2].replace(",", ".")),
@@ -52,15 +55,16 @@ const setData = (data: Array<Deck>, dataElement: string[]) => {
                 TCG: -Number(dataElement[4].replace(",", ".")),
                 VCG: Number(dataElement[5].replace(",", ".")),
             };
-            let lastData = data[data.length - 1];
+            let lastData = data[currentKey];
             if (fieldMode === PARSER_FIELD_MODE.LANE) {
-                let lane = { ...newElem, partial: false, grids: [] } as Lane
+                let lane = { ...newElem, partial: false, grids: [], cargo: [] } as Lane
                 handlePartialLanes(lastData, lane);
                 lastData.lanes.push(lane);
             } else {
                 assignLane(lastData.lanes, newElem as Grid);
                 lastData.grids.push(newElem);
             }
+            count++;//TODO: Change when we get id data.
             break;
         default:
             break;

@@ -3,11 +3,11 @@ import DeckSelectorItem from './DeckSelectorItem';
 import './DeckSelector.scss'
 import { DeckSelectorProps } from '../DeckMap.types';
 
-const DeckSelector: React.FC<DeckSelectorProps> = ({ deckMap, currentDeck }) => {
+export const DeckSelector: React.FC<DeckSelectorProps> = ({ deckMap, currentDeck }) => {
     return (
         <div className="DeckSelector">
-            {deckMap.map((deck, ix) =>
-                <DeckSelectorItem deck={deck} isCurrent={deck.deck === currentDeck.deck} key={ix} />
+            {Object.keys(deckMap).sort((key1, key2) => deckMap[key1].sortOrder - deckMap[key2].sortOrder).map((key, ix) =>
+                <DeckSelectorItem deck={deckMap[key]} isCurrent={key === currentDeck.name} key={ix} />
             )}
         </div>
     );

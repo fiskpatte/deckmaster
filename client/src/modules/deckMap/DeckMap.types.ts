@@ -1,10 +1,10 @@
-import {Cargo, Deck, Lane, Grid } from '../../shared/types/deckMap';
-import { Coords } from '../../shared/types/util';
+import { Cargo, Deck, Lane, Grid, DeckMapType } from '../../shared/types/deckMap';
+import { Coords, Placement } from '../../shared/types/util';
 
 export interface DeckMapProps {
     currentDeck: Deck,
     currentCargo: Cargo,
-    currentPosition: Coords|null
+    currentPlacement: Placement | null
 }
 
 export interface LanesProps {
@@ -12,7 +12,7 @@ export interface LanesProps {
     svgRef: React.RefObject<SVGSVGElement>,
     rightOrigin: number,
     onClick: (event: React.MouseEvent | React.TouchEvent) => void,
-    onButtonClick: (position: Coords) => void
+    onButtonClick: (position: Coords, laneID: number) => void
 }
 
 export interface LaneProps {
@@ -20,12 +20,13 @@ export interface LaneProps {
     svgRef: React.RefObject<SVGSVGElement>,
     rightOrigin: number
     onClick: (event: React.MouseEvent<SVGElement>) => void,
-    onButtonClick: (position: Coords) => void
+    onButtonClick: (position: Coords, laneID: number) => void
 }
 
 export interface LaneButtonProps {
     lane: Lane,
-    onClick: (event: React.MouseEvent<SVGElement>) => void
+    onClick: (event: React.MouseEvent<SVGElement>) => void,
+    visible: boolean
 }
 
 export interface LaneNameProps {
@@ -76,7 +77,7 @@ export interface CargoDetailsItemProps {
 }
 
 export interface DeckSelectorProps {
-    deckMap: Array<Deck>,
+    deckMap: DeckMapType,
     currentDeck: Deck
 }
 

@@ -6,3 +6,9 @@ export interface Coords {
     x: number,
     y: number
 }
+
+export interface Placement {
+    LCG: number,
+    TCG: number,
+    laneID: number
+}

@@ -7,7 +7,7 @@ import variables from './CargoDetails.scss';
 import { CargoDetailsProps } from '../DeckMap.types';
 import { Overlay } from '../../../shared/components/overlay';
 
-const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
+export const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
     const { registrationNumber, length, width, height, weight } = currentCargo;
     const [isCollapsed, setIsCollapsed] = useState(true);
 

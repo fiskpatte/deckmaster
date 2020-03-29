@@ -3,7 +3,8 @@ import { cargoFactory } from '../../shared/types/deckMap';
 import { CargoState } from '../store.types';
 
 const initialState: CargoState = {
-    currentCargo: cargoFactory()
+    currentCargo: cargoFactory(),
+    currentPlacement: null
 }
 
 const cargoReducer = (state = initialState, action: any): CargoState => {
@@ -13,6 +14,11 @@ const cargoReducer = (state = initialState, action: any): CargoState => {
             return {
                 ...state,
                 currentCargo: action.payload
+            }
+        case ACTION_TYPES.SET_CURRENT_PLACEMENT:
+            return {
+                ...state,
+                currentPlacement: action.payload
             }
         default:
             return state;
