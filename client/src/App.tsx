@@ -13,6 +13,7 @@ import PrivateRoute from "./shared/components/PrivateRoute";
 import { getMockCargo } from './api/endpoints';
 import EnterCargoScreen from "./modules/enterCargoScreen";
 import cargoActions from "./store/actions/cargoActions";
+import ConfirmCargoScreen from "./modules/confirmCargoScreen";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -53,12 +54,12 @@ const App: React.FC = () => {
           <PrivateRoute path="/placecargo">
             <EnterCargoScreen />
           </PrivateRoute>
-          <Route path="/loading">
+          <PrivateRoute path="/confirmcargo">
+            <ConfirmCargoScreen />
+          </PrivateRoute>
+          <Route path="/deckmap">
             <DeckMapContainer />
           </Route>
-          <PrivateRoute path="/overview">
-            <h1>Protected overview</h1>
-          </PrivateRoute>
           <Route path="/discharge">
             <div>Discharge</div>
           </Route>

@@ -26,7 +26,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
                 </div>
             </div>
             <nav className="Body">
-                <NavItem path="/loading" label="Place cargo" />
+                <NavItem path="/placecargo" label="Place cargo" />
                 <NavItem path="/overview" label="Deck overview" />
                 <NavItem path="/discharge" label="Discharge" />
                 <NavItem path="/history" label="History" />

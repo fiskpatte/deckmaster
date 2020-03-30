@@ -15,11 +15,7 @@ export class UsersService {
   async findOne(username: string): Promise<User | undefined> {
     try {
       const user = await this.userModel.findOne({username: username})
-      if(user){
-        return user;
-      } else {
-        return null;
-      }
+      return user;
     } catch(error){
       console.log(error);
       return null;
