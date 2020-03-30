@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { DECK_MAP } from '../../shared/constants';
-import { Lanes } from './Lanes';
+import { Lanes } from './lanes';
 // import Grids from './Grids/Grids';
 import { DeckMapProps } from './DeckMap.types';
 import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY, placeCargoFromSVGCoords } from './DeckMap.functions';
