@@ -1,0 +1,9 @@
+@import "../../../shared/styles/main.scss";
+
+.MenuButton {
+    max-width: 40px;
+    min-width: 23px;
+    width: 8vw;
+    height: 100%;
+    @include flexCenter();
+}

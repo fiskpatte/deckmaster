@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './Header.scss'
-import MenuButton from './components/MenuButton';
-import ViewTitle from './components/ViewTitle';
-import DetailsButton from './components/DetailsButton';
-import NotificationsButton from './components/NotificationsButton';
-import Logo from './components/Logo';
+import { MenuButton } from './menuButton';
+import { ViewTitle } from './viewTitle';
+import { DetailsButton } from './detailsButton';
+import { NotificationsButton } from './notificationsButton';
+import { Logo } from './logo';
 import { SideBarContainer } from './sideBar';
 import { useLocation } from 'react-router-dom';
+import { HeaderItem } from './headerItem';
 
 export const Header: React.FC = () => {
     const [sideBarOpen, setSideBarOpen] = useState(false);
@@ -25,13 +26,23 @@ export const Header: React.FC = () => {
         <>
             <div className="Header">
                 <div className="FlexContainer">
-                    <MenuButton onClick={() => setSideBarOpen(true)} />
-                    <ViewTitle />
+                    <HeaderItem>
+                        <MenuButton onClick={() => setSideBarOpen(true)} />
+                    </HeaderItem>
+                    <HeaderItem>
+                        <ViewTitle />
+                    </HeaderItem>
                 </div>
                 <div className="FlexContainer">
-                    <DetailsButton />
-                    <NotificationsButton />
-                    <Logo />
+                    <HeaderItem>
+                        <DetailsButton />
+                    </HeaderItem>
+                    <HeaderItem>
+                        <NotificationsButton />
+                    </HeaderItem>
+                    <HeaderItem>
+                        <Logo />
+                    </HeaderItem>
                 </div>
             </div>
             <SideBarContainer sideBarOpen={sideBarOpen} closeSideBar={closeSideBar} />

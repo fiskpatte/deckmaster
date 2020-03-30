@@ -12,7 +12,7 @@ export const PlacedCargo: React.FC<Props> = ({ cargo }) => {
         <>
             {cargo.map((c, ix) => {
                 return (
-                    <CargoIcon key={ix} x={c.LCG} y={c.TCG} width={c.length} height={c.width} placed={true} />
+                    <CargoIcon key={ix} x={c.LCG} y={c.TCG} width={c.length} height={c.width} />
                 );
             })}
         </>

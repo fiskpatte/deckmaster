@@ -15,13 +15,13 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo, currentPla
     const svgRef = useRef<SVGSVGElement>(null);
 
     const placeCargoFromClick = (event: React.MouseEvent | React.TouchEvent) => {
-        console.log("lane clicked",event);
+        console.log("lane clicked", event);
         return;
         // placeCargoFromEvent(event, svgRef, currentCargo, setPlacement);
     }
     const placeCargoFromFrontPosition = (position: Coords, laneID: number) => {
-        position.x -= currentCargo.length/2;
-        let newPlacement = {LCG:position.x,TCG:position.y,laneID:laneID} as Placement
+        position.x -= currentCargo.length / 2;
+        let newPlacement = { LCG: position.x, TCG: position.y, laneID: laneID } as Placement
         placeCargoFromSVGCoords(newPlacement, setPlacement);
     }
     let viewBoxSizeX = getViewBoxSizeX(currentDeck);
@@ -44,7 +44,8 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo, currentPla
                     <CargoIcon x={currentPlacement.LCG}
                         y={currentPlacement.TCG}
                         width={currentCargo.length}
-                        height={currentCargo.width} />
+                        height={currentCargo.width}
+                        placing={true} />
                     : null}
             </g>
         </svg>

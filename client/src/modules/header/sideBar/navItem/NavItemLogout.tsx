@@ -1,7 +1,7 @@
 import React from 'react';
 import { setAuthorizationToken } from '../../../../shared/functions/axios';
 import { useHistory } from 'react-router-dom';
-import { NavItemProps } from '../SideBar.types';
+import { NavItemProps } from './types';
 
 const NavItemLogout: React.FC<NavItemProps> = ({ label, path }) => {
     const history = useHistory();

@@ -1,29 +1,34 @@
 import React from 'react';
 import { ReactComponent as CloseMenuIcon } from '../../../assets/icons/closeMenuIcon.svg';
 import { motion } from 'framer-motion';
-import variables from './SideBar.scss';
-import NavItem from './navItem/NavItem';
+import { NavItem } from './navItem';
 import NavItemLogout from './navItem/NavItemLogout';
-import { SideBarProps } from './SideBar.types';
+import { SideBarProps } from './types';
+import { HeaderItem } from '../headerItem';
+import variables from './SideBar.scss';
 
 const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
 
     const hiddenWidth = -1 * variables.sideBarWidth.slice(0, -4);
-
+    
     const variants = {
-        visible: { left: "0vw", transition: { ease: "linear" } },
+        visible: { left: "0px", transition: { ease: "linear" } },
         hidden: { left: `${hiddenWidth}vmax`, transition: { ease: "linear" } }
     };
 
     return (
-        <motion.div className="SideBar" initial={"hidden"} animate={sideBarOpen ? "visible" : "hidden"} variants={variants}>
+        <motion.div className="SideBar" initial={"hidden"} animate={sideBarOpen ? "visible" : "hidden"} variants={variants} >
             <div className="Header">
-                <div className="HeaderItem MenuTitle">
-                    MENU
+                <HeaderItem>
+                    <div className="MenuTitle">
+                        MENU
                     </div>
-                <div className="HeaderItem CloseMenuButton" onClick={closeSideBar}>
-                    <CloseMenuIcon />
-                </div>
+                </HeaderItem>
+                <HeaderItem>
+                    <div className="CloseMenuButton" onClick={closeSideBar}>
+                        <CloseMenuIcon />
+                    </div>
+                </HeaderItem>
             </div>
             <nav className="Body">
                 <NavItem path="/placecargo" label="Place cargo" />

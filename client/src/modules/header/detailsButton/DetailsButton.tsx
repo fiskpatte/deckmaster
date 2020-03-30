@@ -1,9 +1,10 @@
 import React from 'react';
 import { ReactComponent as DetailsIcon } from '../../../assets/icons/detailsIcon.svg';
+import './DetailsButtons.scss';
 
-const DetailsButton: React.FC = () => {
+export const DetailsButton: React.FC = () => {
     return (
-        <div className="HeaderItem DetailsButton">
+        <div className="DetailsButton">
             <DetailsIcon />
         </div>
     )

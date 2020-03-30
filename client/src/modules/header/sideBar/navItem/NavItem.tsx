@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { NavItemProps } from '../SideBar.types';
+import { NavItemProps } from './types';
+import './NavItem.scss';
 
-const NavItem: React.FC<NavItemProps> = ({ label, path }) => {
+export const NavItem: React.FC<NavItemProps> = ({ label, path }) => {
     return (
         <NavLink to={path} >
             <div className="NavItem">

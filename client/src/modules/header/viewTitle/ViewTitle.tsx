@@ -1,8 +1,9 @@
 import React from 'react';
+import './ViewTitle.scss';
 
-const ViewTitle: React.FC = () => {
+export const ViewTitle: React.FC = () => {
     return (
-        <div className="HeaderItem ViewTitle">
+        <div className="ViewTitle">
             Title
         </div>
     )
