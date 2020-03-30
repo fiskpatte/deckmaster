@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import Card from '../../../shared/components/card/Card';
+import { Card } from '../../../shared/components/card';
 import CargoDetailItem from './CargoDetailsItem';
-import Collapsible from '../../../shared/components/collapsible/Collapsible';
+import { Collapsible } from '../../../shared/components/collapsible';
 import './CargoDetails.scss';
 import variables from './CargoDetails.scss';
 import { CargoDetailsProps } from '../DeckMap.types';
-import Overlay from './../../../shared/components/overlay/Overlay';
+import { Overlay } from '../../../shared/components/overlay';
 
-const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
+export const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
     const { registrationNumber, length, width, height, weight } = currentCargo;
     const [isCollapsed, setIsCollapsed] = useState(true);
 

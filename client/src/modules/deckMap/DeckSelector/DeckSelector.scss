@@ -5,7 +5,7 @@
     margin: 2vh 2vw;
     height: min-content;
     .DeckSelectorItem {
-      font-size: 2vw;
+      font-size: $standardFont;
       cursor: pointer;
     }
     .Selected {

@@ -1,16 +1,23 @@
+export interface DeckMapType {
+    [key: string]: Deck;
+}
+
 export interface Deck {
-    deck: string,
+    name: string,
     lanes: Array<Lane>,
-    grids: Array<Grid>
+    grids: Array<Grid>,
+    sortOrder: number
 }
 
 export const deckFactory = (): Deck => ({
-    deck: "",
+    name: "",
     lanes: [],
-    grids: []
+    grids: [],
+    sortOrder: 0
 })
 
 export interface DeckMapElement {
+    id: number,
     length: number,
     width: number,
     LCG: number,
@@ -20,6 +27,7 @@ export interface DeckMapElement {
 
 const deckMapElementFactory = (): DeckMapElement => {
     return {
+        id: 0,
         length: 0,
         width: 0,
         LCG: 0,
@@ -30,13 +38,17 @@ const deckMapElementFactory = (): DeckMapElement => {
 
 export interface Lane extends DeckMapElement {
     name: string,
-    partial: boolean
+    partial: boolean,
+    grids: Array<Grid>,
+    cargo: Array<Cargo>
 }
 
 export const laneFactory = (): Lane => {
     let elem = deckMapElementFactory() as Lane;
     elem.name = "";
     elem.partial = false;
+    elem.grids = [];
+    elem.cargo = [];
     return elem;
 }
 
@@ -53,7 +65,8 @@ export const gridFactory = (): Grid => {
 export interface Cargo extends DeckMapElement {
     registrationNumber: string,
     height: number,
-    weight: number
+    weight: number,
+    laneID: number
 }
 
 export const cargoFactory = (): Cargo => {

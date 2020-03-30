@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentDeck } from '../../../store/actions/appActions';
-import Card from '../../../shared/components/card/Card';
+import { Card } from '../../../shared/components/card';
 import { DeckSelectorItemProps } from '../DeckMap.types';
 
 const DeckSelectorItem: React.FC<DeckSelectorItemProps> = ({ deck, isCurrent }) => {
@@ -10,7 +10,7 @@ const DeckSelectorItem: React.FC<DeckSelectorItemProps> = ({ deck, isCurrent }) 
 
     return (
         <Card className={`DeckSelectorItem ${isCurrent ? "Selected" : ""}`} onClick={onClick}>
-            {deck.deck}
+            {deck.name}
         </Card>
     );
 }

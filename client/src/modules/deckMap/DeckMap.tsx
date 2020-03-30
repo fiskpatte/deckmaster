@@ -1,26 +1,28 @@
 import React, { useRef } from 'react';
 import { DECK_MAP } from '../../shared/constants';
-import Lanes from './Lanes/Lanes';
-import Grids from './Grids/Grids';
+import { Lanes } from './Lanes';
+// import Grids from './Grids/Grids';
 import { DeckMapProps } from './DeckMap.types';
-import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY, placeCargoFromEvent, placeCargoFromSVGCoords } from './DeckMap.functions';
+import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY, placeCargoFromSVGCoords } from './DeckMap.functions';
 import CargoIcon from './CargoIcon';
-import { Coords } from '../../shared/types/util';
+import { Coords, Placement } from '../../shared/types/util';
 import { useDispatch } from 'react-redux';
-import { setCurrentPosition } from '../../store/actions/appActions';
+import { setCurrentPlacement } from '../../store/actions/cargoActions';
 
-const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo, currentPosition }) => {
+const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo, currentPlacement }) => {
     const dispatch = useDispatch();
-    const setPosition = (position: Coords) => dispatch(setCurrentPosition(position))
-    const svgRef = useRef<SVGSVGElement>(null); 
+    const setPlacement = (placement: Placement) => dispatch(setCurrentPlacement(placement))
+    const svgRef = useRef<SVGSVGElement>(null);
 
     const placeCargoFromClick = (event: React.MouseEvent | React.TouchEvent) => {
-        placeCargoFromEvent(event, svgRef, currentCargo, setPosition);
+        console.log("lane clicked",event);
+        return;
+        // placeCargoFromEvent(event, svgRef, currentCargo, setPlacement);
     }
-    const placeCargoFromFrontPosition = (position: Coords) => {
-        position.x -= currentCargo.length;
-        position.y -= currentCargo.width / 2;
-        placeCargoFromSVGCoords(position, setPosition);
+    const placeCargoFromFrontPosition = (position: Coords, laneID: number) => {
+        position.x -= currentCargo.length/2;
+        let newPlacement = {LCG:position.x,TCG:position.y,laneID:laneID} as Placement
+        placeCargoFromSVGCoords(newPlacement, setPlacement);
     }
     let viewBoxSizeX = getViewBoxSizeX(currentDeck);
     let viewBoxSizeY = getViewBoxSizeY(currentDeck);
@@ -34,13 +36,13 @@ const DeckMap: React.FC<DeckMapProps> = ({ currentDeck, currentCargo, currentPos
             ref={svgRef}>
             <g
                 className="containerGroup"
-                transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
-                onClick={ev => placeCargoFromClick(ev)} >
-                <Lanes lanes={currentDeck.lanes} svgRef={svgRef} rightOrigin={viewBoxSizeX + viewBoxOriginX} onClick={(ev) => placeCargoFromClick(ev)} onButtonClick={(position) => placeCargoFromFrontPosition(position)} />
-                <Grids grids={currentDeck.grids} onClick={(position) => placeCargoFromFrontPosition(position)} />
-                {currentPosition ?
-                    <CargoIcon x={currentPosition.x}
-                        y={currentPosition.y}
+                // onClick={ev => placeCargoFromClick(ev)} 
+                transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`} >
+                <Lanes lanes={currentDeck.lanes} svgRef={svgRef} rightOrigin={viewBoxSizeX + viewBoxOriginX} onClick={(ev) => placeCargoFromClick(ev)} onButtonClick={(position, id) => placeCargoFromFrontPosition(position, id)} />
+                {/* <Grids grids={currentDeck.grids} onClick={(position) => placeCargoFromFrontPosition(position)} /> */}
+                {currentPlacement ?
+                    <CargoIcon x={currentPlacement.LCG}
+                        y={currentPlacement.TCG}
                         width={currentCargo.length}
                         height={currentCargo.width} />
                     : null}

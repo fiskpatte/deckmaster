@@ -3,9 +3,8 @@ import { AppState } from '../store.types';
 import { deckFactory } from '../../shared/types/deckMap';
 
 const initialState: AppState = {
-    deckMap: [],
+    deckMap: {},
     currentDeck: deckFactory(),
-    currentPosition: null
 }
 const appReducer = (state = initialState, action: any): AppState => {
     switch (action.type) {
@@ -19,11 +18,6 @@ const appReducer = (state = initialState, action: any): AppState => {
                 ...state,
                 currentDeck: action.payload
             };
-        case ACTION_TYPES.SET_CURRENT_POSITION:
-            return {
-                ...state,
-                currentPosition: action.payload
-            }
         default:
             return state;
     }

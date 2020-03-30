@@ -1,7 +1,7 @@
 import { arrayMax, arrayMin } from "../../shared/functions/math";
 import { DECK_MAP } from "../../shared/constants";
 import { Deck, Cargo } from "../../shared/types/deckMap";
-import { Coords } from '../../shared/types/util';
+import { Coords, Placement } from '../../shared/types/util';
 
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
     return arrayMin(currentDeck.lanes.map(lane => lane.LCG - lane.length / 2)) * DECK_MAP.X_SCALE - DECK_MAP.X_MARGIN;
@@ -31,24 +31,27 @@ export const svgPoint = (svgElement: SVGSVGElement, fromElement: SVGGraphicsElem
     return pt.matrixTransform(fromElement.getScreenCTM()?.inverse());
 }
 
-export const placeCargoFromEvent = (event: React.MouseEvent | React.TouchEvent, svgRef: React.RefObject<SVGSVGElement>, cargo: Cargo, callback: (position: Coords) => void) => {
+export const placeCargoFromEvent = (event: React.MouseEvent | React.TouchEvent, svgRef: React.RefObject<SVGSVGElement>, cargo: Cargo, callback: (position: Placement) => void) => {
+    //THIS FUNCTION HAS TO BE REVIEWED!!
     event.preventDefault();
     let coords = getCoordinates(event);
     placeCargo(coords, svgRef, cargo, callback);
 }
 
-export const placeCargo = (coords: Coords | null, svgRef: React.RefObject<SVGSVGElement>, cargo: Cargo, callback: (position: Coords) => void) => {
+export const placeCargo = (coords: Coords | null, svgRef: React.RefObject<SVGSVGElement>, cargo: Cargo, callback: (position: Placement) => void) => {
+    //THIS FUNCTION HAS TO BE REVIEWED!!
+    console.log(cargo);
     if (!coords) return;
     if (svgRef.current) {
         let center = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y)
-        let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
-        callback(corner)
+        // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
+        callback({LCG:center.x,TCG:center.y,laneID:0});
     }
 }
 
-export const placeCargoFromSVGCoords = (coords: Coords | null, callback: (position: Coords) => void) => {
-    if (!coords) return;
-    callback(coords)
+export const placeCargoFromSVGCoords = (placement: Placement | null, callback: (placement: Placement) => void) => {
+    if (!placement) return;
+    callback(placement)
 }
 
 export const getCoordinates = (event: React.MouseEvent | React.TouchEvent) => {

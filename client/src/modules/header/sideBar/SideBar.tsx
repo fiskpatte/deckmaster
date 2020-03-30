@@ -8,11 +8,11 @@ import { SideBarProps } from './SideBar.types';
 
 const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
 
-    const hiddenWidth = -1 * variables.sideBarWidth.slice(0, -2);
+    const hiddenWidth = -1 * variables.sideBarWidth.slice(0, -4);
 
     const variants = {
         visible: { left: "0vw", transition: { ease: "linear" } },
-        hidden: { left: `${hiddenWidth}vw`, transition: { ease: "linear" } }
+        hidden: { left: `${hiddenWidth}vmax`, transition: { ease: "linear" } }
     };
 
     return (
@@ -21,7 +21,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
                 <div className="HeaderItem MenuTitle">
                     MENU
                     </div>
-                <div className="HeaderItem" onClick={closeSideBar}>
+                <div className="HeaderItem CloseMenuButton" onClick={closeSideBar}>
                     <CloseMenuIcon />
                 </div>
             </div>

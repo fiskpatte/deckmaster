@@ -3,7 +3,7 @@ import Lane from './Lane';
 import './Lane.scss'
 import { LanesProps } from '../DeckMap.types';
 
-const Lanes: React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin, onClick, onButtonClick }) => {
+export const Lanes: React.FC<LanesProps> = ({ lanes, svgRef, rightOrigin, onClick, onButtonClick }) => {
 
     return (
         <>

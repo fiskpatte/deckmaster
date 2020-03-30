@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.scss";
-import DeckMapContainer from "./modules/deckMap/DeckMap.container";
+import { DeckMapContainer } from "./modules/deckMap";
 import { parseLoadPlan } from "./shared/functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
-import Header from "./modules/header/Header";
+import { Header } from "./modules/header";
 import { useDispatch } from "react-redux";
 import appActions from "./store/actions/appActions";
-import Loader from "./shared/components/loader/Loader";
+import { Loader } from "./shared/components/loader";
 import LoginScreen from "./modules/loginScreen/LoginScreen";
 import PrivateRoute from "./shared/components/PrivateRoute";
 import { getMockCargo } from './api/endpoints';
@@ -22,17 +22,17 @@ const App: React.FC = () => {
   useEffect(() => {
     parseLoadPlan(loadPlans).then(res => {
       //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
-      res.unshift({ deck: "Lower Hold", lanes: [], grids: [] },
-        { deck: "Main Deck", lanes: [], grids: [] },
-        { deck: "Upper Deck", lanes: [], grids: [] })
+      res["Lower Hold"] = { name: "Lower Hold", lanes: [], grids: [], sortOrder: 1 }
+      res["Main Deck"] = { name: "Main Deck", lanes: [], grids: [], sortOrder: 2 }
+      res["Upper Deck"] = { name: "Upper Deck", lanes: [], grids: [], sortOrder: 3 }
       dispatch(appActions.setDeckMap(res));
-      dispatch(appActions.setCurrentDeck(res[3]));
+      dispatch(appActions.setCurrentDeck(res["Weather Deck"]));
       getMockCargo().then(cargo => {
         dispatch(cargoActions.setCurrentCargo(cargo));
         setLoading(false);
       })
     });
-  });
+  }, [dispatch]);
 
   if (loading) {
     return (

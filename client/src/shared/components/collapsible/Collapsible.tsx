@@ -7,7 +7,7 @@ interface Props {
     isCollapsedParent?: boolean,
     setIsCollapsedParent?: () => void
 }
-const Collapsible: React.FC<Props> = ({ children, isCollapsedParent = true, setIsCollapsedParent }) => {
+export const Collapsible: React.FC<Props> = ({ children, isCollapsedParent = true, setIsCollapsedParent }) => {
     const [isCollapsed, setIsCollapsedState] = useState(true);
     let toggleIsCollapsed = () => setIsCollapsedState(!isCollapsed);
     let setIsCollapsed = setIsCollapsedParent ?? toggleIsCollapsed;

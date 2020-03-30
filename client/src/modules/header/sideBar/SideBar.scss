@@ -10,13 +10,14 @@
   color: white;
   .Header {
     border: 0;
+    overflow: hidden;
     .MenuTitle {
-      font-size: 4vw;
+      font-size: $titleFont;
     }
   }
   .Body {
     background-color: $lightBlue;
-    height: 100vh-$headerHeight;
+    height: 100%-$headerHeight;
     a {
       text-decoration: inherit;
       color: inherit;
@@ -31,7 +32,7 @@
       box-sizing: border-box;
       padding: 2vh 2vw;
       @include flexStart();
-      font-size: 3vw;
+      font-size: $subTitleFont;
     }
   }
 }

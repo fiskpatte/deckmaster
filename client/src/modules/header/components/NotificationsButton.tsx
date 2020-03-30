@@ -3,7 +3,7 @@ import { ReactComponent as NotificationsIcon } from '../../../assets/icons/notif
 
 const NotificationsButton: React.FC = () => {
     return (
-        <div className="HeaderItem NotificationsIcon">
+        <div className="HeaderItem NotificationsButton">
             <NotificationsIcon />
         </div>
     )
