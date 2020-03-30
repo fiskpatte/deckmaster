@@ -26,20 +26,21 @@
       stroke: none;
     }
     .CargoIcon {
-      fill: $successGreen;
+      fill: $gray20;
       stroke-width: 1;
       stroke: $gray20;
       pointer-events: none;
+      fill-opacity: 0.5;
     }
     .CargoIcon.Placed {
       pointer-events: auto;
-      fill: $gray20;
+      fill-opacity: 1;
     }
   }
   .Footer {
     @include flexCenter();
     height: 25%;
-    .ConfirmButton{
+    .ConfirmButton {
       font-size: $standardFont;
       font-family: FoundrySterlingMedium;
       cursor: pointer;
