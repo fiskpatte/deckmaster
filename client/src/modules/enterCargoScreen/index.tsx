@@ -12,9 +12,8 @@ export default function EnterCargoScreen() {
   const [error, setError] = useState("");
   const history = useHistory();
   const dispatch = useDispatch();
+
   const onNextButtonClick = async () => {
-    // I detta läge ska vi mocka ett cargo.
-    // Sedan ska vi sätta detta i redux
     try {
       if (error) {
         setError("");
@@ -22,9 +21,7 @@ export default function EnterCargoScreen() {
       const cargo = await getMockCargo();
       dispatch(setCurrentCargo(cargo));
       history.push("/confirmcargo");
-      // go to mapscreen
     } catch (error) {
-      // Show error
       setError("Cargo not found");
     }
   };
