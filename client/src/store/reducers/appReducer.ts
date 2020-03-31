@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from '../../shared/constants'
-import { AppState } from '../store.types';
+import { AppState } from '../types';
 import { deckFactory } from '../../shared/types/deckMap';
 
 const initialState: AppState = {

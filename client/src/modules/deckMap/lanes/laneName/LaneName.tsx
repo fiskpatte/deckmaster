@@ -1,14 +1,20 @@
 import React, { useRef } from 'react';
-import { DECK_MAP } from '../../../shared/constants';
-import { LaneNameProps } from '../DeckMap.types';
-import useReferenceScale from '../../../shared/hooks/useReferenceScale';
+import { DECK_MAP } from '../../../../shared/constants';
+import useReferenceScale from '../../../../shared/hooks/useReferenceScale';
+import { Lane } from './../../../../shared/types/deckMap';
+import './LaneName.scss';
 
-const LaneName: React.FC<LaneNameProps> = ({ lane, rightOrigin }) => {
+interface Props {
+    lane: Lane,
+    rightOrigin: number
+}
+
+export const LaneName: React.FC<Props> = ({ lane, rightOrigin }) => {
     const originX = rightOrigin - 3 * DECK_MAP.X_MARGIN / 2;
     const textRef = useRef<SVGTextElement>(null);
-    const scale = useReferenceScale(textRef,{width:DECK_MAP.LANE_NAME_WIDTH,height:lane.width});
-    let fontSize = Math.min(scale.width, scale.height); 
-    if(scale.height !== 1 && scale.width !==1){
+    const scale = useReferenceScale(textRef, { width: DECK_MAP.LANE_NAME_WIDTH, height: lane.width });
+    let fontSize = Math.min(scale.width, scale.height);
+    if (scale.height !== 1 && scale.width !== 1) {
         //Avoid changing the font size before the initial render so that the scale applies correctly
         fontSize *= DECK_MAP.LANE_NAME_FONT_SIZE;
     }

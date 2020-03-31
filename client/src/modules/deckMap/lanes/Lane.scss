@@ -1,17 +1,6 @@
-@import "../../../shared/styles/colors.scss";
+@import "../../../shared/styles/main.scss";
 
-.Lane {
-}
-
-.LaneButton {
-  fill: $successGreen;
-  stroke: none;
-  filter: drop-shadow(0px 0.25px 0.1px rgba(0,0,0,0.25))
-}
-
-.LaneName {
-  fill: $gray20;
-  stroke: none;
-  font-family: FoundrySterlingLight;
-  dominant-baseline: central;
+.Lane.Full {
+    fill:$primaryRed;
+    fill-opacity: 0.3;
 }

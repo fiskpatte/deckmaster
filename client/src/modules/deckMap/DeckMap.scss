@@ -6,6 +6,8 @@
   .Header {
     border: 0;
     height: 20%;
+    display: flex;
+    justify-content: space-between;
   }
   .svgBody {
     width: 99%;
@@ -16,51 +18,10 @@
       stroke: black;
       stroke-width: 0.1;
       pointer-events: visible;
-    }
-    .BoundingBox {
-      fill: none;
-      stroke: none;
-    }
-    .GridItem {
-      fill: $gray30;
-      stroke: none;
-    }
-    .CargoIcon {
-      fill: $gray20;
-      stroke-width: 1;
-      stroke: $gray20;
-      pointer-events: none;
-    }
-    .CargoIcon.Placing {
-      pointer-events: auto;
-      animation: blinker 1.5s linear infinite;
-    }
+    }    
   }
   .Footer {
     @include flexCenter();
-    height: 25%;
-    .ConfirmButton {
-      font-size: $standardFont;
-      font-family: FoundrySterlingMedium;
-      cursor: pointer;
-      color: white;
-      background-color: $successGreen;
-      padding: 1vh 2vw;
-    }
-  }
-}
-
-.Hidden {
-  visibility: hidden;
-}
-
-.Shadow {
-  filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
-}
-
-@keyframes blinker {
-  50% {
-    fill: $gray80;
-    stroke: $gray80;
+    height: 25%;    
   }
 }

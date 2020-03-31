@@ -1,9 +1,16 @@
 import React from 'react';
-import { DECK_MAP } from '../../../shared/constants';
+import { DECK_MAP } from '../../../../shared/constants';
 import ArrowIcon from './ArrowIcon';
-import { LaneButtonProps } from '../DeckMap.types';
+import { Lane } from './../../../../shared/types/deckMap';
+import './LaneButton.scss';
 
-const LaneButton: React.FC<LaneButtonProps> = ({ lane, onClick, visible }) => {
+interface Props {
+    lane: Lane,
+    onClick: (event: React.MouseEvent<SVGElement>) => void,
+    visible: boolean
+}
+
+export const LaneButton: React.FC<Props> = ({ lane, onClick, visible }) => {
     if (!visible) return null;
     const buttonHeight = lane.width * DECK_MAP.LANE_BUTTON_HEIGHT_RATIO;
     const originX = lane.LCG - lane.length / 2 - DECK_MAP.LANE_BUTTON_WIDTH / 2;

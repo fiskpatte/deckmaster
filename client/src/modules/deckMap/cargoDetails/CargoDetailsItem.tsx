@@ -1,7 +1,11 @@
 import React from 'react';
-import { CargoDetailsItemProps } from '../DeckMap.types';
 
-const CargoDetailsItem: React.FC<CargoDetailsItemProps> = ({ label, value }) => {
+interface Props {
+    label: string,
+    value: string
+}
+
+const CargoDetailsItem: React.FC<Props> = ({ label, value }) => {
     return (
         <div className="CargoDetailItem">
             <div className="Label">

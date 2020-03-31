@@ -4,12 +4,18 @@ import CargoDetailItem from './CargoDetailsItem';
 import { Collapsible } from '../../../shared/components/collapsible';
 import './CargoDetails.scss';
 import variables from './CargoDetails.scss';
-import { CargoDetailsProps } from '../DeckMap.types';
 import { Overlay } from '../../../shared/components/overlay';
+import { Cargo } from './../../../shared/types/deckMap';
+import { useHistory } from 'react-router-dom';
 
-export const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
+interface Props {
+    currentCargo: Cargo
+}
+
+export const CargoDetails: React.FC<Props> = ({ currentCargo }) => {
     const { registrationNumber, length, width, height, weight } = currentCargo;
     const [isCollapsed, setIsCollapsed] = useState(true);
+    const history = useHistory();
 
     return (
         <>
@@ -24,7 +30,7 @@ export const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
                         <Card className="Button" onClick={() => console.log("Edit details click")}>
                             {"Edit details"}
                         </Card>
-                        <Card className="Button" onClick={() => console.log("Change cargo click")}>
+                        <Card className="Button" onClick={() => history.push("/placecargo")}>
                             {"Change cargo"}
                         </Card>
                     </Collapsible>

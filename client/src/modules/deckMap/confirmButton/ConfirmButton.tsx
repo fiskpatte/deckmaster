@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Card } from './../../shared/components/card';
+import { Card } from '../../../shared/components/card';
+import './ConfirmButton.scss';
 
 interface Props {
     onClick: () => void;
 }
 
-const ConfirmButton: React.FC<Props> = ({ onClick }) => {
+export const ConfirmButton: React.FC<Props> = ({ onClick }) => {
     return (
         <Card className="ConfirmButton" onClick={onClick}>
             {"CONFIRM"}

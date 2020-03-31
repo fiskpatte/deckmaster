@@ -1,16 +1,23 @@
 import React from 'react';
-import Grid from './Grid';
-import { GridsProps } from '../DeckMap.types';
+import GridComponent from './Grid';
+import { Grid } from './../../../shared/types/deckMap';
+import { Coords } from '../../../shared/types/util';
 
-export const Grids: React.FC<GridsProps> = ({ grids,onClick }) => {
+interface Props {
+    grids: Array<Grid>,
+    onClick: (position: Coords) => void,
+    nextPosition: Coords
+}
+
+export const Grids: React.FC<Props> = ({ grids, onClick, nextPosition }) => {
 
     return (
         <>
             {
                 grids.map((grid, ix) => {
                     return (
-                        <Grid grid={grid}
-                            visible={true}
+                        <GridComponent grid={grid}
+                            visible={grid.LCG < nextPosition.x}
                             onClick={onClick}
                             key={ix} />
                     )
