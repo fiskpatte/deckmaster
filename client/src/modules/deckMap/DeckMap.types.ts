@@ -47,7 +47,7 @@ export interface CargoIconProps {
     y: number,
     height: number,
     width: number,
-    placed?: boolean
+    placing?: boolean
 }
 
 export interface GridsProps {

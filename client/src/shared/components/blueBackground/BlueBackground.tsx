@@ -5,7 +5,7 @@ interface Props {
     children?: React.ReactNode
 }
 
-const BlueBackground: React.FC<Props> = ({ children }) => (
+export const BlueBackground: React.FC<Props> = ({ children }) => (
     <div className="BlueBackground">
         {children}
     </div>

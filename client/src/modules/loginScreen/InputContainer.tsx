@@ -1,7 +1,7 @@
 import React from 'react';
 import './LoginScreen.scss';
 import { ReactComponent as DeckmasterLogo } from '../../assets/icons/deckmasterLogo.svg';
-import Paper from '../../shared/components/paper';
+import { Paper } from '../../shared/components/paper';
 
 interface Props {
     username: string,
@@ -27,7 +27,7 @@ const InputContainer: React.FC<Props> = ({ username, setUsername, password, setP
                 <h4 style={{ color: 'red' }}>{error}</h4>
             </div>
 
-            </Paper>
+        </Paper>
     )
 }
 export default InputContainer;

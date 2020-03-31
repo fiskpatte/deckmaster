@@ -8,7 +8,7 @@ import { Header } from "./modules/header";
 import { useDispatch } from "react-redux";
 import appActions from "./store/actions/appActions";
 import { Loader } from "./shared/components/loader";
-import LoginScreen from "./modules/loginScreen/LoginScreen";
+import { LoginScreen } from "./modules/loginScreen";
 import PrivateRoute from "./shared/components/PrivateRoute";
 import { getMockCargo } from './api/endpoints';
 import EnterCargoScreen from "./modules/enterCargoScreen";

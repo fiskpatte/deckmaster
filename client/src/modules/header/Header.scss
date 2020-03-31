@@ -5,43 +5,5 @@
   height: $headerHeight;
   border-bottom: 1px solid $gray80;
   justify-content: space-between;
-  z-index: 10;
-  .HeaderItem {
-    height: 100%;
-    box-sizing: border-box;
-    padding: 2vh 2vw;
-    @include flexCenter();
-    min-width: min-content;
-  }
-  .ViewTitle {
-    font-size: $titleFont;
-  }
-  .Logo {
-    max-width: 152px;
-    min-width: 100px;
-    width: 15vw;
-    padding: 0 1vw;
-  }
-  .DetailsButton {
-    max-width: calc(37px + 2vw);
-    min-width: calc(20px + 2vw);
-    width: 8vw;
-    padding: 2vh 1vw;
-  }
-  .NotificationsButton {
-    max-width: calc(47px + 2vw);
-    min-width: calc(30px + 2vw);
-    width: 8vw;
-    padding: 2vh 1vw;
-  }
-  .MenuButton {
-    max-width: calc(40px + 4vw);
-    min-width: calc(23px + 4vw);
-    width: 8vw;
-  }
-  .CloseMenuButton {
-    max-width: calc(46px + 4vw);
-    min-width: calc(29px + 4vw);
-    width: 8vw;
-  }
+  z-index: 10;        
 }

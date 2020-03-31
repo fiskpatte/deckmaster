@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import BlueBackground from "../../shared/components/blueBackground/BlueBackground";
-import Paper from "../../shared/components/paper";
+import { BlueBackground } from "../../shared/components/blueBackground";
+import { Paper } from "../../shared/components/paper";
 import { getMockCargo } from "../../api/endpoints";
 import { setCurrentCargo } from "../../store/actions/cargoActions";
-import ErrorMessage from "../../shared/components/errorMessage";
+import { ErrorMessage } from "../../shared/components/errorMessage";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 

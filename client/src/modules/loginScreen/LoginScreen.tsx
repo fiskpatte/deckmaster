@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import BlueBackground from '../../shared/components/blueBackground/BlueBackground'
+import { BlueBackground } from '../../shared/components/blueBackground'
 import { login } from '../../api/endpoints'
 import { useHistory } from 'react-router-dom';
 import InputContainer from './InputContainer';
 
-const LoginScreen: React.FC = () => {
+export const LoginScreen: React.FC = () => {
     const [username, setUsername] = useState('Pontus2');
     const [password, setPassword] = useState('testtest')
     const [error, setError] = useState('')

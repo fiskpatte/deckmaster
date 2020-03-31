@@ -1,9 +1,10 @@
 import React from 'react';
 import { ReactComponent as NotificationsIcon } from '../../../assets/icons/notificationsIcon.svg';
+import './NotificationsButton.scss';
 
-const NotificationsButton: React.FC = () => {
+export const NotificationsButton: React.FC = () => {
     return (
-        <div className="HeaderItem NotificationsButton">
+        <div className="NotificationsButton">
             <NotificationsIcon />
         </div>
     )

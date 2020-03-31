@@ -1,0 +1,7 @@
+@import "../../../shared/styles/main.scss";
+
+.ViewTitle {
+    font-size: $titleFont;
+    height: 100%;
+    @include flexCenter();
+}

@@ -1,9 +1,10 @@
 import React from 'react';
 import { ReactComponent as DeckmasterLogo } from '../../../assets/icons/deckmasterLogo.svg';
+import './Logo.scss';
 
-const Logo: React.FC = () => {
+export const Logo: React.FC = () => {
     return (
-        <div className="HeaderItem Logo">
+        <div className="Logo">
             <DeckmasterLogo />
         </div>
     )

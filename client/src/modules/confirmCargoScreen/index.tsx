@@ -1,6 +1,6 @@
 import React from "react";
-import BlueBackground from "../../shared/components/blueBackground/BlueBackground";
-import Paper from "../../shared/components/paper";
+import { BlueBackground } from "../../shared/components/blueBackground";
+import { Paper } from "../../shared/components/paper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useHistory } from "react-router-dom";

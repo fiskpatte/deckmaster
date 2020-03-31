@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './DeckMap.scss';
-import { CargoDetails } from './CargoDetails';
-import { DeckSelector } from './DeckSelector';
+import { CargoDetails } from './cargoDetails';
+import { DeckSelector } from './deckSelector';
 import DeckMap from './DeckMap';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store/store'

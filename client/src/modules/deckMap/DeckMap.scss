@@ -30,11 +30,10 @@
       stroke-width: 1;
       stroke: $gray20;
       pointer-events: none;
-      fill-opacity: 0.5;
     }
-    .CargoIcon.Placed {
+    .CargoIcon.Placing {
       pointer-events: auto;
-      fill-opacity: 1;
+      animation: blinker 1.5s linear infinite;
     }
   }
   .Footer {
@@ -57,4 +56,11 @@
 
 .Shadow {
   filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+}
+
+@keyframes blinker {
+  50% {
+    fill: $gray80;
+    stroke: $gray80;
+  }
 }

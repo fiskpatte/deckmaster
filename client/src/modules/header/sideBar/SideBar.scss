@@ -3,37 +3,34 @@
 .SideBar {
   position: absolute;
   top: 0;
+  // left: -$sideBarWidth;
   width: $sideBarWidth;
+  // max-width: 260px;
+  // min-width: 200px;
   height: 100vh;
   z-index: $sideBarOverlayZIndex + 1;
   background-color: $secondaryBlue;
   color: white;
   .Header {
-    border: 0;
+    display: flex;
+    height: $headerHeight;
+    justify-content: space-between;
     overflow: hidden;
+    border: 0;
     .MenuTitle {
       font-size: $titleFont;
+    }
+    .CloseMenuButton {
+      max-width: 46px;
+      min-width: 29px;
+      width: 8vw;
+      height: 100%;
+      @include flexCenter();
     }
   }
   .Body {
     background-color: $lightBlue;
     height: 100%-$headerHeight;
-    a {
-      text-decoration: inherit;
-      color: inherit;
-    }
-    a.active {
-      .NavItem {
-        background-color: $primaryBlue;
-      }
-    }
-    .NavItem {
-      border-bottom: 1px solid $primaryBlue;
-      box-sizing: border-box;
-      padding: 2vh 2vw;
-      @include flexStart();
-      font-size: $subTitleFont;
-    }
   }
 }
 
