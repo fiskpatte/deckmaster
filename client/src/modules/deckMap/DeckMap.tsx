@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { DECK_MAP } from "../../shared/constants";
-import { Lanes } from "./lanes";
+import { Lanes } from "./Lanes";
 import {
   getViewBoxOriginX,
   getViewBoxOriginY,
