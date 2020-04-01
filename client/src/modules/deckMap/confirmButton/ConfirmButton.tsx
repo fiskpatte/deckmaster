@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card } from '../../../shared/components/card';
+import Button from './../../../shared/components/button';
 import './ConfirmButton.scss';
 
 interface Props {
@@ -8,9 +8,7 @@ interface Props {
 
 export const ConfirmButton: React.FC<Props> = ({ onClick }) => {
     return (
-        <Card className="ConfirmButton" onClick={onClick}>
-            {"CONFIRM"}
-        </Card>
+        <Button className="ConfirmButton" type="positive" onClick={onClick} label="CONFIRM" />
     );
 }
 
