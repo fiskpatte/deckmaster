@@ -1,11 +1,10 @@
+@import "../../shared/styles/main.scss";
+
 .TopBar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 40px;
-  .LogoContainer{
-    max-width: 152px;
+  @include flexEnd();
+  .LogoContainer {
+    max-width: 200px;
     min-width: 100px;
-    width: 15vw;
+    width: 20vw;
   }
 }

@@ -29,7 +29,7 @@ const DeckMap: React.FC<Props> = ({
   if (currentCargo.registrationNumber === "") {
     history.push("/placecargo");
   }
-  // currentCargo.width = 4;
+  currentCargo.width = 4;
   const placeCargoFromClick = (event: React.MouseEvent | React.TouchEvent) => {
     console.log("lane clicked", event);
     return;

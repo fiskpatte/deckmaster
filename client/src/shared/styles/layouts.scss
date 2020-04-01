@@ -26,3 +26,8 @@ $smallFont: calc(12px + 0.3vw);
   justify-content: flex-start;
   align-items: center;
 }
+@mixin flexEnd() {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
