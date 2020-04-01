@@ -1,6 +1,6 @@
 import { ACTION_TYPES } from "../../shared/constants";
 import { cargoFactory } from "../../shared/types/deckMap";
-import { CargoState } from "../store.types";
+import { CargoState } from "../types";
 
 const initialState: CargoState = {
   currentCargo: cargoFactory(),

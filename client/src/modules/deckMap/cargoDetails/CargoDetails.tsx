@@ -1,30 +1,35 @@
 import React, { useState } from "react";
 import { Card } from "../../../shared/components/card";
-
+import CargoDetailItem from "./CargoDetailsItem";
 import { Collapsible } from "../../../shared/components/collapsible";
 import "./CargoDetails.scss";
 import variables from "./CargoDetails.scss";
-import { CargoDetailsProps } from "../DeckMap.types";
 import { Overlay } from "../../../shared/components/overlay";
-import CargoDetailsItem from "./CargoDetailsItem";
+import { Cargo } from "./../../../shared/types/deckMap";
+import { useHistory } from "react-router-dom";
 
-export const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
+interface Props {
+  currentCargo: Cargo;
+}
+
+export const CargoDetails: React.FC<Props> = ({ currentCargo }) => {
   const { registrationNumber, length, width, height, weight } = currentCargo;
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const history = useHistory();
 
   return (
     <>
       <div className="CargoDetails">
         <Card className="Card">
-          <CargoDetailsItem label="Cargo ID" value={registrationNumber} />
-          <CargoDetailsItem label="Length" value={`${length} meters`} />
-          <CargoDetailsItem label="Width" value={`${width} meters`} />
+          <CargoDetailItem label="Cargo ID" value={registrationNumber} />
+          <CargoDetailItem label="Length" value={`${length} meters`} />
+          <CargoDetailItem label="Width" value={`${width} meters`} />
           <Collapsible
             isCollapsedParent={isCollapsed}
             setIsCollapsedParent={() => setIsCollapsed(!isCollapsed)}
           >
-            <CargoDetailsItem label="Height" value={`${height} meters`} />
-            <CargoDetailsItem label="Weight" value={`${weight} t`} />
+            <CargoDetailItem label="Height" value={`${height} meters`} />
+            <CargoDetailItem label="Weight" value={`${weight} t`} />
             <Card
               className="Button"
               onClick={() => console.log("Edit details click")}
@@ -33,7 +38,7 @@ export const CargoDetails: React.FC<CargoDetailsProps> = ({ currentCargo }) => {
             </Card>
             <Card
               className="Button"
-              onClick={() => console.log("Change cargo click")}
+              onClick={() => history.push("/placecargo")}
             >
               {"Change cargo"}
             </Card>

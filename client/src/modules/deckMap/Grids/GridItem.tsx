@@ -1,8 +1,14 @@
 import React from 'react';
 import { DECK_MAP } from '../../../shared/constants';
-import { GridItemProps } from '../DeckMap.types';
+import { Grid } from './../../../shared/types/deckMap';
+import './Grid.scss';
+interface Props {
+    grid: Grid,
+    radius: number,
+    upper?: boolean
+}
 
-const GridItem: React.FC<GridItemProps> = ({ grid, upper, radius, ...rest }) => {
+const GridItem: React.FC<Props> = ({ grid, upper, radius, ...rest }) => {
     let cy = 0;
     const borderMargin = 3 * radius;
     if (upper) {

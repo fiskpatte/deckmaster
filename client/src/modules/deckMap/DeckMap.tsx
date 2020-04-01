@@ -1,8 +1,6 @@
 import React, { useRef } from "react";
 import { DECK_MAP } from "../../shared/constants";
-import { Lanes } from "./Lanes";
-// import Grids from './Grids/Grids';
-import { DeckMapProps } from "./DeckMap.types";
+import { Lanes } from "./lanes";
 import {
   getViewBoxOriginX,
   getViewBoxOriginY,
@@ -10,12 +8,20 @@ import {
   getViewBoxSizeY,
   placeCargoFromSVGCoords
 } from "./DeckMap.functions";
-import CargoIcon from "./CargoIcon";
+import { CargoIcon } from "./cargoIcon";
 import { Coords, Placement } from "../../shared/types/util";
 import { useDispatch } from "react-redux";
 import { setCurrentPlacement } from "../../store/actions/cargoActions";
+import { Deck, Cargo } from "../../shared/types/deckMap";
+import "./DeckMap.scss";
+import { useHistory } from "react-router-dom";
+interface Props {
+  currentDeck: Deck;
+  currentCargo: Cargo;
+  currentPlacement: Placement | null;
+}
 
-const DeckMap: React.FC<DeckMapProps> = ({
+const DeckMap: React.FC<Props> = ({
   currentDeck,
   currentCargo,
   currentPlacement
@@ -24,6 +30,11 @@ const DeckMap: React.FC<DeckMapProps> = ({
   const setPlacement = (placement: Placement) =>
     dispatch(setCurrentPlacement(placement));
   const svgRef = useRef<SVGSVGElement>(null);
+  const history = useHistory();
+
+  if (currentCargo.registrationNumber === "") {
+    history.push("/placecargo");
+  }
 
   const placeCargoFromClick = (event: React.MouseEvent | React.TouchEvent) => {
     console.log("lane clicked", event);
@@ -52,7 +63,6 @@ const DeckMap: React.FC<DeckMapProps> = ({
     >
       <g
         className="containerGroup"
-        // onClick={ev => placeCargoFromClick(ev)}
         transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
       >
         <Lanes
@@ -64,7 +74,6 @@ const DeckMap: React.FC<DeckMapProps> = ({
             placeCargoFromFrontPosition(position, id)
           }
         />
-        {/* <Grids grids={currentDeck.grids} onClick={(position) => placeCargoFromFrontPosition(position)} /> */}
         {currentPlacement ? (
           <CargoIcon
             x={currentPlacement.LCG}

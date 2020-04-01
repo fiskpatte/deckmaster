@@ -1,10 +1,18 @@
 import React, { useRef } from 'react';
-import { CargoIconProps } from './DeckMap.types';
-import useReferenceScale from '../../shared/hooks/useReferenceScale';
-import { ReactComponent as Icon } from '../../assets/icons/cargoIcon.svg';
+import useReferenceScale from '../../../shared/hooks/useReferenceScale';
+import { ReactComponent as Icon } from '../../../assets/icons/cargoIcon.svg';
+import './CargoIcon.scss';
+
+interface Props {
+    x: number,
+    y: number,
+    height: number,
+    width: number,
+    placing?: boolean
+}
 
 //This component uses {x,y} as LCG and TCG coordinates
-const CargoIcon: React.FC<CargoIconProps> = ({ x, y, width, height, placing = false }) => {
+export const CargoIcon: React.FC<Props> = ({ x, y, width, height, placing = false }) => {
     const groupRef = useRef<SVGPathElement>(null);
     const scale = useReferenceScale(groupRef, { width, height });
     const corner = { x: x - width / 2, y: y - height / 2 };

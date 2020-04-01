@@ -1,9 +1,14 @@
 import React from 'react';
 import DeckSelectorItem from './DeckSelectorItem';
 import './DeckSelector.scss'
-import { DeckSelectorProps } from '../DeckMap.types';
+import { DeckMapType, Deck } from './../../../shared/types/deckMap';
 
-export const DeckSelector: React.FC<DeckSelectorProps> = ({ deckMap, currentDeck }) => {
+interface Props {
+    deckMap: DeckMapType,
+    currentDeck: Deck
+}
+
+export const DeckSelector: React.FC<Props> = ({ deckMap, currentDeck }) => {
     return (
         <div className="DeckSelector">
             {Object.keys(deckMap).sort((key1, key2) => deckMap[key1].sortOrder - deckMap[key2].sortOrder).map((key, ix) =>

@@ -1,10 +1,16 @@
 import React, { useRef } from 'react';
-import { DECK_MAP } from '../../../shared/constants';
-import { ArrowIconProps } from '../DeckMap.types';
-import useReferenceScale from '../../../shared/hooks/useReferenceScale';
-import { ReactComponent as Icon } from '../../../assets/icons/arrowIcon.svg';
+import { DECK_MAP } from '../../../../shared/constants';
+import useReferenceScale from '../../../../shared/hooks/useReferenceScale';
+import { ReactComponent as Icon } from '../../../../assets/icons/arrowIcon.svg';
 
-const ArrowIcon: React.FC<ArrowIconProps> = ({ x, y, width, height }) => {
+interface Props {
+    x: number,
+    y: number,
+    height: number,
+    width: number
+}
+
+const ArrowIcon: React.FC<Props> = ({ x, y, width, height }) => {
     const pathRef = useRef<SVGPathElement>(null);
     const scale = useReferenceScale(pathRef, { width: width * DECK_MAP.BUTTON_ARROW_RATIO, height: height * DECK_MAP.BUTTON_ARROW_RATIO })
 

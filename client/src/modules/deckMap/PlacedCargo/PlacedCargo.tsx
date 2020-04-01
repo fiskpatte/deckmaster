@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Cargo } from '../../../shared/types/deckMap';
-import CargoIcon from '../CargoIcon';
+import { CargoIcon } from '../cargoIcon';
 
 interface Props {
     cargo: Array<Cargo>

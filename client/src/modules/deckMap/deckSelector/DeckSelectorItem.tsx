@@ -2,9 +2,14 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentDeck } from '../../../store/actions/appActions';
 import { Card } from '../../../shared/components/card';
-import { DeckSelectorItemProps } from '../DeckMap.types';
+import { Deck } from '../../../shared/types/deckMap';
 
-const DeckSelectorItem: React.FC<DeckSelectorItemProps> = ({ deck, isCurrent }) => {
+interface Props {
+    deck: Deck,
+    isCurrent: boolean
+}
+
+const DeckSelectorItem: React.FC<Props> = ({ deck, isCurrent }) => {
     const dispatch = useDispatch();
     const onClick = () => { dispatch(setCurrentDeck(deck)) };
 

@@ -3,10 +3,7 @@
 .SideBar {
   position: absolute;
   top: 0;
-  // left: -$sideBarWidth;
   width: $sideBarWidth;
-  // max-width: 260px;
-  // min-width: 200px;
   height: 100vh;
   z-index: $sideBarOverlayZIndex + 1;
   background-color: $secondaryBlue;

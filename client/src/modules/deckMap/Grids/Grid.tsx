@@ -1,11 +1,21 @@
 import React from 'react';
 import GridItem from './GridItem';
 import { DECK_MAP } from '../../../shared/constants';
-import { GridProps } from '../DeckMap.types';
+import { Grid } from './../../../shared/types/deckMap';
+import { Coords } from '../../../shared/types/util';
+import './Grid.scss';
+
+interface Props {
+    grid: Grid,
+    visible: boolean,
+    onClick: (position: Coords) => void
+}
 
 const radius = DECK_MAP.GRID_RADIUS * Math.max(DECK_MAP.X_SCALE, DECK_MAP.Y_SCALE);
+
 const boundingBoxRadius = radius * 8;
-const Grid: React.FC<GridProps> = ({ grid, visible, onClick, ...rest }) => {
+
+const GridComponent: React.FC<Props> = ({ grid, visible, onClick, ...rest }) => {
     if (!visible) return null;
     let gridPosition = { x: grid.LCG + grid.length / 2, y: grid.TCG }
     return (
@@ -22,4 +32,4 @@ const Grid: React.FC<GridProps> = ({ grid, visible, onClick, ...rest }) => {
     );
 }
 
-export default Grid;
+export default GridComponent;

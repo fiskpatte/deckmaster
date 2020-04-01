@@ -51,15 +51,17 @@ const App: React.FC = () => {
           <Route path="/login" exact>
             <LoginScreen />
           </Route>
-          <PrivateRoute path="/placecargo">
-            <EnterCargoScreen />
-          </PrivateRoute>
-          <PrivateRoute path="/confirmcargo">
-            <ConfirmCargoScreen />
-          </PrivateRoute>
-          <Route path="/deckmap">
-            <DeckMapContainer />
-          </Route>
+          <Switch>
+            <PrivateRoute path="/placecargo">
+              <EnterCargoScreen />
+            </PrivateRoute>
+            <PrivateRoute path="/confirmcargo">
+              <ConfirmCargoScreen />
+            </PrivateRoute>
+            <Route path="/deckmap">
+              <DeckMapContainer />
+            </Route>
+          </Switch>
           <Route path="/discharge">
             <div>Discharge</div>
           </Route>
