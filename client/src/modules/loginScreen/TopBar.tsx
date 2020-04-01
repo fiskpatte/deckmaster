@@ -5,7 +5,7 @@ import "./LoginScreen.scss";
 export const TopBar = () => (
   <div className="TopBar">
     <div></div>
-    <div>
+    <div className="LogoContainer">
       <DeckmasterLogo />
     </div>
   </div>

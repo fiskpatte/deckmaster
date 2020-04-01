@@ -6,6 +6,7 @@ import Button from "../../shared/components/button";
 import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
+import { isLoggedIn } from "../../shared/functions/auth";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -13,6 +14,8 @@ export const LoginScreen: React.FC = () => {
   const [username, setUsername] = useState("Pontus2");
   const [password, setPassword] = useState("testtest");
   const [error, setError] = useState("");
+
+  if (isLoggedIn()) history.push("placecargo");
 
   const onLoginButtonClick = async () => {
     if (!username || !password) {

@@ -11,9 +11,9 @@ import { Loader } from "./shared/components/loader";
 import { LoginScreen } from "./modules/loginScreen";
 import PrivateRoute from "./shared/components/PrivateRoute";
 import { getMockCargo } from './api/endpoints';
-import EnterCargoScreen from "./modules/enterCargoScreen";
+import { EnterCargoScreen } from "./modules/enterCargoScreen";
 import cargoActions from "./store/actions/cargoActions";
-import ConfirmCargoScreen from "./modules/confirmCargoScreen";
+import { ConfirmCargoScreen } from "./modules/confirmCargoScreen";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
