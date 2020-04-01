@@ -11,6 +11,12 @@ export const DECK_MAP_MODE = {
   DISCHARGE: 3
 }
 
+export enum OverflowDirection {
+  Left = -1,
+  None = 0,
+  Right = +1
+}
+
 export const DECK_MAP = {
   X_MARGIN: 8,
   Y_MARGIN: 2,

@@ -5,7 +5,7 @@ import { Size } from '../types/util';
 const useReferenceScale = (reference: React.RefObject<any>, size: Size) => {
     const [scale, setScale] = useState({ width: 1, height: 1 });
     useLayoutEffect(() => {
-        if (reference.current) {
+        if (reference?.current) {
             let refBBox = reference.current.getBBox();
             let widthScale = size.width / refBBox.width;
             let heightScale = size.height / refBBox.height;

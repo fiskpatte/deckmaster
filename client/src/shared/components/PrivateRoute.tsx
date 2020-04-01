@@ -5,6 +5,7 @@ import { isLoggedIn } from "../functions/auth";
 interface PrivateRouteProps {
   children: React.ReactNode,
   path: string,
+  exact?: boolean,
   routeProps?: RouteProps
 }
 
