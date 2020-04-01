@@ -1,8 +1,6 @@
-@import "../../shared/styles/main.scss";
-
-.InputContainer {
-  width: 50%;
-  height: 50%;
-  background-color: white;
-  display: inline-block;
+.TopBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 40px;
 }

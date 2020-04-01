@@ -2,12 +2,23 @@ import React from "react";
 import "./TextInput.scss";
 
 interface Props {
-  children?: React.ReactNode;
   placeholder?: string;
+  value: string;
+  onChange: (e: any) => void;
 }
 
-export const Paper: React.FC<Props> = ({ children }) => (
-  <div className="Paper">{children}</div>
+export const TextInput: React.FC<Props> = ({
+  value,
+  onChange,
+  placeholder
+}) => (
+  <input
+    type="text"
+    className="TextInput"
+    value={value}
+    onChange={onChange}
+    placeholder={placeholder}
+  />
 );
 
-export default Paper;
+export default TextInput;
