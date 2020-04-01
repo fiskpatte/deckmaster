@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BlueBackground } from "../../shared/components/blueBackground";
-import { Paper } from "../../shared/components/paper";
+import { Paper } from "../../shared/components/Paper";
 import { getMockCargo } from "../../api/endpoints";
 import { setCurrentCargo } from "../../store/actions/cargoActions";
 import { ErrorMessage } from "../../shared/components/errorMessage";

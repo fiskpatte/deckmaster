@@ -1,43 +1,46 @@
-import React, { useState } from 'react'
-import { BlueBackground } from '../../shared/components/blueBackground'
-import { login } from '../../api/endpoints'
-import { useHistory } from 'react-router-dom';
-import InputContainer from './InputContainer';
+import React, { useState } from "react";
+import { BlueBackground } from "../../shared/components/blueBackground";
+import { login } from "../../api/endpoints";
+import { useHistory } from "react-router-dom";
+import InputContainer from "./InputContainer";
+import { Paper } from "../../shared/components/Paper";
 
 export const LoginScreen: React.FC = () => {
-    const [username, setUsername] = useState('Pontus2');
-    const [password, setPassword] = useState('testtest')
-    const [error, setError] = useState('')
-    const history = useHistory();
+  const [username, setUsername] = useState("Pontus2");
+  const [password, setPassword] = useState("testtest");
+  const [error, setError] = useState("");
+  const history = useHistory();
 
-    const onLoginButtonClick = async () => {
-        if (!username || !password) {
-            return;
-        }
-
-        if (error) {
-            setError('');
-        }
-
-        try {
-            await login(username, password);
-            history.push("/placecargo");
-        } catch (error) {
-            setError('Login failed');
-        }
+  const onLoginButtonClick = async () => {
+    if (!username || !password) {
+      return;
     }
 
-    return (
-        <BlueBackground>
-            <InputContainer
-                username={username}
-                setUsername={setUsername}
-                password={password}
-                setPassword={setPassword}
-                onLoginButtonClick={onLoginButtonClick}
-                error={error} />
-        </BlueBackground>
-    )
-}
+    if (error) {
+      setError("");
+    }
+
+    try {
+      await login(username, password);
+      history.push("/placecargo");
+    } catch (error) {
+      setError("Login failed");
+    }
+  };
+
+  return (
+    <BlueBackground>
+      <Paper></Paper>
+      <InputContainer
+        username={username}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+        onLoginButtonClick={onLoginButtonClick}
+        error={error}
+      />
+    </BlueBackground>
+  );
+};
 
 export default LoginScreen;

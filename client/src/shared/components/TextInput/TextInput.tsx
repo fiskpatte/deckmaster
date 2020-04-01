@@ -1,8 +1,9 @@
 import React from "react";
-import "./Paper.scss";
+import "./TextInput.scss";
 
 interface Props {
   children?: React.ReactNode;
+  placeholder?: string;
 }
 
 export const Paper: React.FC<Props> = ({ children }) => (
