@@ -7,6 +7,7 @@ import variables from "./CargoDetails.scss";
 import { Overlay } from "../../../shared/components/overlay";
 import { Cargo } from "./../../../shared/types/deckMap";
 import { useHistory } from "react-router-dom";
+import Button from './../../../shared/components/button';
 
 interface Props {
   currentCargo: Cargo;
@@ -30,18 +31,18 @@ export const CargoDetails: React.FC<Props> = ({ currentCargo }) => {
           >
             <CargoDetailItem label="Height" value={`${height} meters`} />
             <CargoDetailItem label="Weight" value={`${weight} t`} />
-            <Card
-              className="Button"
-              onClick={() => console.log("Edit details click")}
-            >
-              {"Edit details"}
-            </Card>
-            <Card
-              className="Button"
-              onClick={() => history.push("/placecargo")}
-            >
-              {"Change cargo"}
-            </Card>
+            <div className="ButtonContainer">
+              <Button
+                className="CargoDetailsButton"
+                onClick={() => console.log("Edit details click")}
+                label="Edit details"
+              />
+              <Button
+                className="CargoDetailsButton"
+                onClick={() => history.push("/placecargo")}
+                label="Change cargo"
+              />
+            </div>
           </Collapsible>
         </Card>
       </div>
