@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { BlueBackground } from "../../shared/components/blueBackground";
-
-import { Paper } from "../../shared/components/Paper";
-import { TextInput } from "../../shared/components/TextInput";
-import Button from "../../shared/components/Button";
+import { Paper } from "../../shared/components/paper";
+import { TextInput } from "../../shared/components/textInput";
+import Button from "../../shared/components/button";
 import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
