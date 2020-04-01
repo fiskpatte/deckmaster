@@ -45,7 +45,7 @@ export default function ConfirmCargoScreen() {
           </tbody>
         </table>
         <button onClick={() => history.push("/placecargo")}>Cancel</button>
-        <button onClick={() => history.push("/deckmap")}>Confirm</button>
+        <button onClick={() => history.push("/placecargo/deckmap")}>Confirm</button>
       </Paper>
     </BlueBackground>
   );

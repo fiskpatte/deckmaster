@@ -8,7 +8,7 @@ interface Props {
     y: number,
     height: number,
     width: number,
-    placing?: boolean
+    placing?: boolean,
 }
 
 //This component uses {x,y} as LCG and TCG coordinates

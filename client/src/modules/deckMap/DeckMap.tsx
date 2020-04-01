@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { DECK_MAP } from '../../shared/constants';
+import { DECK_MAP, OverflowDirection } from '../../shared/constants';
 import { Lanes } from './lanes';
 import { getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY, placeCargoFromSVGCoords } from './DeckMap.functions';
 import { CargoIcon } from './cargoIcon';
@@ -24,7 +24,7 @@ const DeckMap: React.FC<Props> = ({ currentDeck, currentCargo, currentPlacement 
     if (currentCargo.registrationNumber === "") {
         history.push("/placecargo");
     }
-    
+    // currentCargo.width = 4;
     const placeCargoFromClick = (event: React.MouseEvent | React.TouchEvent) => {
         console.log("lane clicked", event);
         return;
@@ -32,7 +32,14 @@ const DeckMap: React.FC<Props> = ({ currentDeck, currentCargo, currentPlacement 
     }
     const placeCargoFromFrontPosition = (position: Coords, laneID: number) => {
         position.x -= currentCargo.length / 2;
-        let newPlacement = { LCG: position.x, TCG: position.y, laneID: laneID } as Placement
+        let placingLane = currentDeck.lanes.find(l => l.id === laneID);
+        let TCG = position.y;
+        let overflow = OverflowDirection.None;
+        if (placingLane && currentCargo.width > placingLane.width) {
+            TCG += (currentCargo.width - placingLane.width) / 2
+            overflow = OverflowDirection.Right
+        }
+        let newPlacement = { LCG: position.x, TCG: TCG, laneID: laneID, overflowDirection: overflow } as Placement
         placeCargoFromSVGCoords(newPlacement, setPlacement);
     }
     let viewBoxSizeX = getViewBoxSizeX(currentDeck);
@@ -49,6 +56,8 @@ const DeckMap: React.FC<Props> = ({ currentDeck, currentCargo, currentPlacement 
                 className="containerGroup"
                 transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`} >
                 <Lanes lanes={currentDeck.lanes} svgRef={svgRef} rightOrigin={viewBoxSizeX + viewBoxOriginX} onClick={(ev) => placeCargoFromClick(ev)} onButtonClick={(position, id) => placeCargoFromFrontPosition(position, id)} />
+                {/* This makes sure that the cargo is always visible over lanes */}
+                {currentDeck.lanes.map((lane,ix) => lane.cargo.map((c,ixc)=> {return <use key={100*ix+ixc} href={`#cargoIcon${c.id}`}/>}))}
                 {currentPlacement ?
                     <CargoIcon x={currentPlacement.LCG}
                         y={currentPlacement.TCG}

@@ -21,7 +21,7 @@ export default function EnterCargoScreen() {
       }
       const cargo = await getMockCargo();
       dispatch(setCurrentCargo(cargo));
-      history.push("/confirmcargo");
+      history.push("/placecargo/confirmcargo");
       // go to mapscreen
     } catch (error) {
       // Show error
