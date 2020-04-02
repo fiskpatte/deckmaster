@@ -7,7 +7,7 @@ import variables from "./CargoDetails.scss";
 import { Overlay } from "../../../shared/components/overlay";
 import { Cargo } from "./../../../shared/types/deckMap";
 import { useHistory } from "react-router-dom";
-import Button from './../../../shared/components/button';
+import Button from "./../../../shared/components/Button";
 
 interface Props {
   currentCargo: Cargo;
