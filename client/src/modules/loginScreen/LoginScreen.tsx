@@ -35,7 +35,6 @@ export const LoginScreen: React.FC = () => {
   };
 
   const Separator = () => <div style={{ height: "20px" }} />;
-
   return (
     <BlueBackground>
       <Paper>
