@@ -4,6 +4,7 @@ import { DECK_MAP } from '../../../shared/constants';
 import { Grid } from './../../../shared/types/deckMap';
 import { Coords } from '../../../shared/types/util';
 import './Grid.scss';
+import { GridName } from './GridName';
 
 interface Props {
     grid: Grid,
@@ -22,11 +23,12 @@ const GridComponent: React.FC<Props> = ({ grid, visible, onClick, ...rest }) => 
         <g onClick={(ev) => { ev.stopPropagation(); onClick(gridPosition) }}>
             <GridItem {...rest} grid={grid} radius={radius} upper />
             <GridItem {...rest} grid={grid} radius={radius} />
+            <GridName grid={grid} />
             <rect
                 className="BoundingBox"
-                x={grid.LCG + grid.length / 2 - boundingBoxRadius / 2}
+                x={grid.LCG - grid.length / 2 + boundingBoxRadius / 2}
                 y={grid.TCG - grid.width / 2}
-                width={boundingBoxRadius}
+                width={grid.length}
                 height={grid.width} />
         </g>
     );
