@@ -12,7 +12,7 @@ export const TextInput: React.FC<Props> = ({
   value,
   onChange,
   placeholder,
-  type
+  type,
 }) => (
   <input
     type={type || "text"}

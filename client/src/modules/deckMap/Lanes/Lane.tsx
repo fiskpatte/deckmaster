@@ -2,10 +2,10 @@ import React from "react";
 import { LaneButton } from "./laneButton";
 import { DECK_MAP } from "../../../shared/constants";
 import { LaneName } from "./laneName";
-import { Grids } from "../Grids";
-import { PlacedCargo } from "../PlacedCargo";
+import { Grids } from "../grids";
+import { PlacedCargo } from "../placedCargo";
 import { arrayMin } from "../../../shared/functions/math";
-import { Lane } from "./../../../shared/types/deckMap";
+import { Lane } from "../../../shared/types/deckMap";
 import { Coords } from "../../../shared/types/util";
 import "./Lane.scss";
 
@@ -29,12 +29,12 @@ const LaneComponent: React.FC<Props> = ({
   const originY = lane.TCG - lane.width / 2;
   let nextPosition = {
     x: originX + lane.length,
-    y: originY + lane.width / 2
+    y: originY + lane.width / 2,
   } as Coords;
   let buttonVisible = true;
   const getNextPosition = () => {
     if (lane.cargo.length === 0) return;
-    let minLCG = arrayMin(lane.cargo.map(c => c.LCG - c.length / 2));
+    let minLCG = arrayMin(lane.cargo.map((c) => c.LCG - c.length / 2));
     //TODO: Distance to deactivate the button should be fixed differently! (setting)
     if (minLCG < originX + 10) {
       buttonVisible = false;
@@ -58,13 +58,13 @@ const LaneComponent: React.FC<Props> = ({
       />
       <Grids
         grids={lane.grids}
-        onClick={pos => onButtonClick(pos, lane.id)}
+        onClick={(pos) => onButtonClick(pos, lane.id)}
         nextPosition={nextPosition}
       />
       <PlacedCargo cargo={lane.cargo} />
       <LaneName lane={lane} rightOrigin={rightOrigin} />
       <LaneButton
-        onClick={ev => {
+        onClick={(ev) => {
           ev.stopPropagation();
           onButtonClick(nextPosition, lane.id);
         }}

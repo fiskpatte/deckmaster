@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { BlueBackground } from "../../shared/components/blueBackground";
-import { Paper } from "../../shared/components/Paper";
+import { Paper } from "../../shared/components/paper";
 import { getMockCargo } from "../../api/endpoints";
 import { setCurrentCargo } from "../../store/actions/cargoActions";
 import { ErrorMessage } from "../../shared/components/errorMessage";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import TextInput from "../../shared/components/TextInput";
-import Button from "../../shared/components/Button";
+import TextInput from "../../shared/components/textInput";
+import Button from "../../shared/components/button";
 import Text from "../../shared/components/Text";
 
 export const EnterCargoScreen = () => {
@@ -34,7 +34,7 @@ export const EnterCargoScreen = () => {
     <BlueBackground>
       <Paper>
         <Text type="header2" value="Enter cargo ID" />
-        <TextInput value={value} onChange={e => setValue(e.target.value)} />
+        <TextInput value={value} onChange={(e) => setValue(e.target.value)} />
         <Button type="positive" label="Next" onClick={onNextButtonClick} />
         {error && <ErrorMessage message={error} />}
       </Paper>

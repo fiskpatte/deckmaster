@@ -8,3 +8,11 @@
     fill: $gray30;
     stroke: none;
 }
+.GridName {
+    fill: $gray20;
+    opacity: 0.3;
+    stroke: none;
+    font-family: FoundrySterlingLight;
+    dominant-baseline: central;
+    text-anchor: middle;
+}

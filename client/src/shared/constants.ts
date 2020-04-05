@@ -17,6 +17,17 @@ export enum OverflowDirection {
   Right = +1
 }
 
+export enum RouteKey {
+  PlaceCargo = "PlaceCargo",
+  PlaceCargoConfirm = "PlaceCargoConfirm",
+  PlaceCargoDeckMap = "PlaceCargoDeckMap",
+  Login = "Login",
+  Discharge = "Discharge",
+  History = "History",
+  Settings = "Settings",
+  NoMatch = "NoMatch"
+}
+
 export const DECK_MAP = {
   X_MARGIN: 8,
   Y_MARGIN: 2,
@@ -29,6 +40,7 @@ export const DECK_MAP = {
   LANE_BUTTON_HEIGHT_RATIO: 0.8,
   LANE_NAME_WIDTH: 8,
   LANE_NAME_FONT_SIZE: 2,
+  GRID_NAME_FONT_SIZE: 1.5,
   BUTTON_ARROW_RATIO: 0.8
 };
 

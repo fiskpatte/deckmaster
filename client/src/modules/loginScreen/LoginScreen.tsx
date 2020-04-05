@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { BlueBackground } from "../../shared/components/blueBackground";
-import { Paper } from "../../shared/components/Paper";
-import TextInput from "../../shared/components/TextInput";
-import Button from "../../shared/components/Button";
+import { Paper } from "../../shared/components/paper";
+import TextInput from "../../shared/components/textInput";
+import Button from "../../shared/components/button";
 import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
@@ -35,7 +35,6 @@ export const LoginScreen: React.FC = () => {
   };
 
   const Separator = () => <div style={{ height: "20px" }} />;
-
   return (
     <BlueBackground>
       <Paper>
@@ -43,14 +42,14 @@ export const LoginScreen: React.FC = () => {
         <Separator />
         <TextInput
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
           placeholder="Email adress"
         />
         <Separator />
         <TextInput
           value={password}
           type={"password"}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
         <Separator />

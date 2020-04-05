@@ -8,6 +8,7 @@ import { Logo } from './logo';
 import { SideBarContainer } from './sideBar';
 import { useLocation } from 'react-router-dom';
 import { HeaderItem } from './headerItem';
+import { isLoggedIn } from '../../shared/functions/auth';
 
 export const Header: React.FC = () => {
     const [sideBarOpen, setSideBarOpen] = useState(false);
@@ -18,7 +19,7 @@ export const Header: React.FC = () => {
         closeSideBar()
     }, [location])
 
-    if (location.pathname.includes('login')) {
+    if (!isLoggedIn()) {
         return null;
     }
 
