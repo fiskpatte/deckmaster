@@ -17,7 +17,7 @@ export const Grids: React.FC<Props> = ({ grids, onClick, nextPosition }) => {
                 grids.map((grid, ix) => {
                     return (
                         <GridComponent grid={grid}
-                            visible={grid.LCG < nextPosition.x}
+                            visible={grid.LCG + grid.length / 2 < nextPosition.x}
                             onClick={onClick}
                             key={ix} />
                     )

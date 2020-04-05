@@ -6,7 +6,8 @@ import {
   getViewBoxOriginY,
   getViewBoxSizeX,
   getViewBoxSizeY,
-  placeCargoFromSVGCoords
+  placeCargoFromSVGCoords,
+  getRulerOrigin
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
 import { Coords, Placement } from "../../shared/types/util";
@@ -15,6 +16,8 @@ import { setCurrentPlacement } from "../../store/actions/cargoActions";
 import { Deck, Cargo } from "../../shared/types/deckMap";
 import "./DeckMap.scss";
 import { useHistory } from "react-router-dom";
+import { FrameRuler } from "./frameRuler";
+
 interface Props {
   currentDeck: Deck;
   currentCargo: Cargo;
@@ -62,6 +65,7 @@ const DeckMap: React.FC<Props> = ({
   let viewBoxSizeY = getViewBoxSizeY(currentDeck);
   let viewBoxOriginX = getViewBoxOriginX(currentDeck);
   let viewBoxOriginY = getViewBoxOriginY(currentDeck);
+  console.log(viewBoxOriginY, viewBoxSizeY)
   return (
     <svg
       className="svgBody"
@@ -82,6 +86,7 @@ const DeckMap: React.FC<Props> = ({
             placeCargoFromFrontPosition(position, id)
           }
         />
+        <FrameRuler frames={currentDeck.frames} originY={getRulerOrigin(currentDeck)} />
         {/* This makes sure that the cargo is always visible over lanes */}
         {currentDeck.lanes.map((lane, ix) =>
           lane.cargo.map((c, ixc) => {

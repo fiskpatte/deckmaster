@@ -1,5 +1,5 @@
 import { PARSER_FIELD_MODE } from '../constants';
-import { Deck, Lane, Grid, DeckMapType } from '../types/deckMap';
+import { Deck, Lane, Grid, DeckMapType, Frame } from '../types/deckMap';
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
 let currentKey = "";
@@ -33,6 +33,9 @@ const setFieldMode = (value: string): boolean => {
         case "grids":
             fieldMode = PARSER_FIELD_MODE.GRID;
             return true;
+        case "frames":
+            fieldMode = PARSER_FIELD_MODE.FRAME;
+            return true;
         default:
             return false;
     }
@@ -42,7 +45,7 @@ const setData = (data: DeckMapType, dataElement: string[]) => {
     switch (fieldMode) {
         case PARSER_FIELD_MODE.DECK_NAME:
             currentKey = dataElement[0]
-            data[currentKey] = { name: currentKey, lanes: [], grids: [], sortOrder: 4 };
+            data[currentKey] = { name: currentKey, lanes: [], grids: [], frames: [], sortOrder: 4 };
             break;
         case PARSER_FIELD_MODE.LANE:
         case PARSER_FIELD_MODE.GRID:
@@ -65,6 +68,13 @@ const setData = (data: DeckMapType, dataElement: string[]) => {
                 lastData.grids.push(newElem);
             }
             count++;//TODO: Change when we get id data.
+            break;
+        case PARSER_FIELD_MODE.FRAME:
+            let frame = {
+                id: Number(dataElement[0]),
+                distance: Number(dataElement[1].replace(",", "."))
+            } as Frame;
+            data[currentKey].frames.push(frame)
             break;
         default:
             break;

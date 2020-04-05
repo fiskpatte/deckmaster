@@ -18,9 +18,9 @@ const App: React.FC = () => {
   useEffect(() => {
     parseLoadPlan(loadPlans).then(res => {
       //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
-      res["Lower Hold"] = { name: "Lower Hold", lanes: [], grids: [], sortOrder: 1 }
-      res["Main Deck"] = { name: "Main Deck", lanes: [], grids: [], sortOrder: 2 }
-      res["Upper Deck"] = { name: "Upper Deck", lanes: [], grids: [], sortOrder: 3 }
+      res["Lower Hold"] = { name: "Lower Hold", lanes: [], grids: [], frames: [], sortOrder: 1 }
+      res["Main Deck"] = { name: "Main Deck", lanes: [], grids: [], frames: [], sortOrder: 2 }
+      res["Upper Deck"] = { name: "Upper Deck", lanes: [], grids: [], frames: [], sortOrder: 3 }
       dispatch(appActions.setDeckMap(res));
       dispatch(appActions.setCurrentDeck(res["Weather Deck"]));
       getMockCargo().then(cargo => {

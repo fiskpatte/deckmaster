@@ -23,6 +23,10 @@ export const getViewBoxSizeY = (currentDeck: Deck): number => {
     return yMax - yMin + DECK_MAP.Y_MARGIN;
 }
 
+export const getRulerOrigin = (currentDeck: Deck): number => {
+    return arrayMax(currentDeck.lanes.map(lane => lane.TCG + lane.width / 2)) + 0.5;
+}
+
 // translate page coordinate to SVG coordinate
 export const svgPoint = (svgElement: SVGSVGElement, fromElement: SVGGraphicsElement, x: number, y: number) => {
     const pt = svgElement.createSVGPoint();
@@ -45,7 +49,7 @@ export const placeCargo = (coords: Coords | null, svgRef: React.RefObject<SVGSVG
     if (svgRef.current) {
         let center = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y)
         // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
-        callback({LCG:center.x,TCG:center.y,laneID:0});
+        callback({ LCG: center.x, TCG: center.y, laneID: 0 });
     }
 }
 

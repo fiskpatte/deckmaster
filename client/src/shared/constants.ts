@@ -2,7 +2,8 @@ export const PARSER_FIELD_MODE = {
   INIT: 0,
   DECK_NAME: 1,
   LANE: 2,
-  GRID: 3
+  GRID: 3,
+  FRAME: 4
 };
 
 export const DECK_MAP_MODE = {
@@ -41,6 +42,7 @@ export const DECK_MAP = {
   LANE_NAME_WIDTH: 8,
   LANE_NAME_FONT_SIZE: 2,
   GRID_NAME_FONT_SIZE: 1.5,
+  FRAME_NAME_FONT_SIZE: 1.5,
   BUTTON_ARROW_RATIO: 0.8
 };
 

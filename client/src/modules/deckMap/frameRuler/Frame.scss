@@ -1,0 +1,14 @@
+@import "../../../shared/styles/main.scss";
+
+.FrameName {
+  fill: $gray20;
+  stroke: none;
+  font-family: FoundrySterlingLight;
+  dominant-baseline: central;
+  text-anchor: middle;
+}
+
+.FrameRuler {
+  stroke-width: 0.05;
+  stroke: $gray20;
+}

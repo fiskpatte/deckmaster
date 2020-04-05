@@ -6,6 +6,7 @@ export interface Deck {
     name: string,
     lanes: Array<Lane>,
     grids: Array<Grid>,
+    frames: Array<Frame>,
     sortOrder: number
 }
 
@@ -13,6 +14,7 @@ export const deckFactory = (): Deck => ({
     name: "",
     lanes: [],
     grids: [],
+    frames: [],
     sortOrder: 0
 })
 
@@ -77,4 +79,9 @@ export const cargoFactory = (): Cargo => {
     elem.weight = 0;
     elem.overflowLaneID = 0;
     return elem;
+}
+
+export interface Frame {
+    id: number,
+    distance: number,
 }
