@@ -26,7 +26,8 @@ export enum RouteKey {
   Discharge = "Discharge",
   History = "History",
   Settings = "Settings",
-  NoMatch = "NoMatch"
+  NoMatch = "NoMatch",
+  DeckOverview = "DeckOverview"
 }
 
 export const DECK_MAP = {

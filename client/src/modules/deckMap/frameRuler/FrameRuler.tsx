@@ -16,7 +16,7 @@ export const FrameRuler: React.FC<Props> = ({ frames, originY }) => {
   return (
     <g>
       <rect className="FrameRuler" x={minDist} y={originY} width={maxDist - minDist} height={1} />
-      {frames.map(f => <FrameComponent frame={f} originY={originY} />)}
+      {frames.map((f, ix) => <FrameComponent key={ix} frame={f} originY={originY} />)}
     </g>
   )
 };

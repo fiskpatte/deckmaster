@@ -65,7 +65,6 @@ const DeckMap: React.FC<Props> = ({
   let viewBoxSizeY = getViewBoxSizeY(currentDeck);
   let viewBoxOriginX = getViewBoxOriginX(currentDeck);
   let viewBoxOriginY = getViewBoxOriginY(currentDeck);
-  console.log(viewBoxOriginY, viewBoxSizeY)
   return (
     <svg
       className="svgBody"

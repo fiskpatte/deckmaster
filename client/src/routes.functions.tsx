@@ -26,3 +26,8 @@ export const renderRoute = (key: RouteKey, index: number) => {
     </Route>
   );
 }
+
+export const getRouteTitleFromPath = (path: string): string => {
+  let key = Object.keys(routes).find(key => routes[key as keyof typeof RouteKey].path === path) as keyof typeof RouteKey;
+  return routes[key].title;
+}
