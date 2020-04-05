@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import TextInput from "../../shared/components/textInput";
 import Button from "../../shared/components/button";
 import Text from "../../shared/components/Text";
+import Separator from "../../shared/components/separator";
 
 export const EnterCargoScreen = () => {
   const [value, setValue] = useState("");
@@ -35,6 +36,7 @@ export const EnterCargoScreen = () => {
       <Paper>
         <Text type="header2" value="Enter cargo ID" />
         <TextInput value={value} onChange={(e) => setValue(e.target.value)} />
+        <Separator />
         <Button type="positive" label="Next" onClick={onNextButtonClick} />
         {error && <ErrorMessage message={error} />}
       </Paper>

@@ -1,8 +1,11 @@
 @import "../../styles/main.scss";
 
 .Text {
-  .header2 {
-    font-size: $subTitleFont;
-    font-family: FoundrySterlingMedium;
-  }
+  color: "#333333";
+}
+
+.header2 {
+  font-size: 1.3em;
+  font-family: FoundrySterlingMedium;
+  margin: 0.3em 0;
 }

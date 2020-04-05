@@ -4,6 +4,10 @@ import { Paper } from "../../shared/components/paper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useHistory } from "react-router-dom";
+import Text from "../../shared/components/Text";
+import Button from "../../shared/components/button";
+import "./ConfirmCargoScreen.scss";
+import Separator from "../../shared/components/separator";
 
 export const ConfirmCargoScreen = () => {
   const { currentCargo: cargo } = useSelector(
@@ -15,39 +19,60 @@ export const ConfirmCargoScreen = () => {
   return (
     <BlueBackground>
       <Paper>
-        <h1>Confirm cargo</h1>
+        <Text type="header2" value="Confirm cargo" />
         <table>
           <tbody>
             <tr>
-              <td>Cargo ID</td>
-              <td>{cargo.registrationNumber}</td>
+              <td className="LabelCell">Cargo ID</td>
+              <td className="ValueCell">{cargo.registrationNumber}</td>
             </tr>
             <tr>
-              <td>Type</td>
-              <td>Truck</td>
+              <td className="LabelCell">Type</td>
+              <td className="ValueCell">Truck</td>
             </tr>
             <tr>
-              <td>Length</td>
-              <td>{cargo.length}</td>
+              <td className="LabelCell">Length</td>
+              <td className="ValueCell">{cargo.length}</td>
             </tr>
             <tr>
-              <td>Width</td>
-              <td>{cargo.width}</td>
+              <td className="LabelCell">Width</td>
+              <td className="ValueCell">{cargo.width}</td>
             </tr>
             <tr>
-              <td>Height</td>
-              <td>{cargo.height}</td>
+              <td className="LabelCell">Height</td>
+              <td className="ValueCell">{cargo.height}</td>
             </tr>
             <tr>
-              <td>Weight</td>
-              <td>{cargo.weight}</td>
+              <td className="LabelCell">Weight</td>
+              <td className="ValueCell">{cargo.weight}</td>
             </tr>
           </tbody>
         </table>
-        <button onClick={() => history.push("/placecargo")}>Cancel</button>
-        <button onClick={() => history.push("/placecargo/deckmap")}>
-          Confirm
-        </button>
+        <Separator />
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+          }}
+        >
+          <div style={{ flex: 1 }}></div>
+          <div style={{ flex: 1 }}>
+            <Button
+              onClick={() => history.push("/placecargo")}
+              label="Cancel"
+              type="danger"
+            />
+          </div>
+          <div style={{ flex: 1, margin: "0 0 0 10px" }}>
+            <Button
+              onClick={() => history.push("/placecargo/deckmap")}
+              label="Next"
+              type="positive"
+            />
+          </div>
+        </div>
       </Paper>
     </BlueBackground>
   );

@@ -1,0 +1,12 @@
+@import "../../shared/styles/fonts.scss";
+@import "../../shared/styles/layouts.scss";
+
+.LabelCell {
+  width: 140px;
+  font-size: $standardFont;
+}
+
+.ValueCell {
+  font-family: FoundrySterlingMedium;
+  font-size: $standardFont;
+}

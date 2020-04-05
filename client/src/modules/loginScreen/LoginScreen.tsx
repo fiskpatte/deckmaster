@@ -7,6 +7,7 @@ import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
 import { isLoggedIn } from "../../shared/functions/auth";
+import Separator from "../../shared/components/separator";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -34,7 +35,6 @@ export const LoginScreen: React.FC = () => {
     }
   };
 
-  const Separator = () => <div style={{ height: "20px" }} />;
   return (
     <BlueBackground>
       <Paper>
