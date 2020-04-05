@@ -6,9 +6,12 @@ import { setCurrentCargo } from "../../store/actions/cargoActions";
 import { ErrorMessage } from "../../shared/components/errorMessage";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import TextInput from "../../shared/components/TextInput";
+import Button from "../../shared/components/Button";
+import Text from "../../shared/components/Text";
 
 export const EnterCargoScreen = () => {
-  const [input, setInput] = useState("");
+  const [value, setValue] = useState("");
   const [error, setError] = useState("");
   const history = useHistory();
   const dispatch = useDispatch();
@@ -30,14 +33,9 @@ export const EnterCargoScreen = () => {
   return (
     <BlueBackground>
       <Paper>
-        <h1>Enter cargo id</h1>
-        <input
-          style={{ width: "300px" }}
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder="Write whatever, mockcargo will be used"
-        />
-        <button onClick={onNextButtonClick}>Next</button>
+        <Text type="header2" value="Enter cargo ID" />
+        <TextInput value={value} onChange={e => setValue(e.target.value)} />
+        <Button type="positive" label="Next" onClick={onNextButtonClick} />
         {error && <ErrorMessage message={error} />}
       </Paper>
     </BlueBackground>

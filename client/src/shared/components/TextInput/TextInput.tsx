@@ -2,18 +2,20 @@ import React from "react";
 import "./TextInput.scss";
 
 interface Props {
-  placeholder?: string;
   value: string;
   onChange: (e: any) => void;
+  placeholder?: string;
+  type?: string;
 }
 
 export const TextInput: React.FC<Props> = ({
   value,
   onChange,
-  placeholder
+  placeholder,
+  type
 }) => (
   <input
-    type="text"
+    type={type || "text"}
     className="TextInput"
     value={value}
     onChange={onChange}

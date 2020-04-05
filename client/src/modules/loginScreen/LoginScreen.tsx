@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { BlueBackground } from "../../shared/components/blueBackground";
 import { Paper } from "../../shared/components/Paper";
-import { TextInput } from "../../shared/components/TextInput";
+import TextInput from "../../shared/components/TextInput";
 import Button from "../../shared/components/Button";
 import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
@@ -49,6 +49,7 @@ export const LoginScreen: React.FC = () => {
         <Separator />
         <TextInput
           value={password}
+          type={"password"}
           onChange={e => setPassword(e.target.value)}
           placeholder="Password"
         />
