@@ -1,7 +1,8 @@
 @import "../../shared/styles/main.scss";
 
 .TopBar {
-  @include flexEnd();
+  @include flexRow();
+  justify-content: space-between;
   .LogoContainer {
     max-width: 200px;
     min-width: 100px;

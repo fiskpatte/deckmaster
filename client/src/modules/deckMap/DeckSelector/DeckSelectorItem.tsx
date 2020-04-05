@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { setCurrentDeck } from "../../../store/actions/appActions";
 import { Deck } from "../../../shared/types/deckMap";
-import Button from "./../../../shared/components/button";
+import Button from "../../../shared/components/button";
 
 interface Props {
   deck: Deck;

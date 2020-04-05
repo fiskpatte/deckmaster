@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { BlueBackground } from "../../shared/components/blueBackground";
 import { Paper } from "../../shared/components/paper";
-import { TextInput } from "../../shared/components/textInput";
+import TextInput from "../../shared/components/textInput";
 import Button from "../../shared/components/button";
 import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
 import { isLoggedIn } from "../../shared/functions/auth";
+import Separator from "../../shared/components/separator";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -34,7 +35,6 @@ export const LoginScreen: React.FC = () => {
     }
   };
 
-  const Separator = () => <div style={{ height: "20px" }} />;
   return (
     <BlueBackground>
       <Paper>
@@ -42,13 +42,14 @@ export const LoginScreen: React.FC = () => {
         <Separator />
         <TextInput
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
           placeholder="Email adress"
         />
         <Separator />
         <TextInput
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          type={"password"}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
         <Separator />

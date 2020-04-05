@@ -9,7 +9,7 @@ import { ConfirmButton } from "./confirmButton";
 import { setDeckMap, setCurrentDeck } from "./../../store/actions/appActions";
 import {
   setCurrentCargo,
-  setCurrentPlacement
+  setCurrentPlacement,
 } from "./../../store/actions/cargoActions";
 import { getMockCargo } from "../../api/endpoints";
 
@@ -29,12 +29,12 @@ export const DeckMapContainer: React.FC = () => {
   const onConfirm = () => {
     let newCargo = { ...currentCargo, ...currentPlacement };
     deckMap[currentDeck.name].lanes
-      .find(l => l.id === currentPlacement?.laneID)
+      .find((l) => l.id === currentPlacement?.laneID)
       ?.cargo.push(newCargo);
     dispatch(setDeckMap(deckMap));
     dispatch(setCurrentDeck(deckMap[currentDeck.name]));
     dispatch(setCurrentPlacement(null));
-    getMockCargo().then(cargo => {
+    getMockCargo().then((cargo) => {
       dispatch(setCurrentCargo(cargo));
     });
   };

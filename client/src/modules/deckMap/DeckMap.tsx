@@ -27,7 +27,7 @@ interface Props {
 const DeckMap: React.FC<Props> = ({
   currentDeck,
   currentCargo,
-  currentPlacement
+  currentPlacement,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = (placement: Placement) =>
@@ -46,7 +46,7 @@ const DeckMap: React.FC<Props> = ({
   };
   const placeCargoFromFrontPosition = (position: Coords, laneID: number) => {
     position.x -= currentCargo.length / 2;
-    let placingLane = currentDeck.lanes.find(l => l.id === laneID);
+    let placingLane = currentDeck.lanes.find((l) => l.id === laneID);
     let TCG = position.y;
     let overflow = OverflowDirection.None;
     if (placingLane && currentCargo.width > placingLane.width) {
@@ -57,7 +57,7 @@ const DeckMap: React.FC<Props> = ({
       LCG: position.x,
       TCG: TCG,
       laneID: laneID,
-      overflowDirection: overflow
+      overflowDirection: overflow,
     } as Placement;
     placeCargoFromSVGCoords(newPlacement, setPlacement);
   };
@@ -81,7 +81,7 @@ const DeckMap: React.FC<Props> = ({
           lanes={currentDeck.lanes}
           svgRef={svgRef}
           rightOrigin={viewBoxSizeX + viewBoxOriginX}
-          onClick={ev => placeCargoFromClick(ev)}
+          onClick={(ev) => placeCargoFromClick(ev)}
           onButtonClick={(position, id) =>
             placeCargoFromFrontPosition(position, id)
           }

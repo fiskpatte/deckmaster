@@ -5,9 +5,9 @@ import { Collapsible } from "../../../shared/components/collapsible";
 import "./CargoDetails.scss";
 import variables from "./CargoDetails.scss";
 import { Overlay } from "../../../shared/components/overlay";
-import { Cargo } from "./../../../shared/types/deckMap";
+import { Cargo } from "../../../shared/types/deckMap";
 import { useHistory } from "react-router-dom";
-import Button from "./../../../shared/components/button";
+import Button from "../../../shared/components/button";
 
 interface Props {
   currentCargo: Cargo;
