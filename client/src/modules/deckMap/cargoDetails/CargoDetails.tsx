@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Card } from "../../../shared/components/card";
+import { Card } from "../../../components/card";
 import CargoDetailItem from "./CargoDetailsItem";
-import { Collapsible } from "../../../shared/components/collapsible";
+import { Collapsible } from "../../../components/collapsible";
 import "./CargoDetails.scss";
 import variables from "./CargoDetails.scss";
-import { Overlay } from "../../../shared/components/overlay";
-import { Cargo } from "../../../shared/types/deckMap";
+import { Overlay } from "../../../components/overlay";
+import { Cargo } from "../../../types/deckMap";
 import { useHistory } from "react-router-dom";
-import Button from "../../../shared/components/button";
+import Button from "../../../components/button";
 
 interface Props {
   currentCargo: Cargo;

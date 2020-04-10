@@ -1,7 +1,7 @@
 import React from "react";
 import { ReactComponent as DeckmasterLogo } from "../../assets/icons/deckmasterLogo.svg";
 import "./LoginScreen.scss";
-import Text from "../../shared/components/Text";
+import Text from "../../components/Text";
 
 export const TopBar = () => (
   <div className="TopBar">

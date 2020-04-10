@@ -1,5 +1,5 @@
-@import "./shared/styles/fonts.scss";
-@import "./shared/styles/colors.scss";
+@import "./styles/fonts.scss";
+@import "./styles/colors.scss";
 
 body {
   margin: 0;
@@ -13,7 +13,8 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }
 
 #root {

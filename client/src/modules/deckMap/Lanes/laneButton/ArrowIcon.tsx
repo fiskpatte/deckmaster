@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
-import { DECK_MAP } from "../../../../shared/constants";
-import useReferenceScale from "../../../../shared/hooks/useReferenceScale";
+import { DECK_MAP } from "../../../../constants";
+import useReferenceScale from "../../../../hooks/useReferenceScale";
 import { ReactComponent as Icon } from "../../../../assets/icons/arrowIcon.svg";
 
 interface Props {

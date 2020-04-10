@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { Frame } from './../../../shared/types/deckMap';
-import { DECK_MAP } from '../../../shared/constants';
-import useReferenceScale from '../../../shared/hooks/useReferenceScale';
+import * as React from "react";
+import { Frame } from "../../../types/deckMap";
+import { DECK_MAP } from "../../../constants";
+import useReferenceScale from "../../../hooks/useReferenceScale";
 
 interface Props {
-  frame: Frame,
-  originY: number
+  frame: Frame;
+  originY: number;
 }
 export const FrameName: React.FC<Props> = ({ frame, originY }) => {
   const textRef = React.useRef<SVGTextElement>(null);
@@ -16,15 +16,17 @@ export const FrameName: React.FC<Props> = ({ frame, originY }) => {
     fontSize *= DECK_MAP.FRAME_NAME_FONT_SIZE;
   }
   return (
-    <text className='FrameName'
+    <text
+      className="FrameName"
       transform={`scale(${1 / DECK_MAP.X_SCALE} ${1 / DECK_MAP.Y_SCALE})`}
       fontSize={`${fontSize}em`}
       x={frame.distance * DECK_MAP.X_SCALE}
       y={(originY + 2) * DECK_MAP.Y_SCALE}
-      ref={textRef}>
+      ref={textRef}
+    >
       {frame.id}
     </text>
-  )
-}
+  );
+};
 
 export default FrameName;

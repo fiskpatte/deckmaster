@@ -1,8 +1,8 @@
-@import "../../../shared/styles/main.scss";
+@import "../../../styles/main.scss";
 
 .HeaderItem {
-    height: 100%;
-    box-sizing: border-box;
-    padding: 2vh 2vw;
-    @include flexCenter();
+  height: 100%;
+  box-sizing: border-box;
+  padding: 2vh 2vw;
+  @include flexCenter();
 }

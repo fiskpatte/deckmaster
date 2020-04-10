@@ -1,12 +1,12 @@
 import React from "react";
 import { LaneButton } from "./laneButton";
-import { DECK_MAP } from "../../../shared/constants";
+import { DECK_MAP } from "../../../constants";
 import { LaneName } from "./laneName";
 import { Grids } from "../grids";
 import { PlacedCargo } from "../placedCargo";
-import { arrayMin } from "../../../shared/functions/math";
-import { Lane } from "../../../shared/types/deckMap";
-import { Coords } from "../../../shared/types/util";
+import { arrayMin } from "../../../functions/math";
+import { Lane } from "../../../types/deckMap";
+import { Coords } from "../../../types/util";
 import "./Lane.scss";
 
 interface Props {

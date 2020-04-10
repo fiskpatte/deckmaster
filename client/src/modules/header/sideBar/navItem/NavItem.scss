@@ -1,18 +1,18 @@
-@import "../../../../shared/styles/main.scss";
+@import "../../../../styles/main.scss";
 
 a {
-    text-decoration: inherit;
-    color: inherit;
+  text-decoration: inherit;
+  color: inherit;
 }
 a.active {
-    .NavItem {
-        background-color: $primaryBlue;
-    }
+  .NavItem {
+    background-color: $primaryBlue;
+  }
 }
 .NavItem {
-    border-bottom: 1px solid $primaryBlue;
-    box-sizing: border-box;
-    padding: 2vh 2vw;
-    @include flexStart();
-    font-size: $subTitleFont;
+  border-bottom: 1px solid $primaryBlue;
+  box-sizing: border-box;
+  padding: 2vh 2vw;
+  @include flexStart();
+  font-size: $subTitleFont;
 }

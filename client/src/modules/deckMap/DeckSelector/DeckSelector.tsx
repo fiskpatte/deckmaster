@@ -1,7 +1,7 @@
 import React from "react";
 import DeckSelectorItem from "./DeckSelectorItem";
 import "./DeckSelector.scss";
-import { DeckMapType, Deck } from "../../../shared/types/deckMap";
+import { DeckMapType, Deck } from "../../../types/deckMap";
 
 interface Props {
   deckMap: DeckMapType;

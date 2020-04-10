@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import useReferenceScale from "../../../shared/hooks/useReferenceScale";
-import { Grid } from "../../../shared/types/deckMap";
-import { DECK_MAP } from "../../../shared/constants";
+import useReferenceScale from "../../../hooks/useReferenceScale";
+import { Grid } from "../../../types/deckMap";
+import { DECK_MAP } from "../../../constants";
 
 interface Props {
   grid: Grid;

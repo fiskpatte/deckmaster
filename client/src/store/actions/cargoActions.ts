@@ -1,24 +1,24 @@
-import { ACTION_TYPES } from "../../shared/constants";
-import { Cargo } from "../../shared/types/deckMap";
-import { Placement } from "../../shared/types/util";
+import { ACTION_TYPES } from "../../constants";
+import { Cargo } from "../../types/deckMap";
+import { Placement } from "../../types/util";
 
 export const setCurrentCargo = (cargo: Cargo) => {
   return {
     type: ACTION_TYPES.SET_CURRENT_CARGO,
-    payload: cargo
+    payload: cargo,
   };
 };
 
 export const setCurrentPlacement = (placement: Placement | null) => {
   return {
     type: ACTION_TYPES.SET_CURRENT_PLACEMENT,
-    payload: placement
+    payload: placement,
   };
 };
 
 const cargoActions = {
   setCurrentCargo,
-  setCurrentPlacement
+  setCurrentPlacement,
 };
 
 export default cargoActions;

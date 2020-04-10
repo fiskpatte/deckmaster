@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { DECK_MAP, OverflowDirection } from "../../shared/constants";
+import { DECK_MAP, OverflowDirection } from "../../constants";
 import { Lanes } from "./lanes";
 import {
   getViewBoxOriginX,
@@ -7,13 +7,13 @@ import {
   getViewBoxSizeX,
   getViewBoxSizeY,
   placeCargoFromSVGCoords,
-  getRulerOrigin
+  getRulerOrigin,
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
-import { Coords, Placement } from "../../shared/types/util";
+import { Coords, Placement } from "../../types/util";
 import { useDispatch } from "react-redux";
 import { setCurrentPlacement } from "../../store/actions/cargoActions";
-import { Deck, Cargo } from "../../shared/types/deckMap";
+import { Deck, Cargo } from "../../types/deckMap";
 import "./DeckMap.scss";
 import { useHistory } from "react-router-dom";
 import { FrameRuler } from "./frameRuler";
@@ -85,7 +85,10 @@ const DeckMap: React.FC<Props> = ({
             placeCargoFromFrontPosition(position, id)
           }
         />
-        <FrameRuler frames={currentDeck.frames} originY={getRulerOrigin(currentDeck)} />
+        <FrameRuler
+          frames={currentDeck.frames}
+          originY={getRulerOrigin(currentDeck)}
+        />
         {/* This makes sure that the cargo is always visible over lanes */}
         {currentDeck.lanes.map((lane, ix) =>
           lane.cargo.map((c, ixc) => {

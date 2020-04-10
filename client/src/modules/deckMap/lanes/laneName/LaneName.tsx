@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { DECK_MAP } from "../../../../shared/constants";
-import useReferenceScale from "../../../../shared/hooks/useReferenceScale";
-import { Lane } from "../../../../shared/types/deckMap";
+import { DECK_MAP } from "../../../../constants";
+import useReferenceScale from "../../../../hooks/useReferenceScale";
+import { Lane } from "../../../../types/deckMap";
 import "./LaneName.scss";
 
 interface Props {

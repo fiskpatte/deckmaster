@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { BlueBackground } from "../../shared/components/blueBackground";
-import { Paper } from "../../shared/components/paper";
-import TextInput from "../../shared/components/textInput";
-import Button from "../../shared/components/button";
+import { BlueBackground } from "../../components/blueBackground";
+import { Paper } from "../../components/paper";
+import TextInput from "../../components/textInput";
+import Button from "../../components/button";
 import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
-import { isLoggedIn } from "../../shared/functions/auth";
-import Separator from "../../shared/components/separator";
+import { isLoggedIn } from "../../functions/auth";
+import Separator from "../../components/separator";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();

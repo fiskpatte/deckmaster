@@ -1,4 +1,4 @@
-@import "../../../shared/styles/main.scss";
+@import "../../../styles/main.scss";
 
 .CargoDetails {
   @include flexRow();
@@ -10,7 +10,7 @@
   .Card {
     @include flexColumn();
     width: 100%;
-    .ButtonContainer{
+    .ButtonContainer {
       @include flexCenter();
       flex-direction: column;
       .CargoDetailsButton {

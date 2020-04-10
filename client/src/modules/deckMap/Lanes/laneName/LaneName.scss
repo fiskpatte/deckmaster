@@ -1,12 +1,12 @@
-@import "../../../../shared/styles/main.scss";
+@import "../../../../styles/main.scss";
 
 .LaneName {
-    fill: $gray20;
-    stroke: none;
-    font-family: FoundrySterlingLight;
-    dominant-baseline: central;
+  fill: $gray20;
+  stroke: none;
+  font-family: FoundrySterlingLight;
+  dominant-baseline: central;
 }
 
 .Hidden {
-    visibility: hidden;
+  visibility: hidden;
 }

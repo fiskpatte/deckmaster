@@ -1,13 +1,13 @@
 import React from "react";
-import { BlueBackground } from "../../shared/components/blueBackground";
-import { Paper } from "../../shared/components/paper";
+import { BlueBackground } from "../../components/blueBackground";
+import { Paper } from "../../components/paper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useHistory } from "react-router-dom";
-import Text from "../../shared/components/Text";
-import Button from "../../shared/components/button";
+import Text from "../../components/Text";
+import Button from "../../components/button";
 import "./ConfirmCargoScreen.scss";
-import Separator from "../../shared/components/separator";
+import Separator from "../../components/separator";
 
 export const ConfirmCargoScreen = () => {
   const { currentCargo: cargo } = useSelector(

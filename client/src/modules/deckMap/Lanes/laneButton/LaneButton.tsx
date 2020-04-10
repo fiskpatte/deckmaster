@@ -1,7 +1,7 @@
 import React from "react";
-import { DECK_MAP } from "../../../../shared/constants";
+import { DECK_MAP } from "../../../../constants";
 import ArrowIcon from "./ArrowIcon";
-import { Lane } from "../../../../shared/types/deckMap";
+import { Lane } from "../../../../types/deckMap";
 import "./LaneButton.scss";
 
 interface Props {

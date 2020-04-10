@@ -1,4 +1,4 @@
-@import "../../shared/styles/main.scss";
+@import "../../styles/main.scss";
 
 .DeckMap {
   height: 100%-$headerHeight;
@@ -18,10 +18,10 @@
       stroke: black;
       stroke-width: 0.1;
       pointer-events: visible;
-    }    
+    }
   }
   .Footer {
     @include flexCenter();
-    height: 25%;    
+    height: 25%;
   }
 }

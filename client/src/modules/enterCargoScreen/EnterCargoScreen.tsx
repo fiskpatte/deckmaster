@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { BlueBackground } from "../../shared/components/blueBackground";
-import { Paper } from "../../shared/components/paper";
+import { BlueBackground } from "../../components/blueBackground";
+import { Paper } from "../../components/paper";
 import { getMockCargo } from "../../api/endpoints";
 import { setCurrentCargo } from "../../store/actions/cargoActions";
-import { ErrorMessage } from "../../shared/components/errorMessage";
+import { ErrorMessage } from "../../components/errorMessage";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import TextInput from "../../shared/components/textInput";
-import Button from "../../shared/components/button";
-import Text from "../../shared/components/Text";
-import Separator from "../../shared/components/separator";
+import TextInput from "../../components/textInput";
+import Button from "../../components/button";
+import Text from "../../components/Text";
+import Separator from "../../components/separator";
 
 export const EnterCargoScreen = () => {
   const [value, setValue] = useState("");

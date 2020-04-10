@@ -1,6 +1,6 @@
 import React from "react";
-import { DECK_MAP } from "../../../shared/constants";
-import { Grid } from "../../../shared/types/deckMap";
+import { DECK_MAP } from "../../../constants";
+import { Grid } from "../../../types/deckMap";
 import "./Grid.scss";
 interface Props {
   grid: Grid;

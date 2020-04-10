@@ -1,9 +1,9 @@
-@import "../../../shared/styles/main.scss";
+@import "../../../styles/main.scss";
 
 .Logo {
-    max-width: 152px;
-    min-width: 100px;
-    width: 15vw;
-    height: 100%;
-    @include flexCenter();
+  max-width: 152px;
+  min-width: 100px;
+  width: 15vw;
+  height: 100%;
+  @include flexCenter();
 }
