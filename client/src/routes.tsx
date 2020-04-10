@@ -5,6 +5,7 @@ import { ConfirmCargoScreen } from "./modules/confirmCargoScreen";
 import { DeckMapContainer } from "./modules/deckMap";
 import { LoginScreen } from "./modules/loginScreen";
 import { RouteProps } from "react-router-dom";
+import SettingsScreen from "./modules/settingsScreen";
 
 interface Props {
   title: string;
@@ -70,7 +71,7 @@ export const routes: { [key in RouteKey]: Props } = {
     private: true,
     exact: true,
     path: "/settings",
-    component: <div>Settings</div>,
+    component: <SettingsScreen />,
   },
   [RouteKey.NoMatch]: {
     title: "No matching page",
