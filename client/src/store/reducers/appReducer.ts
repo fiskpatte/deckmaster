@@ -3,9 +3,12 @@ import { AppState } from "../types";
 import { deckFactory } from "../../types/deckMap";
 
 const initialState: AppState = {
-  deckMap: {},
   currentDeck: deckFactory(),
+  deckMap: {},
+  settings: null,
+  vesselId: "vessel1",
 };
+
 const appReducer = (state = initialState, action: any): AppState => {
   switch (action.type) {
     case ACTION_TYPES.SET_DECK_MAP:
@@ -18,6 +21,17 @@ const appReducer = (state = initialState, action: any): AppState => {
         ...state,
         currentDeck: action.payload,
       };
+    case ACTION_TYPES.SET_VESSEL_ID:
+      return {
+        ...state,
+        vesselId: action.payload,
+      };
+    case ACTION_TYPES.SET_SETTINGS: {
+      return {
+        ...state,
+        settings: action.payload,
+      };
+    }
     default:
       return state;
   }

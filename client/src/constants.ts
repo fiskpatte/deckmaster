@@ -3,19 +3,19 @@ export const PARSER_FIELD_MODE = {
   DECK_NAME: 1,
   LANE: 2,
   GRID: 3,
-  FRAME: 4
+  FRAME: 4,
 };
 
 export const DECK_MAP_MODE = {
   OVERVIEW: 1,
   PLACE_CARGO: 2,
-  DISCHARGE: 3
-}
+  DISCHARGE: 3,
+};
 
 export enum OverflowDirection {
   Left = -1,
   None = 0,
-  Right = +1
+  Right = +1,
 }
 
 export enum RouteKey {
@@ -27,7 +27,7 @@ export enum RouteKey {
   History = "History",
   Settings = "Settings",
   NoMatch = "NoMatch",
-  DeckOverview = "DeckOverview"
+  DeckOverview = "DeckOverview",
 }
 
 export const DECK_MAP = {
@@ -44,12 +44,14 @@ export const DECK_MAP = {
   LANE_NAME_FONT_SIZE: 2,
   GRID_NAME_FONT_SIZE: 1.5,
   FRAME_NAME_FONT_SIZE: 1.5,
-  BUTTON_ARROW_RATIO: 0.8
+  BUTTON_ARROW_RATIO: 0.8,
 };
 
 export const ACTION_TYPES = {
   SET_DECK_MAP: "SET_DECK_MAP",
   SET_CURRENT_DECK: "SET_CURRENT_DECK",
   SET_CURRENT_CARGO: "SET_CURRENT_CARGO",
-  SET_CURRENT_PLACEMENT: "SET_CURRENT_PLACEMENT"
+  SET_CURRENT_PLACEMENT: "SET_CURRENT_PLACEMENT",
+  SET_VESSEL_ID: "SET_VESSEL_ID",
+  SET_SETTINGS: "SET_SETTINGS",
 };

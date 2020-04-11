@@ -35,5 +35,20 @@ export const post = async (endpoint, body) => {
   }
 };
 
+export const put = async (endpoint, body) => {
+  try {
+    endpoint = removeSlashPrefix(endpoint);
+    const result = await axios.put(`${serverPrefix + endpoint}`, body);
+    return result.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      window.location = "/login";
+      return;
+    }
+    console.log(`Put to ${endpoint} failed. ${error}`);
+    throw error;
+  }
+};
+
 const removeSlashPrefix = (endpoint) =>
   endpoint[0] === "/" ? endpoint.substr(1) : endpoint;

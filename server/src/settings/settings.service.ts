@@ -26,6 +26,7 @@ export class SettingsService {
   async createSettingsForVessel(vesselId: string) {
     const settings = new this.settingsModel({
       vesselId: vesselId,
+      bumperToBumperDistance: 0.7,
     });
 
     const createdSettings = await settings.save();
@@ -38,8 +39,8 @@ export class SettingsService {
       if (!settings.vesselId) {
         throw new Error();
       }
-      if (dto.bumperToBumperSettings) {
-        settings.bumperToBumperDistance = dto.bumperToBumperSettings;
+      if (dto.bumperToBumperDistance) {
+        settings.bumperToBumperDistance = dto.bumperToBumperDistance;
       }
       settings.save();
     } catch (error) {
@@ -50,12 +51,8 @@ export class SettingsService {
   private async findSettings(vesselId: string): Promise<Settings> {
     try {
       const settings = await this.settingsModel.findOne({ vesselId });
-      if (!settings) {
-        throw new Error();
-      }
       return settings;
     } catch (error) {
-      console.log(error);
       throw new NotFoundException('Settings not found');
     }
   }

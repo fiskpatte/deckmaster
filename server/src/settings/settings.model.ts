@@ -14,5 +14,5 @@ export interface Settings extends mongoose.Document {
 export class SettingsDTO {
   id: string;
   vesselId: string;
-  bumperToBumperSettings: number;
+  bumperToBumperDistance: number;
 }
