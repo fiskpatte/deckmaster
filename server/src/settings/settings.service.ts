@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Settings, transformDbSettings, SettingsDTO } from './settings.model';
+import { Settings, SettingsDTO } from './settings.model';
+import { transformDbModel } from 'src/utils/mongo';
 
 @Injectable()
 export class SettingsService {
@@ -16,7 +17,7 @@ export class SettingsService {
         // Create settings if they don't exist for this vessel
         settings = await this.createSettingsForVessel(vesselId);
       }
-      return transformDbSettings(settings);
+      return transformDbModel(settings);
     } catch (error) {
       throw new NotFoundException();
     }

@@ -1,86 +1,90 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import {Model} from 'mongoose';
-import {Chance} from 'chance';
-import { Cargo, transformDbCargo } from './cargo.model';
+import { Model } from 'mongoose';
+import { Chance } from 'chance';
+import { Cargo } from './cargo.model';
 import { CargoDTO } from './cargo.dtos';
+import { transformDbModel } from 'src/utils/mongo';
 
 @Injectable()
 export class CargoService {
+  constructor(
+    @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
+  ) {}
 
-  constructor(@InjectModel('Cargo') private readonly cargoModel: Model<Cargo>) {}
-
-  async addCargo(createCargoDTO: CargoDTO){
+  async addCargo(createCargoDTO: CargoDTO) {
     const newCargo = new this.cargoModel({
-      registrationNumber : createCargoDTO.registrationNumber,
+      registrationNumber: createCargoDTO.registrationNumber,
       length: createCargoDTO.length,
       width: createCargoDTO.width,
       height: createCargoDTO.height,
       type: createCargoDTO.type,
-      weight: createCargoDTO.weight
+      weight: createCargoDTO.weight,
     });
 
     const result = await newCargo.save();
-    return transformDbCargo(result);
+    return transformDbModel(result);
   }
 
-  async getCargo(cargoId: string){
+  async getCargo(cargoId: string) {
     const cargo = await this.findCargo(cargoId);
-    return transformDbCargo(cargo);
+    return transformDbModel(cargo);
   }
 
   async getAllCargo() {
-    try{
+    try {
       const allCargo = await this.cargoModel.find().exec();
-      return allCargo.map(transformDbCargo) as Cargo[];
-
-    } catch(error){
+      return allCargo.map(transformDbModel) as Cargo[];
+    } catch (error) {
       throw error;
     }
   }
 
-  async updateCargo(cargoId: string, dto: CargoDTO){
-
-    try{
+  async updateCargo(cargoId: string, dto: CargoDTO) {
+    try {
       const cargo = await this.findCargo(cargoId);
-      if(dto.registrationNumber){
+      if (dto.registrationNumber) {
         cargo.registrationNumber = dto.registrationNumber;
       }
-      if(dto.length){
+      if (dto.length) {
         cargo.length = dto.length;
       }
-      if(dto.width){
+      if (dto.width) {
         cargo.width = dto.width;
       }
-      if(dto.height){
+      if (dto.height) {
         cargo.height = dto.height;
       }
-      if(dto.type){
+      if (dto.type) {
         cargo.type = dto.type;
       }
-      if(dto.weight){
+      if (dto.weight) {
         cargo.weight = dto.weight;
       }
-     cargo.save();
-
-    } catch(error){
-      throw new NotFoundException("Cargo not found")
+      cargo.save();
+    } catch (error) {
+      throw new NotFoundException('Cargo not found');
     }
   }
 
-  async deleteCargo(cargoId: string){
-    try{
-      await this.cargoModel.deleteOne({_id: cargoId}).exec();
-    } catch (error){
-      throw new NotFoundException("Cargo not found")
+  async deleteCargo(cargoId: string) {
+    try {
+      await this.cargoModel.deleteOne({ _id: cargoId }).exec();
+    } catch (error) {
+      throw new NotFoundException('Cargo not found');
     }
   }
 
-  async mockCargo(){
-    try{
+  async mockCargo() {
+    try {
       const chance = new Chance();
-      
-      const registrationNumber = `${chance.string({length: 3, casing: 'upper', alpha: true, numeric: false})} ${chance.string({length: 3, pool: '1234567890'})}`;
+
+      const registrationNumber = `${chance.string({
+        length: 3,
+        casing: 'upper',
+        alpha: true,
+        numeric: false,
+      })} ${chance.string({ length: 3, pool: '1234567890' })}`;
       const length = chance.floating({ min: 10, max: 14, fixed: 1 });
       const width = chance.floating({ min: 2.1, max: 2.6, fixed: 1 });
       const height = chance.floating({ min: 2.8, max: 3.2, fixed: 1 });
@@ -97,24 +101,22 @@ export class CargoService {
 
       const cargo = await this.addCargo(dto);
       return cargo;
-
-    } catch(error){
+    } catch (error) {
       console.log(error);
-      throw "Failed to mock cargo";
+      throw 'Failed to mock cargo';
     }
   }
 
   private async findCargo(id: string): Promise<Cargo> {
-    try{
+    try {
       const cargo = await this.cargoModel.findById(id);
-      if(!cargo){
+      if (!cargo) {
         throw new Error();
       }
       return cargo;
-    } catch(error){
-      console.log(error)
-      throw new NotFoundException("Cargo not found");
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException('Cargo not found');
     }
   }
 }
-

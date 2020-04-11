@@ -16,11 +16,3 @@ export class SettingsDTO {
   vesselId: string;
   bumperToBumperSettings: number;
 }
-
-export function transformDbSettings(dbSettings) {
-  return {
-    id: dbSettings.id,
-    vesselId: dbSettings.vesselId,
-    bumperToBumperDistance: dbSettings.bumperToBumperDistance,
-  };
-}
