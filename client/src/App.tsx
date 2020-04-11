@@ -7,8 +7,6 @@ import { Header } from "./modules/header";
 import { useDispatch } from "react-redux";
 import appActions from "./store/actions/appActions";
 import { Loader } from "./components/loader";
-import { getMockCargo } from "./api/endpoints";
-import cargoActions from "./store/actions/cargoActions";
 import { renderRoutes } from "./routes.functions";
 
 const App: React.FC = () => {
@@ -41,10 +39,7 @@ const App: React.FC = () => {
       };
       dispatch(appActions.setDeckMap(res));
       dispatch(appActions.setCurrentDeck(res["Weather Deck"]));
-      getMockCargo().then((cargo) => {
-        dispatch(cargoActions.setCurrentCargo(cargo));
-        setLoading(false);
-      });
+      setLoading(false);
     });
   }, [dispatch]);
 
