@@ -6,10 +6,21 @@ interface Props {
   label: string;
   onClick: () => void;
   type?: "positive" | "danger" | "navigation" | "neutral";
+  disabled?: boolean;
 }
 
-export const Button: React.FC<Props> = ({ label, onClick, type = "", className = "" }) => (
-  <button className={`Button ${type} ${className}`} onClick={onClick}>
+export const Button: React.FC<Props> = ({
+  label,
+  onClick,
+  type = "",
+  className = "",
+  disabled,
+}) => (
+  <button
+    className={`Button ${type} ${className}`}
+    onClick={onClick}
+    disabled={disabled}
+  >
     {label}
   </button>
 );
