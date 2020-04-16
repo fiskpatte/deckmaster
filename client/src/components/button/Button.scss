@@ -12,10 +12,34 @@
   border: none;
 }
 
-.positive {
+.type-positive {
   background-color: $successGreen;
 }
 
-.danger {
+.type-danger {
   background-color: $primaryRed;
+}
+
+.type-navigation {
+  background-color: $primaryBlue;
+}
+
+.type-neutral {
+  background-color: $gray80;
+  color: transparentize($gray20, 0.2);
+}
+.size-small {
+  font-size: $smallFont;
+}
+
+.size-standard {
+  font-size: $standardFont;
+}
+
+.size-medium {
+  font-size: $mediumFont;
+}
+
+.size-big {
+  font-size: $bigFont;
 }

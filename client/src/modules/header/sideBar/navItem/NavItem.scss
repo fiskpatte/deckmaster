@@ -14,5 +14,5 @@ a.active {
   box-sizing: border-box;
   padding: 2vh 2vw;
   @include flexStart();
-  font-size: $subTitleFont;
+  font-size: $mediumFont;
 }

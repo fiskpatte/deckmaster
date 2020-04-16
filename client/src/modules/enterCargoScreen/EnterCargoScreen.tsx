@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TextInput from "../../components/textInput";
 import Button from "../../components/button";
-import Text from "../../components/Text";
+import Text from "../../components/text";
 import Separator from "../../components/separator";
 
 export const EnterCargoScreen = () => {
@@ -34,7 +34,7 @@ export const EnterCargoScreen = () => {
   return (
     <BlueBackground>
       <Paper>
-        <Text type="header2" value="Enter cargo ID" />
+        <Text size="medium" value="Enter cargo ID" />
         <TextInput value={value} onChange={(e) => setValue(e.target.value)} />
         <Separator />
         <Button type="positive" label="Next" onClick={onNextButtonClick} />

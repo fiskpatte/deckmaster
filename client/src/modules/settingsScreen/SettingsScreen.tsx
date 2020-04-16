@@ -8,7 +8,7 @@ import { RootState } from "../../store/store";
 import { Loader } from "../../components/loader";
 import Separator from "../../components/separator";
 import Button from "../../components/button";
-import Text from "../../components/Text";
+import Text from "../../components/text";
 import FlexContainer from "../../components/flexContainer";
 import { settingsFactory } from "../../types/settings";
 
@@ -52,7 +52,7 @@ export const EnterCargoScreen = () => {
   return (
     <BlueBackground>
       <Paper>
-        <Text type="header3" value="Bumper to bumper distance" />
+        <Text value="Bumper to bumper distance" />
         <input
           value={settings.bumperToBumperDistance || 0}
           onChange={(e) =>

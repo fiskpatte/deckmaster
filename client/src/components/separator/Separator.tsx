@@ -1,5 +1,5 @@
 import React from "react";
 
-const Separator = () => <div style={{ height: "20px" }} />;
+const Separator = () => <div style={{ height: "4vh" }} />;
 
 export default Separator;

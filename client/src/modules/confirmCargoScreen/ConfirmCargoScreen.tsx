@@ -4,7 +4,7 @@ import { Paper } from "../../components/paper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useHistory } from "react-router-dom";
-import Text from "../../components/Text";
+import Text from "../../components/text";
 import Button from "../../components/button";
 import "./ConfirmCargoScreen.scss";
 import Separator from "../../components/separator";
@@ -19,7 +19,7 @@ export const ConfirmCargoScreen = () => {
   return (
     <BlueBackground>
       <Paper>
-        <Text type="header2" value="Confirm cargo" />
+        <Text size="medium" value="Confirm cargo" />
         <table>
           <tbody>
             <tr>
