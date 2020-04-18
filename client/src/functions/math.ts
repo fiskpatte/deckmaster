@@ -1,5 +1,5 @@
-export const arrayMin = (arr: Array<number>) => {
-    let len = arr.length, min = Infinity;
+export const arrayMin = (arr: Array<number>, defaultValue?: number) => {
+    let len = arr.length, min = defaultValue || Infinity;
     while (len--) {
         if (arr[len] < min) {
             min = arr[len];
@@ -8,8 +8,8 @@ export const arrayMin = (arr: Array<number>) => {
     return min;
 };
 
-export const arrayMax = (arr: Array<number>) => {
-    let len = arr.length, max = -Infinity;
+export const arrayMax = (arr: Array<number>, defaultValue?: number) => {
+    let len = arr.length, max = defaultValue || -Infinity;
     while (len--) {
         if (arr[len] > max) {
             max = arr[len];
@@ -17,3 +17,8 @@ export const arrayMax = (arr: Array<number>) => {
     }
     return max;
 };
+
+export const isBetween = (target: number, lowerValue: number, higherValue: number) => {
+    if (target >= lowerValue && target <= higherValue) return true;
+    return false;
+}

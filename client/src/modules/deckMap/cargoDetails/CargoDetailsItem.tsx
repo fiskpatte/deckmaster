@@ -1,4 +1,5 @@
 import React from "react";
+import Text from "../../../components/text";
 
 interface Props {
   label: string;
@@ -8,8 +9,8 @@ interface Props {
 const CargoDetailsItem: React.FC<Props> = ({ label, value }) => {
   return (
     <div className="CargoDetailItem">
-      <div className="Label">{`${label}:`}</div>
-      <div className="Value">{value}</div>
+      <Text size="small" weight="light" value={`${label}:`} />
+      <Text size="small" weight="medium" value={value} />
     </div>
   );
 };

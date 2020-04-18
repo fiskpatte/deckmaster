@@ -15,7 +15,9 @@ export const ConfirmCargoScreen = () => {
   );
 
   const history = useHistory();
-
+  if (cargo.registrationNumber === "") {
+    history.push("/placecargo");
+  }
   return (
     <BlueBackground>
       <Paper>

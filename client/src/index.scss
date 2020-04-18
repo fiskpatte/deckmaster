@@ -5,6 +5,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: FoundrySterlingLight;
+  user-select: none;
   color: $gray20;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -13,8 +14,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 #root {

@@ -4,17 +4,18 @@ import { DECK_MAP } from "../../../constants";
 import { LaneName } from "./laneName";
 import { Grids } from "../grids";
 import { PlacedCargo } from "../placedCargo";
-import { arrayMin } from "../../../functions/math";
-import { Lane } from "../../../types/deckMap";
-import { Coords } from "../../../types/util";
+import { Lane, Cargo } from "../../../types/deckMap";
+import { Placement } from "../../../types/util";
 import "./Lane.scss";
+import { getNextPlacement } from "../DeckMap.functions";
 
 interface Props {
   lane: Lane;
   svgRef: React.RefObject<SVGSVGElement>;
   rightOrigin: number;
   onClick: (event: React.MouseEvent<SVGElement>) => void;
-  onButtonClick: (position: Coords, laneID: number) => void;
+  onButtonClick: (placement: Placement) => void;
+  currentCargo: Cargo;
 }
 
 const LaneComponent: React.FC<Props> = ({
@@ -23,26 +24,24 @@ const LaneComponent: React.FC<Props> = ({
   rightOrigin,
   onClick,
   onButtonClick,
+  currentCargo,
   ...rest
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
-  let nextPosition = {
-    x: originX + lane.length,
-    y: originY + lane.width / 2,
-  } as Coords;
+  let nextPlacement = {
+    LCG: originX + lane.length,
+    TCG: originY + lane.width / 2,
+    laneID: lane.id
+  } as Placement;
   let buttonVisible = true;
-  const getNextPosition = () => {
-    if (lane.cargo.length === 0) return;
-    let minLCG = arrayMin(lane.cargo.map((c) => c.LCG - c.length / 2));
-    //TODO: Distance to deactivate the button should be fixed differently! (setting)
-    if (minLCG < originX + 10) {
-      buttonVisible = false;
-    }
-    //TODO: B2B distance from settings
-    nextPosition.x = minLCG - 0.2;
-  };
-  getNextPosition();
+  let isOverflow = currentCargo.width > lane.width;
+
+  let success = getNextPlacement(lane, currentCargo, nextPlacement);
+  if (!success) {
+    buttonVisible = false;
+  }
+
   return (
     <>
       <rect
@@ -58,15 +57,18 @@ const LaneComponent: React.FC<Props> = ({
       />
       <Grids
         grids={lane.grids}
-        onClick={(pos) => onButtonClick(pos, lane.id)}
-        nextPosition={nextPosition}
+        onClick={(pos) => onButtonClick(pos)}
+        nextPlacement={nextPlacement}
+        currentCargo={currentCargo}
+        isOverflow={isOverflow}
+        lane={lane}
       />
       <PlacedCargo cargo={lane.cargo} />
       <LaneName lane={lane} rightOrigin={rightOrigin} />
       <LaneButton
         onClick={(ev) => {
           ev.stopPropagation();
-          onButtonClick(nextPosition, lane.id);
+          onButtonClick(nextPlacement);
         }}
         lane={lane}
         visible={buttonVisible}

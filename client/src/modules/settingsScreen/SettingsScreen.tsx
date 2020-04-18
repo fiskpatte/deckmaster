@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import _ from "lodash";
 import { BlueBackground } from "../../components/blueBackground";
 import { Paper } from "../../components/paper";
 import { getSettings, updateSettings } from "../../api/endpoints";
@@ -22,7 +21,7 @@ export const EnterCargoScreen = () => {
   // Fetch settings from API
   useEffect(() => {
     fetchSettings(vesselId);
-  }, []);
+  }, [vesselId]);
 
   const fetchSettings = async (vesselId: string) => {
     const result = await getSettings(vesselId);

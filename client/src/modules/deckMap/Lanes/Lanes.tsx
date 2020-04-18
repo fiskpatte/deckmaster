@@ -1,15 +1,16 @@
 import React from "react";
 import LaneComponent from "./Lane";
 import "./Lane.scss";
-import { Lane } from "../../../types/deckMap";
-import { Coords } from "../../../types/util";
+import { Lane, Cargo } from "../../../types/deckMap";
+import { Placement } from "../../../types/util";
 
 interface Props {
   lanes: Array<Lane>;
   svgRef: React.RefObject<SVGSVGElement>;
   rightOrigin: number;
   onClick: (event: React.MouseEvent | React.TouchEvent) => void;
-  onButtonClick: (position: Coords, laneID: number) => void;
+  onButtonClick: (placement: Placement) => void;
+  currentCargo: Cargo
 }
 
 export const Lanes: React.FC<Props> = ({
@@ -18,6 +19,7 @@ export const Lanes: React.FC<Props> = ({
   rightOrigin,
   onClick,
   onButtonClick,
+  currentCargo
 }) => {
   return (
     <>
@@ -29,6 +31,7 @@ export const Lanes: React.FC<Props> = ({
             onClick={onClick}
             onButtonClick={onButtonClick}
             rightOrigin={rightOrigin}
+            currentCargo={currentCargo}
             svgRef={svgRef}
           />
         );

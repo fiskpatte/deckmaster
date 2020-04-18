@@ -1,5 +1,6 @@
 import { PARSER_FIELD_MODE } from '../constants';
 import { Deck, Lane, Grid, DeckMapType, Frame } from '../types/deckMap';
+import { getAdjacentSide } from '../modules/deckMap/DeckMap.functions';
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
 let currentKey = "";
@@ -60,8 +61,9 @@ const setData = (data: DeckMapType, dataElement: string[]) => {
             };
             let lastData = data[currentKey];
             if (fieldMode === PARSER_FIELD_MODE.LANE) {
-                let lane = { ...newElem, partial: false, grids: [], cargo: [] } as Lane
+                let lane = { ...newElem, partial: false, grids: [], cargo: [], adjacentLanes: [] } as Lane
                 handlePartialLanes(lastData, lane);
+                assignAdjacentLanes(lastData, lane);
                 lastData.lanes.push(lane);
             } else {
                 assignLane(lastData.lanes, newElem as Grid);
@@ -81,16 +83,17 @@ const setData = (data: DeckMapType, dataElement: string[]) => {
     }
 }
 
-const handlePartialLanes = (lastData: Deck, newElem: Lane) => {
-    if (lastData.lanes.some(l => l.name === newElem.name)) {
-        let updated = lastData.lanes.reduce((r, l) => {
-            if (l.name === newElem.name && l.LCG < newElem.LCG) {
+const handlePartialLanes = (deck: Deck, newLane: Lane) => {
+    let possibleLanes = deck.lanes.filter(l => l.name === newLane.name)
+    if (possibleLanes.length > 0) {
+        let updated = deck.lanes.reduce((r, l) => {
+            if (l.name === newLane.name && l.LCG < newLane.LCG) {
                 l.partial = true;
                 r++;
             }
             return r;
         }, 0)
-        if (updated === 0) newElem.partial = true;
+        if (updated < possibleLanes.length) newLane.partial = true;
     }
 }
 
@@ -105,4 +108,14 @@ const assignLane = (lanes: Array<Lane>, grid: Grid) => {
         return r?.LCG && r.LCG > l.LCG - l.length / 2 ? r : l;
     }, null);
     lane?.grids.push(grid);
+}
+
+const assignAdjacentLanes = (deck: Deck, newLane: Lane) => {
+    deck.lanes.forEach((lane) => {
+        let adjacentSide = getAdjacentSide(lane, newLane);
+        if (adjacentSide) {
+            newLane.adjacentLanes.push({ ...lane, adjacentSide: -adjacentSide });
+            lane.adjacentLanes.push({ ...newLane, adjacentSide: adjacentSide });
+        }
+    })
 }

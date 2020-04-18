@@ -4,15 +4,15 @@ a {
   text-decoration: inherit;
   color: inherit;
 }
-a.active {
-  .NavItem {
-    background-color: $primaryBlue;
-  }
+
+a.NavItem.active {
+  background-color: $primaryBlue;
 }
+
 .NavItem {
   border-bottom: 1px solid $primaryBlue;
   box-sizing: border-box;
-  padding: 2vh 2vw;
+  padding: 1vh 2vw;
   @include flexStart();
   font-size: $mediumFont;
 }

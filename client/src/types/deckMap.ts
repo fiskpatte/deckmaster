@@ -1,3 +1,5 @@
+import { AdjacentSide } from "../constants";
+
 export interface DeckMapType {
     [key: string]: Deck;
 }
@@ -42,7 +44,8 @@ export interface Lane extends DeckMapElement {
     name: string,
     partial: boolean,
     grids: Array<Grid>,
-    cargo: Array<Cargo>
+    cargo: Array<Cargo>,
+    adjacentLanes: Array<AdjacentLane>
 }
 
 export const laneFactory = (): Lane => {
@@ -51,7 +54,12 @@ export const laneFactory = (): Lane => {
     elem.partial = false;
     elem.grids = [];
     elem.cargo = [];
+    elem.adjacentLanes = [];
     return elem;
+}
+
+interface AdjacentLane extends Lane {
+    adjacentSide: AdjacentSide
 }
 
 export interface Grid extends DeckMapElement {

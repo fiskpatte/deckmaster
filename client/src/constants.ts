@@ -12,10 +12,18 @@ export const DECK_MAP_MODE = {
   DISCHARGE: 3,
 };
 
-export enum OverflowDirection {
+export enum SwipeDirection {
+  Undefined = -1,
+  Up,
+  Down,
+  Left,
+  Right
+}
+
+export enum AdjacentSide {
+  Right = 1,
   Left = -1,
-  None = 0,
-  Right = +1,
+  Undefined = 0
 }
 
 export enum RouteKey {

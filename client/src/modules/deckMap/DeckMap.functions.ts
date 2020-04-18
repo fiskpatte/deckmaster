@@ -1,12 +1,12 @@
 import { arrayMax, arrayMin } from "../../functions/math";
-import { DECK_MAP } from "../../constants";
-import { Deck, Cargo } from "../../types/deckMap";
+import { DECK_MAP, AdjacentSide } from "../../constants";
+import { Deck, Cargo, DeckMapElement, Lane } from "../../types/deckMap";
 import { Coords, Placement } from "../../types/util";
 
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.LCG - lane.length / 2)) *
-      DECK_MAP.X_SCALE -
+    DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -14,7 +14,7 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)) *
-      DECK_MAP.Y_SCALE -
+    DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
@@ -58,17 +58,17 @@ export const svgPoint = (
   return pt.matrixTransform(fromElement.getScreenCTM()?.inverse());
 };
 
-export const placeCargoFromEvent = (
-  event: React.MouseEvent | React.TouchEvent,
-  svgRef: React.RefObject<SVGSVGElement>,
-  cargo: Cargo,
-  callback: (position: Placement) => void
-) => {
-  //THIS FUNCTION HAS TO BE REVIEWED!!
-  event.preventDefault();
-  let coords = getCoordinates(event);
-  placeCargo(coords, svgRef, cargo, callback);
-};
+// export const placeCargoFromEvent = (
+//   event: React.MouseEvent | React.TouchEvent,
+//   svgRef: React.RefObject<SVGSVGElement>,
+//   cargo: Cargo,
+//   callback: (position: Placement) => void
+// ) => {
+//   //THIS FUNCTION HAS TO BE REVIEWED!!
+//   event.preventDefault();
+//   let coords = getCoordinates(event);
+//   placeCargo(coords, svgRef, cargo, callback);
+// };
 
 export const placeCargo = (
   coords: Coords | null,
@@ -94,23 +94,83 @@ export const placeCargoFromSVGCoords = (
   callback(placement);
 };
 
-export const getCoordinates = (event: React.MouseEvent | React.TouchEvent) => {
-  let x = 0;
-  let y = 0;
-  let nEvent = event.nativeEvent;
-  console.log(nEvent);
-  if (window.TouchEvent && nEvent instanceof TouchEvent) {
-    if (nEvent.touches.length === 1) {
-      let touch = nEvent.touches[0];
-      x = touch.clientX;
-      y = touch.clientY;
-    } else {
-      return null;
+//Return if newElem is right or left of elem. if contained is true, the newElem has to be completely adjacent
+export const getAdjacentSide = (elem: DeckMapElement, newElem: DeckMapElement, contained = false) => {
+  let getEndpoints = (elem: DeckMapElement) => {
+    let left = elem.TCG - elem.width / 2;
+    let right = left + elem.width;
+    let aft = elem.LCG - elem.length / 2;
+    let fwd = aft + elem.length;
+
+    return { left, right, aft, fwd };
+  }
+  let elemEndpoints = getEndpoints(elem);
+  let newElemEndpoints = getEndpoints(newElem);
+
+  //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
+  let isAdjacent = contained ?
+    newElemEndpoints.aft >= elemEndpoints.aft && newElemEndpoints.fwd <= elemEndpoints.fwd :
+    newElemEndpoints.aft <= elemEndpoints.fwd && newElemEndpoints.fwd >= elemEndpoints.aft;
+  if (isAdjacent) {
+    if (Math.abs(elemEndpoints.right - newElemEndpoints.left) <= newElem.width) return AdjacentSide.Right;
+    if (Math.abs(elemEndpoints.left - newElemEndpoints.right) <= newElem.width) return AdjacentSide.Left;
+  }
+  return AdjacentSide.Undefined;
+}
+
+export const getNextPlacement = (lane: Lane, currentCargo: Cargo, nextPlacement: Placement) => {
+  if (lane.cargo.length === 0 && currentCargo.width <= lane.width) return true;
+  let originX = lane.LCG - lane.length / 2;
+  let minLCG = arrayMin(lane.cargo.map((c) => c.LCG - c.length / 2), nextPlacement.LCG);
+  if (lane.adjacentLanes.some(al => al.cargo.some(c => c.overflowLaneID === lane.id))) {
+    let overflowMinLCG = arrayMin(lane.adjacentLanes.map(al => al.cargo.filter(c => c.overflowLaneID === lane.id).map(c => c.LCG - c.length / 2)).flat());
+    minLCG = Math.min(minLCG, overflowMinLCG);
+  }
+
+  //TODO: Distance to deactivate the button should be fixed differently! (setting)
+  if (minLCG < originX + currentCargo.length) {
+    nextPlacement.LCG = originX;
+    return false;
+  }
+  //TODO: B2B distance from settings
+  nextPlacement.LCG = minLCG - 0.2;
+
+  if (currentCargo.width > lane.width) {
+    let success = handleOverflow(currentCargo, nextPlacement, lane);
+    if (!success) {
+      nextPlacement.LCG = originX;
+      return false;
     }
   }
-  if (nEvent instanceof MouseEvent) {
-    x = nEvent.clientX;
-    y = nEvent.clientY;
-  }
-  return { x, y };
+  return true;
 };
+
+export const handleOverflow = (currentCargo: Cargo, nextPlacement: Placement, placingLane: Lane, recursive = true): boolean => {
+
+  if (performOverflow(placingLane, currentCargo, nextPlacement, AdjacentSide.Right)) return true;
+  else if (performOverflow(placingLane, currentCargo, nextPlacement, AdjacentSide.Left)) return true;
+  else {
+    let backstep = 0.5;
+    if (recursive && nextPlacement.LCG - backstep >= placingLane.LCG - placingLane.length / 2) {
+      nextPlacement.LCG -= backstep;
+      return handleOverflow(currentCargo, nextPlacement, placingLane);
+    } else {
+      return false;
+    }
+  }
+}
+//Performs overflow in specified direction if possible. 
+export const performOverflow = (placingLane: Lane, currentCargo: Cargo, nextPlacement: Placement, overflowSide: AdjacentSide, frontPlacement = true) => {
+  if (overflowSide === AdjacentSide.Undefined) return false;
+  let cargo = { ...currentCargo, ...nextPlacement };
+  if (frontPlacement) {
+    cargo.LCG -= currentCargo.length / 2;
+  }
+  let adjacentLane = placingLane.adjacentLanes.filter(al => al.adjacentSide === overflowSide && getAdjacentSide(al, cargo, true));
+  if (adjacentLane.length === 1 && !adjacentLane[0].cargo.some(c => getAdjacentSide(c, cargo))) {
+    nextPlacement.TCG = placingLane.TCG + overflowSide * (currentCargo.width - placingLane.width) / 2;
+    nextPlacement.overflowLaneID = adjacentLane[0].id;
+    return true;
+  }
+  return false;
+}

@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { DECK_MAP, OverflowDirection } from "../../constants";
+import React, { useRef, useCallback } from "react";
+import { DECK_MAP, AdjacentSide } from "../../constants";
 import { Lanes } from "./lanes";
 import {
   getViewBoxOriginX,
@@ -8,9 +8,10 @@ import {
   getViewBoxSizeY,
   placeCargoFromSVGCoords,
   getRulerOrigin,
+  performOverflow
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
-import { Coords, Placement } from "../../types/util";
+import { Placement } from "../../types/util";
 import { useDispatch } from "react-redux";
 import { setCurrentPlacement } from "../../store/actions/cargoActions";
 import { Deck, Cargo } from "../../types/deckMap";
@@ -30,41 +31,40 @@ const DeckMap: React.FC<Props> = ({
   currentPlacement,
 }) => {
   const dispatch = useDispatch();
-  const setPlacement = (placement: Placement) =>
-    dispatch(setCurrentPlacement(placement));
+  const setPlacement = useCallback(
+    (placement: Placement) =>
+      dispatch(setCurrentPlacement(placement)), [dispatch]);
   const svgRef = useRef<SVGSVGElement>(null);
   const history = useHistory();
 
   if (currentCargo.registrationNumber === "") {
     history.push("/placecargo");
   }
-  currentCargo.width = 4;
+
   const placeCargoFromClick = (event: React.MouseEvent | React.TouchEvent) => {
     console.log("lane clicked", event);
     return;
     // placeCargoFromEvent(event, svgRef, currentCargo, setPlacement);
   };
-  const placeCargoFromFrontPosition = (position: Coords, laneID: number) => {
-    position.x -= currentCargo.length / 2;
-    let placingLane = currentDeck.lanes.find((l) => l.id === laneID);
-    let TCG = position.y;
-    let overflow = OverflowDirection.None;
-    if (placingLane && currentCargo.width > placingLane.width) {
-      TCG += (currentCargo.width - placingLane.width) / 2;
-      overflow = OverflowDirection.Right;
-    }
-    let newPlacement = {
-      LCG: position.x,
-      TCG: TCG,
-      laneID: laneID,
-      overflowDirection: overflow,
-    } as Placement;
-    placeCargoFromSVGCoords(newPlacement, setPlacement);
+  const placeCargoFromFrontPlacement = (placement: Placement) => {
+    placement.LCG -= currentCargo.length / 2;
+    placeCargoFromSVGCoords(placement, setPlacement);
   };
+  const placeCargoFromSwipe = useCallback(
+    (swipeSide: AdjacentSide) => {
+      let placement = currentPlacement;
+      let placingLane = currentDeck.lanes.find(l => l.id === placement?.laneID);
+      if (placingLane && placement) {
+        let success = performOverflow(placingLane, currentCargo, placement, swipeSide, false)
+        if (success) setPlacement(placement);
+      }
+    }, [currentDeck, currentPlacement, currentCargo, setPlacement]);
+
   let viewBoxSizeX = getViewBoxSizeX(currentDeck);
   let viewBoxSizeY = getViewBoxSizeY(currentDeck);
   let viewBoxOriginX = getViewBoxOriginX(currentDeck);
   let viewBoxOriginY = getViewBoxOriginY(currentDeck);
+
   return (
     <svg
       className="svgBody"
@@ -80,9 +80,10 @@ const DeckMap: React.FC<Props> = ({
           lanes={currentDeck.lanes}
           svgRef={svgRef}
           rightOrigin={viewBoxSizeX + viewBoxOriginX}
+          currentCargo={currentCargo}
           onClick={(ev) => placeCargoFromClick(ev)}
-          onButtonClick={(position, id) =>
-            placeCargoFromFrontPosition(position, id)
+          onButtonClick={(placement) =>
+            placeCargoFromFrontPlacement(placement)
           }
         />
         <FrameRuler
@@ -102,6 +103,7 @@ const DeckMap: React.FC<Props> = ({
             width={currentCargo.length}
             height={currentCargo.width}
             placing={true}
+            swipeCallback={placeCargoFromSwipe}
           />
         ) : null}
       </g>

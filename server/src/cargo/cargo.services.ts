@@ -10,7 +10,7 @@ import { transformDbModel } from 'src/utils/mongo';
 export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
-  ) {}
+  ) { }
 
   async addCargo(createCargoDTO: CargoDTO) {
     const newCargo = new this.cargoModel({
@@ -86,10 +86,12 @@ export class CargoService {
         numeric: false,
       })} ${chance.string({ length: 3, pool: '1234567890' })}`;
       const length = chance.floating({ min: 10, max: 14, fixed: 1 });
-      const width = chance.floating({ min: 2.1, max: 2.6, fixed: 1 });
+      let width = chance.floating({ min: 2.1, max: 2.6, fixed: 1 });
       const height = chance.floating({ min: 2.8, max: 3.2, fixed: 1 });
       const type = chance.integer({ min: 1, max: 2 }) * 10;
       const weight = chance.integer({ min: 15, max: 20 });
+
+      if (Math.random() < 0.2) width = 4;
 
       const dto = new CargoDTO();
       dto.registrationNumber = registrationNumber;

@@ -1,7 +1,6 @@
 @import "../../styles/main.scss";
 
 .Text {
-  color: $gray20;
   margin: $standardMargin;
 }
 
@@ -41,4 +40,12 @@
 
 .size-big {
   font-size: $bigFont;
+}
+
+.color-white {
+  color: white;
+}
+
+.color-standard {
+  color: $gray20;
 }
