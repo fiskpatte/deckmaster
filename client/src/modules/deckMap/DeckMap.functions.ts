@@ -119,10 +119,11 @@ export const getAdjacentSide = (elem: DeckMapElement, newElem: DeckMapElement, c
 }
 
 export const getNextPlacement = (lane: Lane, currentCargo: Cargo, nextPlacement: Placement) => {
-  if (lane.cargo.length === 0 && currentCargo.width <= lane.width) return true;
+  let someOverflowingCargo = lane.adjacentLanes.some(al => al.cargo.some(c => c.overflowLaneID === lane.id));
+  if (lane.cargo.length === 0 && currentCargo.width <= lane.width && !someOverflowingCargo) return true;
   let originX = lane.LCG - lane.length / 2;
   let minLCG = arrayMin(lane.cargo.map((c) => c.LCG - c.length / 2), nextPlacement.LCG);
-  if (lane.adjacentLanes.some(al => al.cargo.some(c => c.overflowLaneID === lane.id))) {
+  if (someOverflowingCargo) {
     let overflowMinLCG = arrayMin(lane.adjacentLanes.map(al => al.cargo.filter(c => c.overflowLaneID === lane.id).map(c => c.LCG - c.length / 2)).flat());
     minLCG = Math.min(minLCG, overflowMinLCG);
   }
