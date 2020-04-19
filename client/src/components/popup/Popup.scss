@@ -1,0 +1,22 @@
+@import "../../styles/main.scss";
+
+.Popup {
+  position: absolute;
+  top: 160%;
+  left: 50%;
+  z-index: $popupOverlayZIndex + 1;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.Popup::after {
+  content: "";
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  margin-left: -1vw;
+  border-width: 1vw;
+  margin-top: -1.9vw;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}

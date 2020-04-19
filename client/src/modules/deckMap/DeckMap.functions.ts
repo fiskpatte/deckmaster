@@ -160,7 +160,7 @@ export const handleOverflow = (currentCargo: Cargo, nextPlacement: Placement, pl
     }
   }
 }
-//Performs overflow in specified direction if possible. 
+//Performs overflow in specified direction if possible. Returns true upon success.
 export const performOverflow = (placingLane: Lane, currentCargo: Cargo, nextPlacement: Placement, overflowSide: AdjacentSide, frontPlacement = true) => {
   if (overflowSide === AdjacentSide.Undefined) return false;
   let cargo = { ...currentCargo, ...nextPlacement };
