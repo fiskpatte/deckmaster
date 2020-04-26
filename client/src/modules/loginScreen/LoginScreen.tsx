@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
 import { isLoggedIn } from "../../functions/auth";
 import Separator from "../../components/separator";
+import { FlexRowEndContainer } from "../../components/flexContainer";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -44,6 +45,7 @@ export const LoginScreen: React.FC = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Email adress"
+          size="big"
         />
         <Separator />
         <TextInput
@@ -51,9 +53,17 @@ export const LoginScreen: React.FC = () => {
           type={"password"}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          size="big"
         />
         <Separator />
-        <Button label="Log in" onClick={onLoginButtonClick} type="positive" />
+        <FlexRowEndContainer>
+          <Button
+            label="Log in"
+            onClick={onLoginButtonClick}
+            type="positive"
+            size="medium"
+          />
+        </FlexRowEndContainer>
       </Paper>
     </BlueBackground>
   );

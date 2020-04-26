@@ -5,9 +5,13 @@
   border: 2px solid $gray80;
   box-sizing: border-box;
   border-radius: 6px;
-  width: 100%;
   font-family: FoundrySterlingMedium;
   font-size: $standardFont;
+  padding: 1vh 1vw;
+}
+
+.textinput-size-big {
+  width: 100%;
   padding: 2vh 2vw;
 }
 
@@ -17,4 +21,5 @@
 
 .TextInput:focus {
   outline: none !important;
+  border: 2px solid $lightBlue;
 }

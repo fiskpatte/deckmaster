@@ -10,6 +10,7 @@ import TextInput from "../../components/textInput";
 import Button from "../../components/button";
 import Text from "../../components/text";
 import Separator from "../../components/separator";
+import { FlexRowEndContainer } from "../../components/flexContainer";
 
 export const EnterCargoScreen = () => {
   const [value, setValue] = useState("");
@@ -35,9 +36,15 @@ export const EnterCargoScreen = () => {
     <BlueBackground>
       <Paper>
         <Text size="medium" value="Enter cargo ID" />
-        <TextInput value={value} onChange={(e) => setValue(e.target.value)} />
+        <TextInput
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          size="big"
+        />
         <Separator />
-        <Button type="positive" label="Next" onClick={onNextButtonClick} />
+        <FlexRowEndContainer>
+          <Button type="positive" label="Next" onClick={onNextButtonClick} />
+        </FlexRowEndContainer>
         {error && <ErrorMessage message={error} />}
       </Paper>
     </BlueBackground>

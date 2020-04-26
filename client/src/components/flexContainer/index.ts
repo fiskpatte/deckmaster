@@ -1,2 +1,4 @@
 import FlexContainer from "./FlexContainer";
-export default FlexContainer;
+import FlexRowEndContainer from "./FlexRowEndContainer";
+
+export { FlexContainer, FlexRowEndContainer };

@@ -1,7 +1,5 @@
 import React from "react";
 
-interface Props {}
-
 interface Props {
   children?: React.ReactNode;
   flexDirection: "row" | "column";

@@ -8,14 +8,14 @@ import { Loader } from "../../components/loader";
 import Separator from "../../components/separator";
 import Button from "../../components/button";
 import Text from "../../components/text";
-import FlexContainer from "../../components/flexContainer";
 import { settingsFactory } from "../../types/settings";
+import TextInput from "../../components/textInput";
+import { FlexRowEndContainer } from "../../components/flexContainer";
 
 export const EnterCargoScreen = () => {
   const { vesselId } = useSelector((state: RootState) => state.appReducer);
 
   const [settings, setSettings] = useState(settingsFactory());
-  const [initialSettings, setInitialSettings] = useState(settingsFactory());
   const [isSaving, setIsSaving] = useState(false);
 
   // Fetch settings from API
@@ -26,7 +26,6 @@ export const EnterCargoScreen = () => {
   const fetchSettings = async (vesselId: string) => {
     const result = await getSettings(vesselId);
     setSettings(result);
-    setInitialSettings(result);
   };
 
   const saveButtonClick = async () => {
@@ -51,25 +50,39 @@ export const EnterCargoScreen = () => {
   return (
     <BlueBackground>
       <Paper>
-        <Text value="Bumper to bumper distance" />
-        <input
-          value={settings.bumperToBumperDistance || 0}
-          onChange={(e) =>
-            setSettings({
-              ...settings,
-              bumperToBumperDistance: +e.target.value,
-            })
-          }
-        />
+        <Text size="medium" value="Settings" />
         <Separator />
-        <FlexContainer flexDirection="row" justifyContent="space-between">
+        <table>
+          <tbody>
+            <tr>
+              <td style={{ width: "200px" }}>
+                <Text size="standard" value="B2B distance" />
+              </td>
+              <td>
+                <TextInput
+                  size="standard"
+                  value={settings.bumperToBumperDistance.toString() || "0"}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      bumperToBumperDistance: +e.target.value,
+                    })
+                  }
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <Separator />
+        <FlexRowEndContainer>
           <Button
-            type="neutral"
-            label="Undo"
-            onClick={() => setSettings({ ...initialSettings })}
+            label="Save"
+            type="positive"
+            onClick={saveButtonClick}
+            size="standard"
           />
-          <Button label="Save" type="positive" onClick={saveButtonClick} />
-        </FlexContainer>
+        </FlexRowEndContainer>
       </Paper>
     </BlueBackground>
   );

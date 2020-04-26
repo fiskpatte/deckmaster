@@ -6,6 +6,7 @@ interface Props {
   onChange: (e: any) => void;
   placeholder?: string;
   type?: string;
+  size?: "small" | "standard" | "big";
 }
 
 export const TextInput: React.FC<Props> = ({
@@ -13,10 +14,11 @@ export const TextInput: React.FC<Props> = ({
   onChange,
   placeholder,
   type,
+  size = "standard",
 }) => (
   <input
     type={type || "text"}
-    className="TextInput"
+    className={`TextInput textinput-size-${size}`}
     value={value}
     onChange={onChange}
     placeholder={placeholder}

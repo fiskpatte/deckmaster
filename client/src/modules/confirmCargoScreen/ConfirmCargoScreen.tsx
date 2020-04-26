@@ -64,7 +64,7 @@ export const ConfirmCargoScreen = () => {
             <Button
               onClick={() => history.push("/placecargo")}
               label="Cancel"
-              type="danger"
+              type="neutral"
             />
           </div>
           <div style={{ flex: 1, margin: "0 0 0 10px" }}>
