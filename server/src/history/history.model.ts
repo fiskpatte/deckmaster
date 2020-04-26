@@ -1,13 +1,14 @@
 import * as mongoose from 'mongoose';
 
 export const HistorySchema = new mongoose.Schema({
-  userId: String,
-  created: Number,
+  username: String,
+  created: Date,
   description: String,
 });
 
 export interface History extends mongoose.Document {
   id: string;
-  userId: string;
+  username: string;
   created: Date;
+  description: string;
 }

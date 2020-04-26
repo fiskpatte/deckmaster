@@ -1,4 +1,4 @@
-import { setAuthorizationToken } from "../functions/axios";
+import { setAuthorizationToken, setUsername } from "../functions/axios";
 import { post, get, put } from "./verbs";
 import { Settings } from "../types/settings";
 
@@ -10,6 +10,7 @@ export const login = async (username: string, password: string) => {
 
   if (result?.access_token) {
     setAuthorizationToken(result.access_token);
+    setUsername(result.username);
   } else {
     throw new Error("Login failed");
   }

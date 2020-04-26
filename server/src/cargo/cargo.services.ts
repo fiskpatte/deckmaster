@@ -5,12 +5,14 @@ import { Chance } from 'chance';
 import { Cargo } from './cargo.model';
 import { CargoDTO } from './cargo.dtos';
 import { transformDbModel } from 'src/utils/mongo';
+import { History } from '../history/history.model';
 
 @Injectable()
 export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
-  ) { }
+    @InjectModel('History') private readonly historyModel: Model<History>,
+  ) {}
 
   async addCargo(createCargoDTO: CargoDTO) {
     const newCargo = new this.cargoModel({
@@ -75,7 +77,7 @@ export class CargoService {
     }
   }
 
-  async mockCargo() {
+  async mockCargo(username: string) {
     try {
       const chance = new Chance();
 
@@ -102,6 +104,13 @@ export class CargoService {
       dto.weight = weight;
 
       const cargo = await this.addCargo(dto);
+      console.log('username: ', username);
+      const history = new this.historyModel({
+        username,
+        created: new Date().toISOString(),
+        description: `Mocked cargo ${cargo.registrationNumber}`,
+      });
+      history.save();
       return cargo;
     } catch (error) {
       console.log(error);

@@ -5,10 +5,13 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import store from "./store/store";
-import { setAuthorizationToken } from "./functions/axios";
+import { setAuthorizationToken, setUsername } from "./functions/axios";
 
 if (localStorage.jwtToken) {
   setAuthorizationToken(localStorage.jwtToken);
+  if (localStorage.username) {
+    setUsername(localStorage.username);
+  }
 }
 
 ReactDOM.render(

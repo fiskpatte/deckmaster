@@ -7,6 +7,7 @@ import {
   Patch,
   Delete,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import { CargoService } from './cargo.services';
 import { CargoDTO } from './cargo.dtos';
@@ -35,8 +36,8 @@ export class CargoController {
   }
 
   @Post('mock')
-  async devMockCargo() {
-    const cargo = await this.cargoService.mockCargo();
+  async devMockCargo(@Headers() headers) {
+    const cargo = await this.cargoService.mockCargo(headers.username);
     return cargo;
   }
 
