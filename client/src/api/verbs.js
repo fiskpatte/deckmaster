@@ -3,8 +3,8 @@ import axios from "axios";
 axios.defaults.headers.get["Content-Type"] = "application/json";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-// const serverPrefix = "http://localhost:4000/";
-const serverPrefix = "http://192.168.1.6:4000/";
+const serverPrefix = "http://localhost:4000/";
+// const serverPrefix = "http://192.168.1.6:4000/";
 
 export const get = async (endpoint) => {
   try {
