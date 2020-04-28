@@ -10,7 +10,7 @@ export const login = async (username: string, password: string) => {
 
   if (result?.access_token) {
     setAuthorizationToken(result.access_token);
-    setUsername(result.username);
+    setUsername(result.user_name);
   } else {
     throw new Error("Login failed");
   }

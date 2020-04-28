@@ -12,7 +12,7 @@ export const setAuthorizationToken = (token?: string) => {
 
 export const setUsername = (username?: string) => {
   if (username) {
-    axios.defaults.headers.common["username"] = "username";
+    axios.defaults.headers.common["username"] = username;
     localStorage.setItem("username", username);
   } else {
     delete axios.defaults.headers.common["username"];

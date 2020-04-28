@@ -7,6 +7,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CargoModule } from './cargo/cargo.module';
+import { LogModule } from './log/log.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CargoModule } from './cargo/cargo.module';
     AuthModule,
     CargoPlacementModule,
     CargoModule,
+    LogModule,
     MongooseModule.forRoot(
       'mongodb+srv://dbUser:0cP6knNISFBnrwoC@loadmaster-przxq.mongodb.net/test?retryWrites=true&w=majority',
       { useNewUrlParser: true, useUnifiedTopology: true },
