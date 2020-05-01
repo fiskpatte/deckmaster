@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from "react";
-import { DECK_MAP, AdjacentSide } from "../../constants";
+import { DECK_MAP } from "../../constants";
 import { Lanes } from "./lanes";
 import {
   getViewBoxOriginX,
@@ -8,7 +8,7 @@ import {
   getViewBoxSizeY,
   placeCargoFromSVGCoords,
   getRulerOrigin,
-  performOverflow,
+  placeCargoFromEvent
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
@@ -47,29 +47,18 @@ const DeckMap: React.FC<Props> = ({
     return;
     // placeCargoFromEvent(event, svgRef, currentCargo, setPlacement);
   };
+
+  const placeCargoFromDrag = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    let placingLane = currentDeck.lanes.find(l => l.id === currentPlacement?.laneId);
+    if (currentPlacement && placingLane) {
+      placeCargoFromEvent(event, svgRef, placingLane, currentCargo, currentPlacement, setPlacement);
+    }
+  };
+
   const placeCargoFromFrontPlacement = (placement: Placement) => {
     placement.LCG -= currentCargo.length / 2;
     placeCargoFromSVGCoords(placement, setPlacement);
   };
-  const placeCargoFromSwipe = useCallback(
-    (swipeSide: AdjacentSide) => {
-      let placement = currentPlacement;
-      let placingLane = currentDeck.lanes.find(
-        (l) => l.id === placement?.laneId
-      );
-      if (placingLane && placement) {
-        let success = performOverflow(
-          placingLane,
-          currentCargo,
-          placement,
-          swipeSide,
-          false
-        );
-        if (success) setPlacement(placement);
-      }
-    },
-    [currentDeck, currentPlacement, currentCargo, setPlacement]
-  );
 
   let viewBoxSizeX = getViewBoxSizeX(currentDeck);
   let viewBoxSizeY = getViewBoxSizeY(currentDeck);
@@ -105,16 +94,16 @@ const DeckMap: React.FC<Props> = ({
             return <use key={100 * ix + ixc} href={`#cargoIcon${c.id}`} />;
           })
         )}
-        {currentPlacement ? (
+        {!!currentPlacement &&
           <CargoIcon
             x={currentPlacement.LCG}
             y={currentPlacement.TCG}
             width={currentCargo.length}
             height={currentCargo.width}
             placing={true}
-            swipeCallback={placeCargoFromSwipe}
+            dragCallback={placeCargoFromDrag}
           />
-        ) : null}
+        }
       </g>
     </svg>
   );

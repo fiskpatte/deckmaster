@@ -1,9 +1,8 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import useReferenceScale from "../../../hooks/useReferenceScale";
-import useSvgSwipe from '../../../hooks/useSvgSwipe';
 import { ReactComponent as Icon } from "../../../assets/icons/cargoIcon.svg";
 import "./CargoIcon.scss";
-import { SwipeDirection, AdjacentSide } from "../../../constants";
+import { motion } from 'framer-motion';
 
 interface Props {
   x: number;
@@ -11,7 +10,7 @@ interface Props {
   height: number;
   width: number;
   placing?: boolean;
-  swipeCallback?: (swipeSide: AdjacentSide) => void
+  dragCallback?: (info: MouseEvent | TouchEvent | PointerEvent) => void;
 }
 
 //This component uses {x,y} as LCG and TCG coordinates
@@ -21,24 +20,20 @@ export const CargoIcon: React.FC<Props> = ({
   width,
   height,
   placing = false,
-  swipeCallback
+  dragCallback
 }) => {
   const groupRef = useRef<SVGPathElement>(null);
   const scale = useReferenceScale(groupRef, { width, height });
-  let { swipeDirection, updateSwipeDirection } = useSvgSwipe(groupRef);
-  useEffect(() => {
-    if (placing && swipeCallback) {
-      if (swipeDirection === SwipeDirection.Up) {
-        swipeCallback(AdjacentSide.Left);
-      } else if (swipeDirection === SwipeDirection.Down) {
-        swipeCallback(AdjacentSide.Right);
-      }
-      updateSwipeDirection(SwipeDirection.Undefined);
-    }
-  }, [placing, swipeDirection, updateSwipeDirection, swipeCallback])
+
   const corner = { x: x - width / 2, y: y - height / 2 };
   return (
-    <svg
+    <motion.svg
+      drag={placing}
+      // onDragStart={((ev, info) => console.log("start", ev, info))}
+      onDrag={(event) => dragCallback && dragCallback(event)}
+      // onDragEnd={((ev, info) => console.log("end", ev, info))}
+      dragMomentum={false}
+      dragElastic={0}
       width={width}
       height={height}
       x={corner.x}
@@ -60,7 +55,7 @@ export const CargoIcon: React.FC<Props> = ({
           width={width}
           className="BoundingBox" />
       </g>
-    </svg >
+    </motion.svg >
   );
 };
 

@@ -53,7 +53,7 @@ const LaneComponent: React.FC<Props> = ({
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
-        onClick={onClick}
+      // onClick={onClick}
       />
       <Grids
         grids={lane.grids}

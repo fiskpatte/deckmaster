@@ -6,7 +6,7 @@ import { Coords, Placement } from "../../types/util";
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.LCG - lane.length / 2)) *
-      DECK_MAP.X_SCALE -
+    DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -14,7 +14,7 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)) *
-      DECK_MAP.Y_SCALE -
+    DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
@@ -58,31 +58,53 @@ export const svgPoint = (
   return pt.matrixTransform(fromElement.getScreenCTM()?.inverse());
 };
 
-// export const placeCargoFromEvent = (
-//   event: React.MouseEvent | React.TouchEvent,
-//   svgRef: React.RefObject<SVGSVGElement>,
-//   cargo: Cargo,
-//   callback: (position: Placement) => void
-// ) => {
-//   //THIS FUNCTION HAS TO BE REVIEWED!!
-//   event.preventDefault();
-//   let coords = getCoordinates(event);
-//   placeCargo(coords, svgRef, cargo, callback);
-// };
+const getCoordinatesFromEvent = (event: MouseEvent | TouchEvent | PointerEvent): Coords | undefined => {
+  let x = 0;
+  let y = 0;
+  if (window.TouchEvent && event instanceof TouchEvent) {
+    if (event.touches.length === 1) {
+      let touch = event.touches[0];
+      x = touch.clientX;
+      y = touch.clientY;
+    } else {
+      return undefined;
+    }
+  }
+  if (event instanceof MouseEvent || event instanceof PointerEvent) {
+    x = event.clientX;
+    y = event.clientY;
+  }
+  return { x, y } as Coords;
+};
 
-export const placeCargo = (
-  coords: Coords | null,
+export const placeCargoFromEvent = (
+  event: MouseEvent | TouchEvent | PointerEvent,
   svgRef: React.RefObject<SVGSVGElement>,
+  lane: Lane,
   cargo: Cargo,
+  placement: Placement,
   callback: (position: Placement) => void
 ) => {
-  //THIS FUNCTION HAS TO BE REVIEWED!!
-  console.log(cargo);
+  event.preventDefault();
+  let coords = getCoordinatesFromEvent(event);
+  placeCargoFromScreenCoords(coords, svgRef, lane, cargo, placement, callback);
+};
+
+export const placeCargoFromScreenCoords = (
+  coords: Coords | undefined,
+  svgRef: React.RefObject<SVGSVGElement>,
+  lane: Lane,
+  cargo: Cargo,
+  placement: Placement,
+  callback: (position: Placement) => void
+) => {
   if (!coords) return;
   if (svgRef.current) {
     let center = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y);
+    console.log(center, placement, cargo, lane);
+    let newPlacement = { ...placement, LCG: center.x / DECK_MAP.X_SCALE, TCG: center.y / DECK_MAP.Y_SCALE }
     // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
-    callback({ LCG: center.x, TCG: center.y, laneId: "0" });
+    callback(newPlacement);
   }
 };
 
@@ -114,9 +136,9 @@ export const getAdjacentSide = (
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
   let isAdjacent = contained
     ? newElemEndpoints.aft >= elemEndpoints.aft &&
-      newElemEndpoints.fwd <= elemEndpoints.fwd
+    newElemEndpoints.fwd <= elemEndpoints.fwd
     : newElemEndpoints.aft <= elemEndpoints.fwd &&
-      newElemEndpoints.fwd >= elemEndpoints.aft;
+    newElemEndpoints.fwd >= elemEndpoints.aft;
   if (isAdjacent) {
     if (Math.abs(elemEndpoints.right - newElemEndpoints.left) <= newElem.width)
       return AdjacentSide.Right;

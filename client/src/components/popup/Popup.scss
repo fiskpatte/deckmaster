@@ -6,7 +6,6 @@
   left: 50%;
   z-index: $popupOverlayZIndex + 1;
   white-space: nowrap;
-  transform: translateX(-50%);
 }
 
 .Popup::after {

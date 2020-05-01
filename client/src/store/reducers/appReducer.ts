@@ -44,7 +44,7 @@ const appReducer = (state = initialState, action: any): AppState => {
     case ACTION_TYPES.ADD_CARGO_PLACEMENT: {
       console.log("payload: ", payload);
       const deckMap = _.cloneDeep(state.deckMap);
-      deckMap[payload.deckId].lanes[payload.laneId].cargo.push(payload);
+      deckMap[payload.deckId].lanes.find(l => l.id === payload.laneId)?.cargo.push(payload);
 
       console.log("deckmap: ", deckMap);
       return {

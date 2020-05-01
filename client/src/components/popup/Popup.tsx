@@ -11,8 +11,12 @@ interface Props {
 export const Popup: React.FC<Props> = ({ children, visible }) => {
 
   const variants = {
-    visible: { opacity: 1, top: "160%", transition: { ease: "linear", duration: 0.2 } },
-    hidden: { opacity: 0, top: "100%", transition: { ease: "linear", duration: 0.2 } }
+    visible: { opacity: 1, translateX: "-50%", translateY: "0%", display: "block", transition: { ease: "linear", duration: 0.2 } },
+    hidden: {
+      opacity: 0, translateX: "-50%", translateY: "-60%", transition: { ease: "linear", duration: 0.2 }, transitionEnd: {
+        display: "none",
+      }
+    }
   };
 
   return (
