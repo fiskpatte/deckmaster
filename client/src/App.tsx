@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import appActions from "./store/actions/appActions";
 import { Loader } from "./components/loader";
 import { renderRoutes } from "./routes.functions";
+import socketIOClient from "socket.io-client";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,19 @@ const App: React.FC = () => {
       setLoading(false);
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    const socket = socketIOClient("http://localhost:4000");
+    socket.on("connect", () => {
+      console.log("websocket initialized");
+    });
+    socket.on("newCargoPlacement", (payload: any) => {
+      console.log(
+        "cargoPlacement received from server via websocket: ",
+        payload
+      );
+    });
+  }, []);
 
   if (loading) {
     return <Loader />;

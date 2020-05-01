@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CargoModule } from './cargo/cargo.module';
 import { LogModule } from './log/log.module';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { LogModule } from './log/log.module';
     ),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {}
