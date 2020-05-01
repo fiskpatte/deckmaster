@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setCurrentDeck } from "../../../store/actions/appActions";
+import { setCurrentDeckId } from "../../../store/actions/appActions";
 import { Deck } from "../../../types/deckMap";
 import Button from "../../../components/button";
 
@@ -12,7 +12,7 @@ interface Props {
 const DeckSelectorItem: React.FC<Props> = ({ deck, isCurrent }) => {
   const dispatch = useDispatch();
   const onClick = () => {
-    dispatch(setCurrentDeck(deck));
+    dispatch(setCurrentDeckId(deck.name));
   };
 
   return (

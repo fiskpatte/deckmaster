@@ -17,13 +17,13 @@ export enum SwipeDirection {
   Up,
   Down,
   Left,
-  Right
+  Right,
 }
 
 export enum AdjacentSide {
   Right = 1,
   Left = -1,
-  Undefined = 0
+  Undefined = 0,
 }
 
 export enum RouteKey {
@@ -57,9 +57,10 @@ export const DECK_MAP = {
 
 export const ACTION_TYPES = {
   SET_DECK_MAP: "SET_DECK_MAP",
-  SET_CURRENT_DECK: "SET_CURRENT_DECK",
   SET_CURRENT_CARGO: "SET_CURRENT_CARGO",
   SET_CURRENT_PLACEMENT: "SET_CURRENT_PLACEMENT",
   SET_VESSEL_ID: "SET_VESSEL_ID",
   SET_SETTINGS: "SET_SETTINGS",
+  SET_CURRENT_DECK_ID: "SET_CURRENT_DECK_ID",
+  ADD_CARGO_PLACEMENT: "ADD_CARGO_PLACEMENT",
 };

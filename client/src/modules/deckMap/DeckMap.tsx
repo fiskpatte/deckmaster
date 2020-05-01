@@ -8,7 +8,7 @@ import {
   getViewBoxSizeY,
   placeCargoFromSVGCoords,
   getRulerOrigin,
-  performOverflow
+  performOverflow,
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
@@ -32,8 +32,9 @@ const DeckMap: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
-    (placement: Placement) =>
-      dispatch(setCurrentPlacement(placement)), [dispatch]);
+    (placement: Placement) => dispatch(setCurrentPlacement(placement)),
+    [dispatch]
+  );
   const svgRef = useRef<SVGSVGElement>(null);
   const history = useHistory();
 
@@ -53,12 +54,22 @@ const DeckMap: React.FC<Props> = ({
   const placeCargoFromSwipe = useCallback(
     (swipeSide: AdjacentSide) => {
       let placement = currentPlacement;
-      let placingLane = currentDeck.lanes.find(l => l.id === placement?.laneID);
+      let placingLane = currentDeck.lanes.find(
+        (l) => l.id === placement?.laneId
+      );
       if (placingLane && placement) {
-        let success = performOverflow(placingLane, currentCargo, placement, swipeSide, false)
+        let success = performOverflow(
+          placingLane,
+          currentCargo,
+          placement,
+          swipeSide,
+          false
+        );
         if (success) setPlacement(placement);
       }
-    }, [currentDeck, currentPlacement, currentCargo, setPlacement]);
+    },
+    [currentDeck, currentPlacement, currentCargo, setPlacement]
+  );
 
   let viewBoxSizeX = getViewBoxSizeX(currentDeck);
   let viewBoxSizeY = getViewBoxSizeY(currentDeck);
@@ -82,9 +93,7 @@ const DeckMap: React.FC<Props> = ({
           rightOrigin={viewBoxSizeX + viewBoxOriginX}
           currentCargo={currentCargo}
           onClick={(ev) => placeCargoFromClick(ev)}
-          onButtonClick={(placement) =>
-            placeCargoFromFrontPlacement(placement)
-          }
+          onButtonClick={(placement) => placeCargoFromFrontPlacement(placement)}
         />
         <FrameRuler
           frames={currentDeck.frames}

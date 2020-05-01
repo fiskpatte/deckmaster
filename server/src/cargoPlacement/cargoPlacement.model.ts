@@ -1,27 +1,32 @@
 import * as mongoose from 'mongoose';
-import { LoadingType } from 'src/utils/enums';
 
 export const CargoPlacementSchema = new mongoose.Schema({
-  cargoId: String,
-  loadingType: Number,
+  registrationNumber: String,
   deckId: String,
   laneId: String,
-  gridId: String,
+  LCG: Number,
+  TCG: Number,
+  VCG: Number,
+  overflowingLaneId: String,
 });
 
 export interface CargoPlacement extends mongoose.Document {
   id: string;
-  cargoId: string;
-  loadingType: LoadingType;
-  deckId: string;
-  laneId: string;
-  gridId: string;
+  registrationNumber: string;
+  deckId: String;
+  laneId: String;
+  LCG: Number;
+  TCG: Number;
+  VCG: Number;
+  overflowingLaneId: String;
 }
 
 export class CargoPlacementDto {
-  cargoId: string;
-  loadingType: LoadingType;
-  deckId: string;
-  laneId: string;
-  gridId: string;
+  registrationNumber: string;
+  deckId: String;
+  laneId: String;
+  LCG: Number;
+  TCG: Number;
+  VCG: Number;
+  overflowingLaneId: String;
 }

@@ -12,5 +12,6 @@ import { LogModule } from '../log/log.module';
   ],
   controllers: [CargoController],
   providers: [CargoService],
+  exports: [CargoService],
 })
 export class CargoModule {}

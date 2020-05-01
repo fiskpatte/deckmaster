@@ -21,7 +21,7 @@ export const deckFactory = (): Deck => ({
 });
 
 export interface DeckMapElement {
-  id: number;
+  id: string;
   length: number;
   width: number;
   LCG: number;
@@ -31,7 +31,7 @@ export interface DeckMapElement {
 
 const deckMapElementFactory = (): DeckMapElement => {
   return {
-    id: 0,
+    id: "0",
     length: 0,
     width: 0,
     LCG: 0,
@@ -76,8 +76,8 @@ export interface Cargo extends DeckMapElement {
   registrationNumber: string;
   height: number;
   weight: number;
-  laneID: number;
-  overflowLaneID: number;
+  laneId: string;
+  overflowLaneId: string;
 }
 
 export const cargoFactory = (): Cargo => {
@@ -85,7 +85,7 @@ export const cargoFactory = (): Cargo => {
   elem.registrationNumber = "";
   elem.height = 0;
   elem.weight = 0;
-  elem.overflowLaneID = 0;
+  elem.overflowLaneId = "0";
   return elem;
 };
 

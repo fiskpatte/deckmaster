@@ -33,3 +33,7 @@ export const getSettings = async (vesselId: string) => {
 export const updateSettings = async (settings: Settings) => {
   await put("settings", settings);
 };
+
+export const placeCargo = async (cargoPlacement: any) => {
+  await post("cargoplacement", cargoPlacement);
+};

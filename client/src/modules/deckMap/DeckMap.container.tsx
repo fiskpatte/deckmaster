@@ -6,37 +6,42 @@ import DeckMap from "./DeckMap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import { ConfirmButton } from "./confirmButton";
-import { setDeckMap, setCurrentDeck } from "./../../store/actions/appActions";
-import {
-  setCurrentCargo,
-  setCurrentPlacement,
-} from "./../../store/actions/cargoActions";
-import { getMockCargo } from "../../api/endpoints";
+import { setCurrentPlacement } from "./../../store/actions/cargoActions";
+import { placeCargo } from "../../api/endpoints";
+import { getCurrentDeck } from "../../store/selectors/appSelectors";
 
 export const DeckMapContainer: React.FC = () => {
-  const { currentDeck, deckMap } = useSelector(
-    (state: RootState) => state.appReducer
-  );
+  const { deckMap } = useSelector((state: RootState) => state.appReducer);
   const { currentCargo, currentPlacement } = useSelector(
     (state: RootState) => state.cargoReducer
   );
+
+  const currentDeck = useSelector(getCurrentDeck);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setCurrentPlacement(null));
   }, [dispatch, currentDeck]);
 
-  const onConfirm = () => {
-    let newCargo = { ...currentCargo, ...currentPlacement };
-    deckMap[currentDeck.name].lanes
-      .find((l) => l.id === currentPlacement?.laneID)
-      ?.cargo.push(newCargo);
-    dispatch(setDeckMap(deckMap));
-    dispatch(setCurrentDeck(deckMap[currentDeck.name]));
-    dispatch(setCurrentPlacement(null));
-    getMockCargo().then((cargo) => {
-      dispatch(setCurrentCargo(cargo));
+  const onConfirm = async () => {
+    // deckMap[currentDeck.name].lanes
+    //   .find((l) => l.id === currentPlacement?.laneId)
+    //   ?.cargo.push(newCargoPlacement);
+
+    //
+    // set loader
+    await placeCargo({
+      ...currentCargo,
+      ...currentPlacement,
+      deckId: currentDeck.name,
     });
+
+    // dispatch(setDeckMap(deckMap));
+    // // dispatch(setCurrentDeckId(deckMap[currentDeck.name]));
+    dispatch(setCurrentPlacement(null));
+    // getMockCargo().then((cargo) => {
+    //   dispatch(setCurrentCargo(cargo));
+    // });
   };
 
   return (

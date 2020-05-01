@@ -32,7 +32,7 @@ const LaneComponent: React.FC<Props> = ({
   let nextPlacement = {
     LCG: originX + lane.length,
     TCG: originY + lane.width / 2,
-    laneID: lane.id
+    laneId: lane.id,
   } as Placement;
   let buttonVisible = true;
   let isOverflow = currentCargo.width > lane.width;

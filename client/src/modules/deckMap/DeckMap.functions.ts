@@ -6,7 +6,7 @@ import { Coords, Placement } from "../../types/util";
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.LCG - lane.length / 2)) *
-    DECK_MAP.X_SCALE -
+      DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -14,7 +14,7 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)) *
-    DECK_MAP.Y_SCALE -
+      DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
@@ -82,7 +82,7 @@ export const placeCargo = (
   if (svgRef.current) {
     let center = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y);
     // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
-    callback({ LCG: center.x, TCG: center.y, laneID: 0 });
+    callback({ LCG: center.x, TCG: center.y, laneId: "0" });
   }
 };
 
@@ -95,7 +95,11 @@ export const placeCargoFromSVGCoords = (
 };
 
 //Return if newElem is right or left of elem. if contained is true, the newElem has to be completely adjacent
-export const getAdjacentSide = (elem: DeckMapElement, newElem: DeckMapElement, contained = false) => {
+export const getAdjacentSide = (
+  elem: DeckMapElement,
+  newElem: DeckMapElement,
+  contained = false
+) => {
   let getEndpoints = (elem: DeckMapElement) => {
     let left = elem.TCG - elem.width / 2;
     let right = left + elem.width;
@@ -103,28 +107,54 @@ export const getAdjacentSide = (elem: DeckMapElement, newElem: DeckMapElement, c
     let fwd = aft + elem.length;
 
     return { left, right, aft, fwd };
-  }
+  };
   let elemEndpoints = getEndpoints(elem);
   let newElemEndpoints = getEndpoints(newElem);
 
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
-  let isAdjacent = contained ?
-    newElemEndpoints.aft >= elemEndpoints.aft && newElemEndpoints.fwd <= elemEndpoints.fwd :
-    newElemEndpoints.aft <= elemEndpoints.fwd && newElemEndpoints.fwd >= elemEndpoints.aft;
+  let isAdjacent = contained
+    ? newElemEndpoints.aft >= elemEndpoints.aft &&
+      newElemEndpoints.fwd <= elemEndpoints.fwd
+    : newElemEndpoints.aft <= elemEndpoints.fwd &&
+      newElemEndpoints.fwd >= elemEndpoints.aft;
   if (isAdjacent) {
-    if (Math.abs(elemEndpoints.right - newElemEndpoints.left) <= newElem.width) return AdjacentSide.Right;
-    if (Math.abs(elemEndpoints.left - newElemEndpoints.right) <= newElem.width) return AdjacentSide.Left;
+    if (Math.abs(elemEndpoints.right - newElemEndpoints.left) <= newElem.width)
+      return AdjacentSide.Right;
+    if (Math.abs(elemEndpoints.left - newElemEndpoints.right) <= newElem.width)
+      return AdjacentSide.Left;
   }
   return AdjacentSide.Undefined;
-}
+};
 
-export const getNextPlacement = (lane: Lane, currentCargo: Cargo, nextPlacement: Placement) => {
-  let someOverflowingCargo = lane.adjacentLanes.some(al => al.cargo.some(c => c.overflowLaneID === lane.id));
-  if (lane.cargo.length === 0 && currentCargo.width <= lane.width && !someOverflowingCargo) return true;
+export const getNextPlacement = (
+  lane: Lane,
+  currentCargo: Cargo,
+  nextPlacement: Placement
+) => {
+  let someOverflowingCargo = lane.adjacentLanes.some((al) =>
+    al.cargo.some((c) => c.overflowLaneId === lane.id)
+  );
+  if (
+    lane.cargo.length === 0 &&
+    currentCargo.width <= lane.width &&
+    !someOverflowingCargo
+  )
+    return true;
   let originX = lane.LCG - lane.length / 2;
-  let minLCG = arrayMin(lane.cargo.map((c) => c.LCG - c.length / 2), nextPlacement.LCG);
+  let minLCG = arrayMin(
+    lane.cargo.map((c) => c.LCG - c.length / 2),
+    nextPlacement.LCG
+  );
   if (someOverflowingCargo) {
-    let overflowMinLCG = arrayMin(lane.adjacentLanes.map(al => al.cargo.filter(c => c.overflowLaneID === lane.id).map(c => c.LCG - c.length / 2)).flat());
+    let overflowMinLCG = arrayMin(
+      lane.adjacentLanes
+        .map((al) =>
+          al.cargo
+            .filter((c) => c.overflowLaneId === lane.id)
+            .map((c) => c.LCG - c.length / 2)
+        )
+        .flat()
+    );
     minLCG = Math.min(minLCG, overflowMinLCG);
   }
 
@@ -146,32 +176,63 @@ export const getNextPlacement = (lane: Lane, currentCargo: Cargo, nextPlacement:
   return true;
 };
 
-export const handleOverflow = (currentCargo: Cargo, nextPlacement: Placement, placingLane: Lane, recursive = true): boolean => {
-
-  if (performOverflow(placingLane, currentCargo, nextPlacement, AdjacentSide.Right)) return true;
-  else if (performOverflow(placingLane, currentCargo, nextPlacement, AdjacentSide.Left)) return true;
+export const handleOverflow = (
+  currentCargo: Cargo,
+  nextPlacement: Placement,
+  placingLane: Lane,
+  recursive = true
+): boolean => {
+  if (
+    performOverflow(
+      placingLane,
+      currentCargo,
+      nextPlacement,
+      AdjacentSide.Right
+    )
+  )
+    return true;
+  else if (
+    performOverflow(placingLane, currentCargo, nextPlacement, AdjacentSide.Left)
+  )
+    return true;
   else {
     let backstep = 0.5;
-    if (recursive && nextPlacement.LCG - backstep >= placingLane.LCG - placingLane.length / 2) {
+    if (
+      recursive &&
+      nextPlacement.LCG - backstep >= placingLane.LCG - placingLane.length / 2
+    ) {
       nextPlacement.LCG -= backstep;
       return handleOverflow(currentCargo, nextPlacement, placingLane);
     } else {
       return false;
     }
   }
-}
+};
 //Performs overflow in specified direction if possible. Returns true upon success.
-export const performOverflow = (placingLane: Lane, currentCargo: Cargo, nextPlacement: Placement, overflowSide: AdjacentSide, frontPlacement = true) => {
+export const performOverflow = (
+  placingLane: Lane,
+  currentCargo: Cargo,
+  nextPlacement: Placement,
+  overflowSide: AdjacentSide,
+  frontPlacement = true
+) => {
   if (overflowSide === AdjacentSide.Undefined) return false;
   let cargo = { ...currentCargo, ...nextPlacement };
   if (frontPlacement) {
     cargo.LCG -= currentCargo.length / 2;
   }
-  let adjacentLane = placingLane.adjacentLanes.filter(al => al.adjacentSide === overflowSide && getAdjacentSide(al, cargo, true));
-  if (adjacentLane.length === 1 && !adjacentLane[0].cargo.some(c => getAdjacentSide(c, cargo))) {
-    nextPlacement.TCG = placingLane.TCG + overflowSide * (currentCargo.width - placingLane.width) / 2;
-    nextPlacement.overflowLaneID = adjacentLane[0].id;
+  let adjacentLane = placingLane.adjacentLanes.filter(
+    (al) => al.adjacentSide === overflowSide && getAdjacentSide(al, cargo, true)
+  );
+  if (
+    adjacentLane.length === 1 &&
+    !adjacentLane[0].cargo.some((c) => getAdjacentSide(c, cargo))
+  ) {
+    nextPlacement.TCG =
+      placingLane.TCG +
+      (overflowSide * (currentCargo.width - placingLane.width)) / 2;
+    nextPlacement.overflowLaneId = adjacentLane[0].id;
     return true;
   }
   return false;
-}
+};

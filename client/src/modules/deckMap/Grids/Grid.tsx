@@ -30,8 +30,14 @@ const GridComponent: React.FC<Props> = ({
   lane,
   ...rest
 }) => {
-  let gridPlacement = { LCG: grid.LCG + grid.length / 2, TCG: grid.TCG, laneID: nextPlacement.laneID } as Placement;
-  let isVisible = grid.LCG + grid.length / 2 <= nextPlacement.LCG && (!isOverflow || handleOverflow(currentCargo, gridPlacement, lane, false))
+  let gridPlacement = {
+    LCG: grid.LCG + grid.length / 2,
+    TCG: grid.TCG,
+    laneId: nextPlacement.laneId,
+  } as Placement;
+  let isVisible =
+    grid.LCG + grid.length / 2 <= nextPlacement.LCG &&
+    (!isOverflow || handleOverflow(currentCargo, gridPlacement, lane, false));
 
   if (!isVisible) return null;
 

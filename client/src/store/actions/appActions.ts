@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from "../../constants";
-import { Deck, DeckMapType } from "../../types/deckMap";
+import { DeckMapType } from "../../types/deckMap";
 import { Settings } from "../../types/settings";
 
 export const setDeckMap = (deckMap: DeckMapType) => {
@@ -9,10 +9,10 @@ export const setDeckMap = (deckMap: DeckMapType) => {
   };
 };
 
-export const setCurrentDeck = (deck: Deck) => {
+export const setCurrentDeckId = (deckId: string) => {
   return {
-    type: ACTION_TYPES.SET_CURRENT_DECK,
-    payload: deck,
+    type: ACTION_TYPES.SET_CURRENT_DECK_ID,
+    payload: deckId,
   };
 };
 
@@ -23,9 +23,15 @@ export const setSettings = (settings: Settings) => {
   };
 };
 
+export const addCargoPlacement = (cargoPlacement: any) => ({
+  type: ACTION_TYPES.ADD_CARGO_PLACEMENT,
+  payload: cargoPlacement,
+});
+
 const appActions = {
-  setCurrentDeck,
+  setCurrentDeckId,
   setDeckMap,
+  addCargoPlacement,
 };
 
 export default appActions;

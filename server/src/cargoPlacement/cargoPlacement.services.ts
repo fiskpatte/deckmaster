@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { CargoPlacement, CargoPlacementDto } from './cargoPlacement.model';
 import { transformDbModel } from 'src/utils/mongo';
 import { AppGateway } from 'src/app.gateway';
+import { Cargo } from 'src/cargo/cargo.model';
+import { CargoService } from 'src/cargo/cargo.services';
 
 @Injectable()
 export class CargoPlacementService {
@@ -11,23 +13,34 @@ export class CargoPlacementService {
     @InjectModel('PlaceCargo')
     private readonly cargoPlacementModel: Model<CargoPlacement>,
     private readonly appGateway: AppGateway,
+    private readonly cargoService: CargoService,
   ) {}
 
   async placeCargo(dto: CargoPlacementDto) {
     try {
       const newCargoPlacement = new this.cargoPlacementModel({
-        cargoId: dto.cargoId,
-        loadingType: dto.loadingType,
+        registrationNumber: dto.registrationNumber,
         deckId: dto.deckId,
         laneId: dto.laneId,
-        gridId: dto.gridId,
+        LCG: dto.LCG,
+        TCG: dto.TCG,
+        VCG: dto.VCG,
+        overflowingLaneId: dto.overflowingLaneId,
       });
 
+      // save
       const cargoPlacement = await newCargoPlacement.save();
-
       const resultTransformed = transformDbModel(cargoPlacement);
 
-      this.appGateway.pushCargoPlacementToClients(resultTransformed);
+      const cargo = await this.cargoService.getCargoByRegistrationNumber(
+        cargoPlacement.registrationNumber,
+      );
+
+      // send through websocket
+      this.appGateway.pushCargoPlacementToClients({
+        ...cargo,
+        ...resultTransformed,
+      });
 
       return resultTransformed;
     } catch (error) {

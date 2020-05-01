@@ -7,6 +7,7 @@ export interface AppState {
   deckMap: DeckMapType;
   settings: Settings | null;
   vesselId: string;
+  currentDeckId?: string;
 }
 
 export interface CargoState {

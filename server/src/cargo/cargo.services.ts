@@ -33,6 +33,11 @@ export class CargoService {
     return transformDbModel(cargo);
   }
 
+  async getCargoByRegistrationNumber(registrationNumber: string) {
+    const cargo = await this.cargoModel.findOne({ registrationNumber });
+    return transformDbModel(cargo);
+  }
+
   async getAllCargo() {
     try {
       const allCargo = await this.cargoModel.find().exec();

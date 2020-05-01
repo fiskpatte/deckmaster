@@ -40,6 +40,7 @@ export class AppGateway
   }
 
   pushCargoPlacementToClients(cargoPlacement: CargoPlacement) {
+    console.log('sending to client...');
     this.webSocketServer.emit('newCargoPlacement', cargoPlacement);
   }
 }
