@@ -10,13 +10,13 @@ import {
   Headers,
 } from '@nestjs/common';
 import { CargoService } from './cargo.services';
-import { CargoDTO } from './cargo.dtos';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Cargo } from './cargo.model';
 
 @UseGuards(JwtAuthGuard)
 @Controller('cargo')
 export class CargoController {
-  constructor(private readonly cargoService: CargoService) {}
+  constructor(private readonly cargoService: CargoService) { }
 
   @Get()
   async getAllCargo() {
@@ -30,8 +30,8 @@ export class CargoController {
   }
 
   @Post()
-  async addCargo(@Body() createCargoDTO: CargoDTO) {
-    const cargo = await this.cargoService.addCargo(createCargoDTO);
+  async addCargo(@Body() newCargo: Cargo) {
+    const cargo = await this.cargoService.addCargo(newCargo);
     return cargo;
   }
 
@@ -42,8 +42,8 @@ export class CargoController {
   }
 
   @Patch(':id')
-  async updateCargo(@Param('id') cargoId: string, @Body() dto: CargoDTO) {
-    await this.cargoService.updateCargo(cargoId, dto);
+  async updateCargo(@Param('id') cargoId: string, @Body() newCargo: Cargo) {
+    await this.cargoService.updateCargo(cargoId, newCargo);
     return null;
   }
 

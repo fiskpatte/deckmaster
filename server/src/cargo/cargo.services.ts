@@ -3,8 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Chance } from 'chance';
 import { Cargo } from './cargo.model';
-import { CargoDTO } from './cargo.dtos';
-import { transformDbModel } from 'src/utils/mongo';
+import { transformDbModel, removeReadOnlyFields } from 'src/utils/mongo';
 import { LogService } from 'src/log/log.service.';
 
 @Injectable()
@@ -12,19 +11,11 @@ export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
     private readonly logService: LogService,
-  ) {}
+  ) { }
 
-  async addCargo(createCargoDTO: CargoDTO) {
-    const newCargo = new this.cargoModel({
-      registrationNumber: createCargoDTO.registrationNumber,
-      length: createCargoDTO.length,
-      width: createCargoDTO.width,
-      height: createCargoDTO.height,
-      type: createCargoDTO.type,
-      weight: createCargoDTO.weight,
-    });
-
-    const result = await newCargo.save();
+  async addCargo(newCargo: Cargo) {
+    const newCargoModel = new this.cargoModel(removeReadOnlyFields(newCargo));
+    const result = await newCargoModel.save();
     return transformDbModel(result);
   }
 
@@ -47,28 +38,10 @@ export class CargoService {
     }
   }
 
-  async updateCargo(cargoId: string, dto: CargoDTO) {
+  async updateCargo(cargoId: string, dto: Cargo) {
     try {
-      const cargo = await this.findCargo(cargoId);
-      if (dto.registrationNumber) {
-        cargo.registrationNumber = dto.registrationNumber;
-      }
-      if (dto.length) {
-        cargo.length = dto.length;
-      }
-      if (dto.width) {
-        cargo.width = dto.width;
-      }
-      if (dto.height) {
-        cargo.height = dto.height;
-      }
-      if (dto.type) {
-        cargo.type = dto.type;
-      }
-      if (dto.weight) {
-        cargo.weight = dto.weight;
-      }
-      cargo.save();
+      const cargo = await this.cargoModel.findOneAndUpdate({ _id: cargoId }, removeReadOnlyFields(dto), { new: true });
+      return cargo;
     } catch (error) {
       throw new NotFoundException('Cargo not found');
     }
@@ -100,13 +73,14 @@ export class CargoService {
 
       if (Math.random() < 0.2) width = 4;
 
-      const dto = new CargoDTO();
-      dto.registrationNumber = registrationNumber;
-      dto.length = length;
-      dto.width = width;
-      dto.height = height;
-      dto.type = type;
-      dto.weight = weight;
+      const dto = {
+        registrationNumber,
+        length,
+        width,
+        height,
+        type,
+        weight
+      } as Cargo;
 
       const cargo = await this.addCargo(dto);
 

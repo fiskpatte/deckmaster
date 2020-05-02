@@ -8,7 +8,7 @@ export const CargoSchema = new mongoose.Schema({
   height: Number,
   type: Number,
   weight: Number,
-});
+}, { timestamps: true });
 
 export interface Cargo extends mongoose.Document {
   id: string;
@@ -18,4 +18,6 @@ export interface Cargo extends mongoose.Document {
   height: number;
   type: CargoType;
   weight: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

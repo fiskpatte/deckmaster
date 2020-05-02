@@ -20,10 +20,10 @@ import { AppGateway } from './app.gateway';
     LogModule,
     MongooseModule.forRoot(
       'mongodb+srv://dbUser:0cP6knNISFBnrwoC@loadmaster-przxq.mongodb.net/test?retryWrites=true&w=majority',
-      { useNewUrlParser: true, useUnifiedTopology: true },
+      { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
     ),
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
 })
-export class AppModule {}
+export class AppModule { }
