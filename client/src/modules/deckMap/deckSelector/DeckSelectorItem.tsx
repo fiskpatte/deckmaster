@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { setCurrentDeckId } from "../../../store/actions/appActions";
 import { Deck } from "../../../types/deckMap";
 import Button from "../../../components/button";
+import { setCurrentDeckId } from "../../../store/app/appActions";
 
 interface Props {
   deck: Deck;

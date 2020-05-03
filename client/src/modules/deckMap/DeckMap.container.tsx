@@ -6,9 +6,9 @@ import DeckMap from "./DeckMap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import { ConfirmButton } from "./confirmButton";
-import { setCurrentPlacement } from "./../../store/actions/cargoActions";
+import { setCurrentPlacement } from "../../store/cargo/cargoActions";
 import { placeCargo } from "../../api/endpoints";
-import { getCurrentDeck } from "../../store/selectors/appSelectors";
+import { getCurrentDeck } from "../../store/app/appSelectors";
 
 export const DeckMapContainer: React.FC = () => {
   const { deckMap } = useSelector((state: RootState) => state.appReducer);

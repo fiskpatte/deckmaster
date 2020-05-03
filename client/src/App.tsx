@@ -5,7 +5,7 @@ import { parseLoadPlan } from "./functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
 import { Header } from "./modules/header";
 import { useDispatch } from "react-redux";
-import appActions from "./store/actions/appActions";
+import appActions from "./store/app/appActions";
 import { Loader } from "./components/loader";
 import { renderRoutes } from "./routes.functions";
 import socketIOClient from "socket.io-client";

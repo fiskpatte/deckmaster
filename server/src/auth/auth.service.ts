@@ -30,6 +30,7 @@ export class AuthService {
       // eslint-disable-next-line @typescript-eslint/camelcase
       access_token: this.jwtService.sign(payload),
       user_name: user._doc.username,
+      voyage_id: 'dummy_voyage_id',
     };
   }
 }

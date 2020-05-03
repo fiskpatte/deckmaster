@@ -8,12 +8,12 @@ import {
   getViewBoxSizeY,
   placeCargoFromSVGCoords,
   getRulerOrigin,
-  placeCargoFromEvent
+  placeCargoFromEvent,
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
 import { useDispatch } from "react-redux";
-import { setCurrentPlacement } from "../../store/actions/cargoActions";
+import { setCurrentPlacement } from "../../store/cargo/cargoActions";
 import { Deck, Cargo } from "../../types/deckMap";
 import "./DeckMap.scss";
 import { useHistory } from "react-router-dom";
@@ -48,10 +48,21 @@ const DeckMap: React.FC<Props> = ({
     // placeCargoFromEvent(event, svgRef, currentCargo, setPlacement);
   };
 
-  const placeCargoFromDrag = (event: MouseEvent | TouchEvent | PointerEvent) => {
-    let placingLane = currentDeck.lanes.find(l => l.id === currentPlacement?.laneId);
+  const placeCargoFromDrag = (
+    event: MouseEvent | TouchEvent | PointerEvent
+  ) => {
+    let placingLane = currentDeck.lanes.find(
+      (l) => l.id === currentPlacement?.laneId
+    );
     if (currentPlacement && placingLane) {
-      placeCargoFromEvent(event, svgRef, placingLane, currentCargo, currentPlacement, setPlacement);
+      placeCargoFromEvent(
+        event,
+        svgRef,
+        placingLane,
+        currentCargo,
+        currentPlacement,
+        setPlacement
+      );
     }
   };
 
@@ -94,7 +105,7 @@ const DeckMap: React.FC<Props> = ({
             return <use key={100 * ix + ixc} href={`#cargoIcon${c.id}`} />;
           })
         )}
-        {!!currentPlacement &&
+        {!!currentPlacement && (
           <CargoIcon
             x={currentPlacement.LCG}
             y={currentPlacement.TCG}
@@ -103,7 +114,7 @@ const DeckMap: React.FC<Props> = ({
             placing={true}
             dragCallback={placeCargoFromDrag}
           />
-        }
+        )}
       </g>
     </svg>
   );
