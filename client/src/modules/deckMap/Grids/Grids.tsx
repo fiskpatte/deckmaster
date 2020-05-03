@@ -6,13 +6,13 @@ import { Placement } from "../../../types/util";
 interface Props {
   grids: Array<Grid>;
   onClick: (placement: Placement) => void;
-  nextPlacement: Placement;
+  lanePlacement: Placement;
   currentCargo: Cargo;
   isOverflow: boolean;
   lane: Lane;
 }
 
-export const Grids: React.FC<Props> = ({ grids, onClick, nextPlacement, isOverflow, currentCargo, lane }) => {
+export const Grids: React.FC<Props> = ({ grids, onClick, lanePlacement, isOverflow, currentCargo, lane }) => {
   return (
     <>
       {grids.map((grid, ix) => {
@@ -23,7 +23,7 @@ export const Grids: React.FC<Props> = ({ grids, onClick, nextPlacement, isOverfl
             key={ix}
             isOverflow={isOverflow}
             currentCargo={currentCargo}
-            nextPlacement={nextPlacement}
+            lanePlacement={lanePlacement}
             lane={lane}
           />
         );

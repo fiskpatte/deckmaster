@@ -7,7 +7,7 @@ import { PlacedCargo } from "../placedCargo";
 import { Lane, Cargo } from "../../../types/deckMap";
 import { Placement } from "../../../types/util";
 import "./Lane.scss";
-import { getNextPlacement } from "../DeckMap.functions";
+import { getLanePlacement } from "../DeckMap.functions";
 
 interface Props {
   lane: Lane;
@@ -29,7 +29,7 @@ const LaneComponent: React.FC<Props> = ({
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
-  let nextPlacement = {
+  let lanePlacement = {
     LCG: originX + lane.length,
     TCG: originY + lane.width / 2,
     laneId: lane.id,
@@ -37,10 +37,8 @@ const LaneComponent: React.FC<Props> = ({
   let buttonVisible = true;
   let isOverflow = currentCargo.width > lane.width;
 
-  let success = getNextPlacement(lane, currentCargo, nextPlacement);
-  if (!success) {
-    buttonVisible = false;
-  }
+  lanePlacement = getLanePlacement(lane, currentCargo, lanePlacement) ?? { ...lanePlacement, LCG: originX };
+  if (lanePlacement.LCG === originX) buttonVisible = false;
 
   return (
     <>
@@ -58,7 +56,7 @@ const LaneComponent: React.FC<Props> = ({
       <Grids
         grids={lane.grids}
         onClick={(pos) => onButtonClick(pos)}
-        nextPlacement={nextPlacement}
+        lanePlacement={lanePlacement}
         currentCargo={currentCargo}
         isOverflow={isOverflow}
         lane={lane}
@@ -68,7 +66,7 @@ const LaneComponent: React.FC<Props> = ({
       <LaneButton
         onClick={(ev) => {
           ev.stopPropagation();
-          onButtonClick(nextPlacement);
+          onButtonClick(lanePlacement);
         }}
         lane={lane}
         visible={buttonVisible}

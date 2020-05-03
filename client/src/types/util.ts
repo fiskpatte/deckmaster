@@ -14,5 +14,5 @@ export interface Placement {
   LCG: number;
   TCG: number;
   laneId: string;
-  overflowLaneId?: string;
+  overflowingLaneId?: string;
 }

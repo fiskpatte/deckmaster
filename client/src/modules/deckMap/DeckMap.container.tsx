@@ -9,6 +9,7 @@ import { ConfirmButton } from "./confirmButton";
 import { setCurrentPlacement } from "../../store/cargo/cargoActions";
 import { placeCargo } from "../../api/endpoints";
 import { getCurrentDeck } from "../../store/app/appSelectors";
+import { useHistory } from "react-router-dom";
 
 export const DeckMapContainer: React.FC = () => {
   const { deckMap } = useSelector((state: RootState) => state.appReducer);
@@ -18,30 +19,21 @@ export const DeckMapContainer: React.FC = () => {
 
   const currentDeck = useSelector(getCurrentDeck);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     dispatch(setCurrentPlacement(null));
   }, [dispatch, currentDeck]);
 
   const onConfirm = async () => {
-    // deckMap[currentDeck.name].lanes
-    //   .find((l) => l.id === currentPlacement?.laneId)
-    //   ?.cargo.push(newCargoPlacement);
-
-    //
     // set loader
     await placeCargo({
       ...currentCargo,
       ...currentPlacement,
       deckId: currentDeck.name,
     });
-
-    // dispatch(setDeckMap(deckMap));
-    // // dispatch(setCurrentDeckId(deckMap[currentDeck.name]));
     dispatch(setCurrentPlacement(null));
-    // getMockCargo().then((cargo) => {
-    //   dispatch(setCurrentCargo(cargo));
-    // });
+    history.push("/placecargo");
   };
 
   return (

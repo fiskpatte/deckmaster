@@ -5,14 +5,14 @@ import { Grid, Cargo, Lane } from "../../../types/deckMap";
 import { Placement } from "../../../types/util";
 import "./Grid.scss";
 import { GridName } from "./GridName";
-import { handleOverflow } from "../DeckMap.functions";
+import { getOverflowingPlacement } from "../DeckMap.functions";
 
 interface Props {
   grid: Grid;
   onClick: (placement: Placement) => void;
   isOverflow: boolean;
   currentCargo: Cargo;
-  nextPlacement: Placement;
+  lanePlacement: Placement;
   lane: Lane;
 }
 
@@ -26,18 +26,22 @@ const GridComponent: React.FC<Props> = ({
   onClick,
   isOverflow,
   currentCargo,
-  nextPlacement,
+  lanePlacement,
   lane,
   ...rest
 }) => {
   let gridPlacement = {
     LCG: grid.LCG + grid.length / 2,
     TCG: grid.TCG,
-    laneId: nextPlacement.laneId,
+    laneId: lanePlacement.laneId,
   } as Placement;
-  let isVisible =
-    grid.LCG + grid.length / 2 <= nextPlacement.LCG &&
-    (!isOverflow || handleOverflow(currentCargo, gridPlacement, lane, false));
+  let isVisible = grid.LCG + grid.length / 2 <= lanePlacement.LCG;
+
+  if (isOverflow) {
+    const overflowingPlacement = getOverflowingPlacement(lane, currentCargo, gridPlacement, false)
+    if (!overflowingPlacement) return null;
+    gridPlacement = overflowingPlacement;
+  }
 
   if (!isVisible) return null;
 

@@ -77,7 +77,7 @@ export interface Cargo extends DeckMapElement {
   height: number;
   weight: number;
   laneId: string;
-  overflowLaneId: string;
+  overflowingLaneId: string;
 }
 
 export const cargoFactory = (): Cargo => {
@@ -85,7 +85,7 @@ export const cargoFactory = (): Cargo => {
   elem.registrationNumber = "";
   elem.height = 0;
   elem.weight = 0;
-  elem.overflowLaneId = "0";
+  elem.overflowingLaneId = "0";
   return elem;
 };
 
