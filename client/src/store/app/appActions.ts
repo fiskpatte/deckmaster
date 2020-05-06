@@ -1,6 +1,7 @@
 import { ACTION_TYPES } from "../../constants";
 import { DeckMapType } from "../../types/deckMap";
 import { Settings } from "../../types/settings";
+import { SessionData } from './../../types/sessionData';
 
 export const setDeckMap = (deckMap: DeckMapType) => {
   return {
@@ -28,10 +29,16 @@ export const addCargoPlacement = (cargoPlacement: any) => ({
   payload: cargoPlacement,
 });
 
+export const setSessionData = (data: SessionData | undefined) => ({
+  type: ACTION_TYPES.SET_SESSION_DATA,
+  payload: data,
+});
+
 const appActions = {
   setCurrentDeckId,
   setDeckMap,
   addCargoPlacement,
+  setSessionData
 };
 
 export default appActions;

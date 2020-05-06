@@ -9,12 +9,12 @@ import appActions from "./store/app/appActions";
 import { Loader } from "./components/loader";
 import { renderRoutes } from "./routes.functions";
 import socketIOClient from "socket.io-client";
-import { isLoggedIn } from "./functions/auth";
+import { useIsLoggedIn } from "./hooks/useIsLoggedIn";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-
+  const isLoggedIn = useIsLoggedIn();
   useEffect(() => {
     parseLoadPlan(loadPlans).then((res) => {
       //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
@@ -49,13 +49,13 @@ const App: React.FC = () => {
     const socket = socketIOClient("http://localhost:4000");
 
     socket.on("newCargoPlacement", (payload: any) => {
-      if (isLoggedIn()) {
+      if (isLoggedIn) {
         dispatch(appActions.addCargoPlacement(payload));
       } else {
         console.log("not logged in");
       }
     });
-  }, []);
+  }, [dispatch, isLoggedIn]);
 
   if (loading) {
     return <Loader />;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect, RouteProps, useLocation } from "react-router-dom";
-import { isLoggedIn } from "../../functions/auth";
+import { useIsLoggedIn } from "../../hooks/useIsLoggedIn";
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -12,8 +12,8 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = (props) => {
   const { children, ...rest } = props;
   const location = useLocation();
-
-  if (!isLoggedIn()) {
+  const isLoggedIn = useIsLoggedIn();
+  if (!isLoggedIn) {
     return (
       <Redirect
         to={{

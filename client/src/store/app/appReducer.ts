@@ -9,6 +9,7 @@ const initialState: AppState = {
   settings: null,
   vesselId: "vessel1",
   currentDeckId: undefined,
+  sessionData: undefined
 };
 
 const appReducer = (state = initialState, action: any): AppState => {
@@ -42,16 +43,18 @@ const appReducer = (state = initialState, action: any): AppState => {
       };
     }
     case ACTION_TYPES.ADD_CARGO_PLACEMENT: {
-      console.log("payload: ", payload);
       const deckMap = _.cloneDeep(state.deckMap);
       deckMap[payload.deckId].lanes.find(l => l.id === payload.laneId)?.cargo.push(payload);
-
-      console.log("deckmap: ", deckMap);
       return {
         ...state,
         deckMap,
       };
     }
+    case ACTION_TYPES.SET_SESSION_DATA:
+      return {
+        ...state,
+        sessionData: payload,
+      }
     default:
       return state;
   }

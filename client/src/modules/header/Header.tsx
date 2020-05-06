@@ -8,18 +8,18 @@ import { Logo } from "./logo";
 import { SideBarContainer } from "./sideBar";
 import { useLocation } from "react-router-dom";
 import { HeaderItem } from "./headerItem";
-import { isLoggedIn } from "../../functions/auth";
+import { useIsLoggedIn } from "../../hooks/useIsLoggedIn";
 
 export const Header: React.FC = () => {
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const location = useLocation();
   const closeSideBar = () => setSideBarOpen(false);
-
+  const isLoggedIn = useIsLoggedIn();
   useEffect(() => {
     closeSideBar();
   }, [location]);
 
-  if (!isLoggedIn()) {
+  if (!isLoggedIn) {
     return null;
   }
 

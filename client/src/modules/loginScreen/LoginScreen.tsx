@@ -6,9 +6,12 @@ import Button from "../../components/button";
 import { login } from "../../api/endpoints";
 import { useHistory } from "react-router-dom";
 import TopBar from "./TopBar";
-import { isLoggedIn } from "../../functions/auth";
+import { useIsLoggedIn } from "../../hooks/useIsLoggedIn";
 import Separator from "../../components/separator";
 import { FlexRowEndContainer } from "../../components/flexContainer";
+import { useDispatch } from 'react-redux';
+import { setSessionData } from './../../store/app/appActions';
+import { SessionData } from './../../types/sessionData';
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -16,8 +19,10 @@ export const LoginScreen: React.FC = () => {
   const [username, setUsername] = useState("Pontus2");
   const [password, setPassword] = useState("testtest");
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const isLoggedIn = useIsLoggedIn();
 
-  if (isLoggedIn()) history.push("placecargo");
+  if (isLoggedIn) history.push("placecargo");
 
   const onLoginButtonClick = async () => {
     if (!username || !password) {
@@ -29,7 +34,8 @@ export const LoginScreen: React.FC = () => {
     }
 
     try {
-      await login(username, password);
+      const loginCallback = (data: SessionData) => dispatch(setSessionData(data));
+      await login(username, password, loginCallback);
       history.push("/placecargo");
     } catch (error) {
       setError("Login failed");

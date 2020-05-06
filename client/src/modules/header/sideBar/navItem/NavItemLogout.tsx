@@ -1,14 +1,20 @@
 import React from "react";
-import { setAuthorizationToken } from "../../../../functions/axios";
+import { removeDefaultHeader } from "../../../../functions/axios";
 import { useHistory } from "react-router-dom";
 import { NavItemProps } from "./types";
 import Text from './../../../../components/text';
+import { useDispatch } from 'react-redux';
+import { setSessionData } from "../../../../store/app/appActions";
 
 const NavItemLogout: React.FC<NavItemProps> = ({ label, path }) => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const logout = () => {
-    setAuthorizationToken(undefined);
+    removeDefaultHeader("Authorization");
+    removeDefaultHeader("username");
+    removeDefaultHeader("voyageId");
+    dispatch(setSessionData(undefined));
     history.push(path);
   };
 
