@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BlueBackground } from "../../components/blueBackground";
 import { Paper } from "../../components/paper";
 import { getMockCargo } from "../../api/endpoints";
-import { setCurrentCargo } from "../../store/cargo/cargoActions";
+import { setCurrentCargo } from "../../store/deckMap/deckMapActions";
 import { ErrorMessage } from "../../components/errorMessage";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";

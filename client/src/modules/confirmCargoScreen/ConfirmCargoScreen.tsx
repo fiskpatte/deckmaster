@@ -11,7 +11,7 @@ import Separator from "../../components/separator";
 
 export const ConfirmCargoScreen = () => {
   const { currentCargo: cargo } = useSelector(
-    (state: RootState) => state.cargoReducer
+    (state: RootState) => state.deckMapReducer
   );
 
   const history = useHistory();

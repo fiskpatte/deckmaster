@@ -6,15 +6,14 @@ import DeckMap from "./DeckMap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import { ConfirmButton } from "./confirmButton";
-import { setCurrentPlacement } from "../../store/cargo/cargoActions";
-import { placeCargo } from "../../api/endpoints";
+import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
+import { placeCargo } from "../../api/cargoPlacement";
 import { getCurrentDeck } from "../../store/app/appSelectors";
 import { useHistory } from "react-router-dom";
 
 export const DeckMapContainer: React.FC = () => {
-  const { deckMap } = useSelector((state: RootState) => state.appReducer);
-  const { currentCargo, currentPlacement } = useSelector(
-    (state: RootState) => state.cargoReducer
+  const { deckMap, currentCargo, currentPlacement } = useSelector(
+    (state: RootState) => state.deckMapReducer
   );
 
   const currentDeck = useSelector(getCurrentDeck);

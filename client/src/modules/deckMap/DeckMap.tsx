@@ -13,7 +13,7 @@ import {
 import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
 import { useDispatch } from "react-redux";
-import { setCurrentPlacement } from "../../store/cargo/cargoActions";
+import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import { Deck, Cargo } from "../../types/deckMap";
 import "./DeckMap.scss";
 import { useHistory } from "react-router-dom";

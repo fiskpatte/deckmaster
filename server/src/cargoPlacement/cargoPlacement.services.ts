@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CargoPlacement, CargoPlacementDto } from './cargoPlacement.model';
-import { transformDbModel } from 'src/utils/mongo';
+import { CargoPlacement } from './cargoPlacement.model';
+import { transformDbModel, removeReadOnlyFields } from 'src/utils/mongo';
 import { AppGateway } from 'src/app.gateway';
 import { Cargo } from 'src/cargo/cargo.model';
 import { CargoService } from 'src/cargo/cargo.services';
@@ -16,19 +16,13 @@ export class CargoPlacementService {
     private readonly cargoService: CargoService,
   ) {}
 
-  async placeCargo(dto: CargoPlacementDto) {
+  async placeCargo(cp: CargoPlacement) {
     try {
-      const newCargoPlacement = new this.cargoPlacementModel({
-        registrationNumber: dto.registrationNumber,
-        deckId: dto.deckId,
-        laneId: dto.laneId,
-        LCG: dto.LCG,
-        TCG: dto.TCG,
-        VCG: dto.VCG,
-        overflowingLaneId: dto.overflowingLaneId,
-      });
-
+      const newCargoPlacement = new this.cargoPlacementModel(
+        removeReadOnlyFields(cp),
+      );
       // save
+
       const cargoPlacement = await newCargoPlacement.save();
       const resultTransformed = transformDbModel(cargoPlacement);
 
@@ -51,6 +45,17 @@ export class CargoPlacementService {
   async getCargoPlacements() {
     try {
       const allCargoPlacement = await this.cargoPlacementModel.find().exec();
+      return allCargoPlacement.map(transformDbModel) as CargoPlacement[];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAllByVoyageId(voyageId: string) {
+    try {
+      const allCargoPlacement = await this.cargoPlacementModel
+        .find({ voyageId })
+        .exec();
       return allCargoPlacement.map(transformDbModel) as CargoPlacement[];
     } catch (error) {
       throw error;

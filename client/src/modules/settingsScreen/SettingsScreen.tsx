@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { BlueBackground } from "../../components/blueBackground";
 import { Paper } from "../../components/paper";
 import { getSettings, updateSettings } from "../../api/endpoints";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../store/store";
 import { Loader } from "../../components/loader";
 import Separator from "../../components/separator";
 import Button from "../../components/button";
@@ -12,9 +12,9 @@ import { settingsFactory } from "../../types/settings";
 import TextInput from "../../components/textInput";
 import { FlexRowEndContainer } from "../../components/flexContainer";
 
-export const EnterCargoScreen = () => {
-  const { vesselId } = useSelector((state: RootState) => state.appReducer);
-
+export const SettingsScreen = () => {
+  // const { vesselId } = useSelector((state: RootState) => state.appReducer);
+  const vesselId = "TEST";
   const [settings, setSettings] = useState(settingsFactory());
   const [isSaving, setIsSaving] = useState(false);
 
@@ -88,4 +88,4 @@ export const EnterCargoScreen = () => {
   );
 };
 
-export default EnterCargoScreen;
+export default SettingsScreen;

@@ -5,11 +5,12 @@ import { parseLoadPlan } from "./functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
 import { Header } from "./modules/header";
 import { useDispatch } from "react-redux";
-import appActions from "./store/app/appActions";
 import { Loader } from "./components/loader";
 import { renderRoutes } from "./routes.functions";
 import socketIOClient from "socket.io-client";
 import { useIsLoggedIn } from "./hooks/useIsLoggedIn";
+import { getCargoPlacements } from "./api/cargoPlacement";
+import deckMapActions from "./store/deckMap/deckMapActions";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -39,8 +40,8 @@ const App: React.FC = () => {
         frames: [],
         sortOrder: 3,
       };
-      dispatch(appActions.setDeckMap(res));
-      dispatch(appActions.setCurrentDeckId("Weather Deck"));
+      dispatch(deckMapActions.setDeckMap(res));
+      dispatch(deckMapActions.setCurrentDeckId("Weather Deck"));
       setLoading(false);
     });
   }, [dispatch]);
@@ -50,12 +51,23 @@ const App: React.FC = () => {
 
     socket.on("newCargoPlacement", (payload: any) => {
       if (isLoggedIn) {
-        dispatch(appActions.addCargoPlacement(payload));
+        dispatch(deckMapActions.addCargoPlacement(payload));
       } else {
         console.log("not logged in");
       }
     });
   }, [dispatch, isLoggedIn]);
+
+  useEffect(() => {
+    const fetchCargoPlacements = async () => {
+      const cargoPlacements = await getCargoPlacements();
+      return cargoPlacements;
+      // TODO: Fix
+    };
+    if (isLoggedIn) {
+      fetchCargoPlacements();
+    }
+  }, [isLoggedIn]);
 
   if (loading) {
     return <Loader />;
