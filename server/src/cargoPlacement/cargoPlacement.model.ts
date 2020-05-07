@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { Cargo } from 'src/cargo/cargo.model';
 
 export const CargoPlacementSchema = new mongoose.Schema(
   {
@@ -10,6 +11,7 @@ export const CargoPlacementSchema = new mongoose.Schema(
     VCG: Number,
     overflowingLaneId: String,
     voyageId: String,
+    cargo: { type: mongoose.Schema.Types.ObjectId, ref: 'Cargo' }
   },
   { timestamps: true },
 );
@@ -26,4 +28,5 @@ export interface CargoPlacement extends mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
   voyageId: String;
+  cargo: Cargo;
 }

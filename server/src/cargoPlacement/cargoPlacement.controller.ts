@@ -11,7 +11,7 @@ import { CargoPlacement } from './cargoPlacement.model';
 
 @Controller('cargoplacement')
 export class CargoPlacementController {
-  constructor(private readonly cargoPlacementService: CargoPlacementService) {}
+  constructor(private readonly cargoPlacementService: CargoPlacementService) { }
 
   @Get('voyage')
   async getAllByVoyageId(@Headers() headers) {
@@ -22,6 +22,12 @@ export class CargoPlacementController {
     const result = await this.cargoPlacementService.getAllByVoyageId(
       headers.voyageId,
     );
+    return result;
+  }
+
+  @Get()
+  async getAll() {
+    const result = await this.cargoPlacementService.getCargoPlacements();
     return result;
   }
 

@@ -6,6 +6,7 @@ import { transformDbModel, removeReadOnlyFields } from 'src/utils/mongo';
 import { AppGateway } from 'src/app.gateway';
 import { Cargo } from 'src/cargo/cargo.model';
 import { CargoService } from 'src/cargo/cargo.services';
+import { MongooseDocument } from 'mongoose';
 
 @Injectable()
 export class CargoPlacementService {
@@ -14,30 +15,34 @@ export class CargoPlacementService {
     private readonly cargoPlacementModel: Model<CargoPlacement>,
     private readonly appGateway: AppGateway,
     private readonly cargoService: CargoService,
-  ) {}
+  ) { }
 
   async placeCargo(cp: CargoPlacement) {
     try {
-      const newCargoPlacement = new this.cargoPlacementModel(
+      const cargoPlacementModel = new this.cargoPlacementModel(
         removeReadOnlyFields(cp),
       );
       // save
+      let cargoPlacement = await cargoPlacementModel.save();
 
-      const cargoPlacement = await newCargoPlacement.save();
+      await cargoPlacement.populate('cargo').execPopulate();
       const resultTransformed = transformDbModel(cargoPlacement);
+      const refTransformed = transformDbModel(cargoPlacement['cargo']);
+      resultTransformed.cargo = refTransformed;
 
-      const cargo = await this.cargoService.getCargoByRegistrationNumber(
-        cargoPlacement.registrationNumber,
-      );
+      // const cargo = await this.cargoService.getCargoByRegistrationNumber(
+      //   cargoPlacement.registrationNumber,
+      // );
 
-      // send through websocket
-      this.appGateway.pushCargoPlacementToClients({
-        ...cargo,
-        ...resultTransformed,
-      });
+      // // send through websocket
+      // this.appGateway.pushCargoPlacementToClients({
+      //   ...cargo,
+      //   ...resultTransformed,
+      // });
 
       return resultTransformed;
     } catch (error) {
+      console.log(error)
       throw 'Failed to place cargo';
     }
   }

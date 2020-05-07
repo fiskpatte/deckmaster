@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BlueBackground } from "../../components/blueBackground";
 import { Paper } from "../../components/paper";
 import TextInput from "../../components/textInput";
@@ -22,7 +22,9 @@ export const LoginScreen: React.FC = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
 
-  if (isLoggedIn) history.push("placecargo");
+  useEffect(() => {
+    if (isLoggedIn) history.push("placecargo");
+  }, [history, isLoggedIn])
 
   const onLoginButtonClick = async () => {
     if (!username || !password) {
