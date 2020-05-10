@@ -1,18 +1,23 @@
 import * as React from "react";
-import { Cargo } from "../../../types/deckMap";
+import { CargoPlacement } from "../../../types/deckMap";
 import { CargoIcon } from "../cargoIcon";
 interface Props {
-  cargo: Array<Cargo>;
+  cargo: Array<CargoPlacement>;
 }
 
-export const PlacedCargo: React.FC<Props> = ({ cargo }) => {
-  if (cargo.length === 0) return null;
+export const PlacedCargo: React.FC<Props> = ({ cargo: cargoPlacements }) => {
+  if (cargoPlacements.length === 0) return null;
   return (
     <>
-      {cargo.map((c, ix) => {
+      {cargoPlacements.map((cp) => {
         return (
-          <g key={ix} id={`cargoIcon${c.id}`}>
-            <CargoIcon x={c.LCG} y={c.TCG} width={c.length} height={c.width} />
+          <g key={cp.id} id={`cargoIcon${cp.id}`}>
+            <CargoIcon
+              x={cp.LCG}
+              y={cp.TCG}
+              width={cp.cargo.length}
+              height={cp.cargo.width}
+            />
           </g>
         );
       })}

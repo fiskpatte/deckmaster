@@ -49,18 +49,18 @@ const App: React.FC = () => {
   useEffect(() => {
     const socket = socketIOClient("http://localhost:4000");
 
-    socket.on("newCargoPlacement", (payload: any) => {
-      if (isLoggedIn) {
+    if (isLoggedIn) {
+      socket.on("newCargoPlacement", (payload: any) => {
+        console.log("cargoPlacement from websocket: ", payload);
         dispatch(deckMapActions.addCargoPlacement(payload));
-      } else {
-        console.log("not logged in");
-      }
-    });
+      });
+    }
   }, [dispatch, isLoggedIn]);
 
   useEffect(() => {
     const fetchCargoPlacements = async () => {
       const cargoPlacements = await getCargoPlacements();
+      console.log("cargoPlacements: ", cargoPlacements);
       return cargoPlacements;
       // TODO: Fix
     };

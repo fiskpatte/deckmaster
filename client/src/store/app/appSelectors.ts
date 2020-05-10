@@ -1,17 +1,11 @@
 import { createSelector } from "reselect";
 
-const getCurrentDeckId = (state: { appReducer: any }) =>
-  state.appReducer.currentDeckId;
-const getDeckMap = (state: { appReducer: any }) => state.appReducer.deckMap;
+const getCurrentDeckId = (state: { deckMapReducer: any }) =>
+  state.deckMapReducer.currentDeckId;
+const getDeckMap = (state: { deckMapReducer: any }) =>
+  state.deckMapReducer.deckMap;
 
 export const getCurrentDeck = createSelector(
   [getCurrentDeckId, getDeckMap],
-  (currentDeckId, deckMap) => {
-    console.log("deckmap: ", deckMap);
-    console.log("currentDeckId: ", currentDeckId);
-
-    const result = deckMap[currentDeckId];
-    console.log("result: ", result);
-    return result;
-  }
+  (currentDeckId, deckMap) => deckMap[currentDeckId]
 );

@@ -1,4 +1,4 @@
-import { cargoFactory } from "../../types/deckMap";
+import { cargoFactory, deckFactory } from "../../types/deckMap";
 import { CargoState } from "../types";
 import { DECK_MAP_ACTION_TYPES } from "./deckMapActionTypes";
 import _ from "lodash";
@@ -44,6 +44,20 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
         deckMap,
       };
     }
+
+    case DECK_MAP_ACTION_TYPES.SET_CARGO_PLACEMENTS: {
+      const deckMap = _.cloneDeep(state.deckMap);
+
+      //deckMap
+
+      for (let cargoPlacement of payload) {
+        const lane = deckMap[cargoPlacement.deckId].lanes.find(
+          (lane) => lane.id === cargoPlacement.laneId
+        );
+        //lane.
+      }
+    }
+
     default:
       return state;
   }

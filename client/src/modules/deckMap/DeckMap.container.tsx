@@ -27,9 +27,9 @@ export const DeckMapContainer: React.FC = () => {
   const onConfirm = async () => {
     // set loader
     await placeCargo({
-      ...currentCargo,
       ...currentPlacement,
       deckId: currentDeck.name,
+      cargo: currentCargo.id,
     });
     dispatch(setCurrentPlacement(null));
     history.push("/placecargo");

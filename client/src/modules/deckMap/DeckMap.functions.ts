@@ -6,7 +6,7 @@ import { Coords, Placement } from "../../types/util";
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.LCG - lane.length / 2)) *
-    DECK_MAP.X_SCALE -
+      DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -14,7 +14,7 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)) *
-    DECK_MAP.Y_SCALE -
+      DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
@@ -58,7 +58,9 @@ export const svgPoint = (
   return pt.matrixTransform(fromElement.getScreenCTM()?.inverse());
 };
 
-const getCoordinatesFromEvent = (event: MouseEvent | TouchEvent | PointerEvent): Coords | undefined => {
+const getCoordinatesFromEvent = (
+  event: MouseEvent | TouchEvent | PointerEvent
+): Coords | undefined => {
   let x = 0;
   let y = 0;
   if (window.TouchEvent && event instanceof TouchEvent) {
@@ -102,7 +104,11 @@ export const placeCargoFromScreenCoords = (
   if (svgRef.current) {
     let center = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y);
     console.log(center, placement, cargo, lane);
-    let newPlacement = { ...placement, LCG: center.x / DECK_MAP.X_SCALE, TCG: center.y / DECK_MAP.Y_SCALE }
+    let newPlacement = {
+      ...placement,
+      LCG: center.x / DECK_MAP.X_SCALE,
+      TCG: center.y / DECK_MAP.Y_SCALE,
+    };
     // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
     callback(newPlacement);
   }
@@ -126,25 +132,35 @@ const getEndpoints = (elem: DeckMapElement) => {
 };
 
 const hasSpaceInBetween = (side1: number, side2: number, width: number) => {
-  return Math.abs(side1 - side2) > width
-}
+  return Math.abs(side1 - side2) > width;
+};
 
-export const isAdjacent = (elem: DeckMapElement, newElem: DeckMapElement, contained = false) => {
-
+export const isAdjacent = (
+  elem: DeckMapElement,
+  newElem: DeckMapElement,
+  contained = false
+) => {
   const elemEndpoints = getEndpoints(elem);
   const newElemEndpoints = getEndpoints(newElem);
 
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
   const matchingSides = contained
     ? newElemEndpoints.aft >= elemEndpoints.aft &&
-    newElemEndpoints.fwd <= elemEndpoints.fwd
+      newElemEndpoints.fwd <= elemEndpoints.fwd
     : newElemEndpoints.aft <= elemEndpoints.fwd &&
-    newElemEndpoints.fwd >= elemEndpoints.aft;
+      newElemEndpoints.fwd >= elemEndpoints.aft;
 
-  const noSpaceInBetween = !(hasSpaceInBetween(elemEndpoints.right, newElemEndpoints.left, newElem.width) && hasSpaceInBetween(elemEndpoints.left, newElemEndpoints.right, newElem.width));
+  const noSpaceInBetween = !(
+    hasSpaceInBetween(
+      elemEndpoints.right,
+      newElemEndpoints.left,
+      newElem.width
+    ) &&
+    hasSpaceInBetween(elemEndpoints.left, newElemEndpoints.right, newElem.width)
+  );
 
   return matchingSides && noSpaceInBetween;
-}
+};
 
 //Return if newElem is right or left of elem. if contained is true, the newElem has to be completely adjacent
 export const getAdjacentSide = (
@@ -152,14 +168,25 @@ export const getAdjacentSide = (
   newElem: DeckMapElement,
   contained = false
 ) => {
-
   const elemEndpoints = getEndpoints(elem);
   const newElemEndpoints = getEndpoints(newElem);
 
   if (isAdjacent(elem, newElem, contained)) {
-    if (!hasSpaceInBetween(elemEndpoints.right, newElemEndpoints.left, newElem.width))
+    if (
+      !hasSpaceInBetween(
+        elemEndpoints.right,
+        newElemEndpoints.left,
+        newElem.width
+      )
+    )
       return AdjacentSide.Right;
-    if (!hasSpaceInBetween(elemEndpoints.left, newElemEndpoints.right, newElem.width))
+    if (
+      !hasSpaceInBetween(
+        elemEndpoints.left,
+        newElemEndpoints.right,
+        newElem.width
+      )
+    )
       return AdjacentSide.Left;
   }
   return AdjacentSide.Undefined;
@@ -182,7 +209,7 @@ export const getLanePlacement = (
     return resultPlacement;
   const originX = lane.LCG - lane.length / 2;
   let minLCG = arrayMin(
-    lane.cargo.map((c) => c.LCG - c.length / 2),
+    lane.cargo.map((c) => c.LCG - c.cargo.length / 2),
     resultPlacement.LCG
   );
   if (someOverflowingCargo) {
@@ -191,7 +218,7 @@ export const getLanePlacement = (
         .map((al) =>
           al.cargo
             .filter((c) => c.overflowingLaneId === lane.id)
-            .map((c) => c.LCG - c.length / 2)
+            .map((c) => c.LCG - c.cargo.length / 2)
         )
         .flat()
     );
@@ -216,9 +243,19 @@ export const getOverflowingPlacement = (
   placement: Placement,
   recursive = true
 ): Placement | undefined => {
-  let resultPlacement = getOverflowingPlacementForSide(placingLane, currentCargo, placement, AdjacentSide.Right);
+  let resultPlacement = getOverflowingPlacementForSide(
+    placingLane,
+    currentCargo,
+    placement,
+    AdjacentSide.Right
+  );
   if (resultPlacement) return resultPlacement;
-  resultPlacement = getOverflowingPlacementForSide(placingLane, currentCargo, placement, AdjacentSide.Left);
+  resultPlacement = getOverflowingPlacementForSide(
+    placingLane,
+    currentCargo,
+    placement,
+    AdjacentSide.Left
+  );
   if (resultPlacement) return resultPlacement;
   if (recursive) {
     return handleOverflowRecursive(placingLane, currentCargo, placement);
@@ -226,19 +263,21 @@ export const getOverflowingPlacement = (
   return resultPlacement;
 };
 
-const handleOverflowRecursive = (placingLane: Lane, currentCargo: Cargo, placement: Placement) => {
+const handleOverflowRecursive = (
+  placingLane: Lane,
+  currentCargo: Cargo,
+  placement: Placement
+) => {
   const backstep = 0.5;
   const laneAft = placingLane.LCG - placingLane.length / 2;
   let tempPlacement = { ...placement };
-  if (
-    tempPlacement.LCG - backstep >= laneAft + currentCargo.length / 2
-  ) {
+  if (tempPlacement.LCG - backstep >= laneAft + currentCargo.length / 2) {
     tempPlacement.LCG -= backstep;
     return getOverflowingPlacement(placingLane, currentCargo, tempPlacement);
   } else {
     return undefined;
   }
-}
+};
 
 const getOverflowingPlacementForSide = (
   placingLane: Lane,
@@ -258,7 +297,7 @@ const getOverflowingPlacementForSide = (
   );
   if (
     adjacentLane.length === 1 &&
-    !adjacentLane[0].cargo.some((c) => isAdjacent(c, cargo))
+    !adjacentLane[0].cargo.some((c) => isAdjacent(c.cargo, cargo))
   ) {
     resultPlacement.TCG =
       placingLane.TCG +

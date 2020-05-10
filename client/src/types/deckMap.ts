@@ -44,7 +44,7 @@ export interface Lane extends DeckMapElement {
   name: string;
   partial: boolean;
   grids: Array<Grid>;
-  cargo: Array<Cargo>;
+  cargo: Array<CargoPlacement>;
   adjacentLanes: Array<AdjacentLane>;
 }
 
@@ -78,6 +78,21 @@ export interface Cargo extends DeckMapElement {
   weight: number;
   laneId: string;
   overflowingLaneId: string;
+}
+
+export interface CargoPlacement {
+  id: string;
+  registrationNumber: string;
+  deckId: string;
+  laneId: string;
+  LCG: number;
+  TCG: number;
+  VCG: number;
+  overflowingLaneId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  voyageId: string;
+  cargo: Cargo;
 }
 
 export const cargoFactory = (): Cargo => {

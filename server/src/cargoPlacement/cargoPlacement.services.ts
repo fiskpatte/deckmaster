@@ -14,8 +14,7 @@ export class CargoPlacementService {
     @InjectModel('PlaceCargo')
     private readonly cargoPlacementModel: Model<CargoPlacement>,
     private readonly appGateway: AppGateway,
-    private readonly cargoService: CargoService,
-  ) { }
+  ) {}
 
   async placeCargo(cp: CargoPlacement) {
     try {
@@ -26,23 +25,16 @@ export class CargoPlacementService {
       let cargoPlacement = await cargoPlacementModel.save();
 
       await cargoPlacement.populate('cargo').execPopulate();
-      const resultTransformed = transformDbModel(cargoPlacement);
-      const refTransformed = transformDbModel(cargoPlacement['cargo']);
-      resultTransformed.cargo = refTransformed;
 
-      // const cargo = await this.cargoService.getCargoByRegistrationNumber(
-      //   cargoPlacement.registrationNumber,
-      // );
+      const resultTransformed = transformDbModel(cargoPlacement);
+      resultTransformed.cargo = transformDbModel(cargoPlacement['cargo']);
 
       // // send through websocket
-      // this.appGateway.pushCargoPlacementToClients({
-      //   ...cargo,
-      //   ...resultTransformed,
-      // });
+      this.appGateway.pushCargoPlacementToClients(resultTransformed);
 
       return resultTransformed;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw 'Failed to place cargo';
     }
   }
