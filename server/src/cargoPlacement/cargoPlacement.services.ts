@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CargoPlacement } from './cargoPlacement.model';
-import { transformDbModel, removeReadOnlyFields } from 'src/utils/mongo';
+import { transformDbModel, removeReadOnlyFields, transformDbModelAndRefs } from 'src/utils/mongo';
 import { AppGateway } from 'src/app.gateway';
 import { Cargo } from 'src/cargo/cargo.model';
 import { CargoService } from 'src/cargo/cargo.services';
@@ -14,7 +14,7 @@ export class CargoPlacementService {
     @InjectModel('PlaceCargo')
     private readonly cargoPlacementModel: Model<CargoPlacement>,
     private readonly appGateway: AppGateway,
-  ) {}
+  ) { }
 
   async placeCargo(cp: CargoPlacement) {
     try {
@@ -26,13 +26,12 @@ export class CargoPlacementService {
 
       await cargoPlacement.populate('cargo').execPopulate();
 
-      const resultTransformed = transformDbModel(cargoPlacement);
-      resultTransformed.cargo = transformDbModel(cargoPlacement['cargo']);
+      const transformedPlacement = transformDbModelAndRefs(cargoPlacement, 'cargo');
 
       // // send through websocket
-      this.appGateway.pushCargoPlacementToClients(resultTransformed);
+      this.appGateway.pushCargoPlacementToClients(transformedPlacement);
 
-      return resultTransformed;
+      return transformedPlacement;
     } catch (error) {
       console.log(error);
       throw 'Failed to place cargo';
@@ -51,9 +50,11 @@ export class CargoPlacementService {
   async getAllByVoyageId(voyageId: string) {
     try {
       const allCargoPlacement = await this.cargoPlacementModel
-        .find({ voyageId })
+        .find({ voyageId }).populate('cargo')
         .exec();
-      return allCargoPlacement.map(transformDbModel) as CargoPlacement[];
+      const placements = allCargoPlacement.map(model => transformDbModelAndRefs(model, 'cargo')) as CargoPlacement[];
+
+      return placements;
     } catch (error) {
       throw error;
     }

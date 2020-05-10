@@ -1,4 +1,4 @@
-import { cargoFactory, deckFactory } from "../../types/deckMap";
+import { cargoFactory } from "../../types/deckMap";
 import { CargoState } from "../types";
 import { DECK_MAP_ACTION_TYPES } from "./deckMapActionTypes";
 import _ from "lodash";
@@ -28,12 +28,11 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
         ...state,
         deckMap: payload,
       };
-    case DECK_MAP_ACTION_TYPES.SET_CURRENT_DECK_ID: {
+    case DECK_MAP_ACTION_TYPES.SET_CURRENT_DECK_ID:
       return {
         ...state,
         currentDeckId: payload,
       };
-    }
     case DECK_MAP_ACTION_TYPES.ADD_CARGO_PLACEMENT: {
       const deckMap = _.cloneDeep(state.deckMap);
       deckMap[payload.deckId].lanes
@@ -44,20 +43,22 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
         deckMap,
       };
     }
-
     case DECK_MAP_ACTION_TYPES.SET_CARGO_PLACEMENTS: {
       const deckMap = _.cloneDeep(state.deckMap);
 
-      //deckMap
+      Object.keys(deckMap).forEach(k => {
+        deckMap[k].lanes.forEach(l => l.cargo = [])
+      });
 
       for (let cargoPlacement of payload) {
         const lane = deckMap[cargoPlacement.deckId].lanes.find(
           (lane) => lane.id === cargoPlacement.laneId
         );
-        //lane.
+        if (!lane) throw new Error(`Incorrect laneId on cargoPlacement ${cargoPlacement.id}`);
+        lane.cargo.push(cargoPlacement);
       }
+      return { ...state, deckMap };
     }
-
     default:
       return state;
   }

@@ -60,14 +60,12 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchCargoPlacements = async () => {
       const cargoPlacements = await getCargoPlacements();
-      console.log("cargoPlacements: ", cargoPlacements);
-      return cargoPlacements;
-      // TODO: Fix
+      dispatch(deckMapActions.setCargoPlacements(cargoPlacements));
     };
     if (isLoggedIn) {
       fetchCargoPlacements();
     }
-  }, [isLoggedIn]);
+  }, [dispatch, isLoggedIn]);
 
   if (loading) {
     return <Loader />;

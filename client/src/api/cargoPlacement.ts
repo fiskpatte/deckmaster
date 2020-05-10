@@ -2,7 +2,6 @@ import { post, get } from "./verbs";
 
 export const getCargoPlacements = async () => {
   const cargoPlacements = await get(`cargoPlacement/voyage`);
-
   return cargoPlacements;
 };
 

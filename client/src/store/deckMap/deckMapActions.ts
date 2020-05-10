@@ -35,6 +35,11 @@ export const addCargoPlacement = (cargoPlacement: any) => ({
   payload: cargoPlacement,
 });
 
+export const setCargoPlacements = (cargoPlacements: any) => ({
+  type: DECK_MAP_ACTION_TYPES.SET_CARGO_PLACEMENTS,
+  payload: cargoPlacements
+})
+
 // export const setCargoInDeckMap =
 
 const deckMapActions = {
@@ -43,6 +48,7 @@ const deckMapActions = {
   setDeckMap,
   setCurrentDeckId,
   addCargoPlacement,
+  setCargoPlacements,
 };
 
 export default deckMapActions;

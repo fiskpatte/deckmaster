@@ -10,6 +10,14 @@ export const transformDbModel = (dbModel: MongooseDocument) => {
   return result;
 };
 
+export const transformDbModelAndRefs = (dbModel: MongooseDocument, ...refs: string[]) => {
+  const resultTransformed = transformDbModel(dbModel);
+  for (const ref of refs) {
+    resultTransformed[ref] = transformDbModel(dbModel[ref]);
+  }
+  return resultTransformed;
+}
+
 export const removeReadOnlyFields = (doc) => {
   let result = { ...doc };
   delete result.id;

@@ -11,14 +11,16 @@ export const PlacedCargo: React.FC<Props> = ({ cargo: cargoPlacements }) => {
     <>
       {cargoPlacements.map((cp) => {
         return (
-          <g key={cp.id} id={`cargoIcon${cp.id}`}>
-            <CargoIcon
-              x={cp.LCG}
-              y={cp.TCG}
-              width={cp.cargo.length}
-              height={cp.cargo.width}
-            />
-          </g>
+          <defs key={cp.id}>
+            <g id={`cargoIcon${cp.id}`}>
+              <CargoIcon
+                x={cp.LCG}
+                y={cp.TCG}
+                width={cp.cargo.length}
+                height={cp.cargo.width}
+              />
+            </g>
+          </defs>
         );
       })}
     </>
