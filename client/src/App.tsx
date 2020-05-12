@@ -61,6 +61,7 @@ const App: React.FC = () => {
     const fetchCargoPlacements = async () => {
       const cargoPlacements = await getCargoPlacements();
       console.log("cargoPlacements: ", cargoPlacements);
+
       return cargoPlacements;
       // TODO: Fix
     };
