@@ -58,7 +58,7 @@ export const laneFactory = (): Lane => {
   return elem;
 };
 
-interface AdjacentLane extends Lane {
+export interface AdjacentLane extends Lane {
   adjacentSide: AdjacentSide;
 }
 
