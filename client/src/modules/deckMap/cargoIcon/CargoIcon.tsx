@@ -11,6 +11,7 @@ interface Props {
   width: number;
   placing?: boolean;
   dragCallback?: (info: MouseEvent | TouchEvent | PointerEvent) => void;
+  dragEndCallback?: () => void;
 }
 
 //This component uses {x,y} as LCG and TCG coordinates
@@ -20,18 +21,23 @@ export const CargoIcon: React.FC<Props> = ({
   width,
   height,
   placing = false,
-  dragCallback
+  dragCallback,
+  dragEndCallback
 }) => {
   const groupRef = useRef<SVGPathElement>(null);
   const scale = useReferenceScale(groupRef, { width, height });
+
+  const handleDragStart = (event: any, info: any) => {
+    console.log("START", event, info);//TODO: save dragOffset
+  }
 
   const corner = { x: x - width / 2, y: y - height / 2 };
   return (
     <motion.svg
       drag={placing}
-      // onDragStart={((ev, info) => console.log("start", ev, info))}
+      onDragStart={(ev, info) => handleDragStart(ev, info)}
       onDrag={(event) => dragCallback && dragCallback(event)}
-      // onDragEnd={((ev, info) => console.log("end", ev, info))}
+      onDragEnd={() => dragEndCallback && dragEndCallback()}
       dragMomentum={false}
       dragElastic={0}
       width={width}

@@ -102,15 +102,27 @@ export const placeCargoFromScreenCoords = (
 ) => {
   if (!coords) return;
   if (svgRef.current) {
-    let center = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y);
-    console.log(center, placement, cargo, lane);
-    let newPlacement = {
-      ...placement,
-      LCG: center.x / DECK_MAP.X_SCALE,
-      TCG: center.y / DECK_MAP.Y_SCALE,
-    };
-    // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
-    callback(newPlacement);
+    const centerPoint = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y);
+    const center = { x: centerPoint.x / DECK_MAP.X_SCALE, y: centerPoint.y / DECK_MAP.Y_SCALE };
+    if (cargo.width > lane.width) {
+      //Set a limit in the y displacement
+      const max = lane.TCG + (cargo.width - lane.width) / 2;
+      const min = lane.TCG - (cargo.width - lane.width) / 2;
+      center.y = Math.min(Math.max(center.y, min), max);
+    } else {
+      //Ignore y displacement
+      center.y = placement.TCG;
+    }
+    if (center.x !== placement.LCG || center.y !== placement.TCG) {
+      //Only do the callback if something changed
+      let newPlacement = {
+        ...placement,
+        LCG: center.x,
+        TCG: center.y,
+      };
+      // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
+      callback(newPlacement);
+    }
   }
 };
 

@@ -66,6 +66,19 @@ const DeckMap: React.FC<Props> = ({
     }
   };
 
+  const pinCargoAfterDrag = () => {
+    const placingLane = currentDeck.lanes.find(
+      (l) => l.id === currentPlacement?.laneId
+    );
+    if (currentPlacement && placingLane) {
+      if (currentCargo.width > placingLane.width) {
+        let pinnedPlacement = { ...currentPlacement };
+        pinnedPlacement.TCG = placingLane.TCG + (currentPlacement.TCG > placingLane.TCG ? 1 : -1) * (currentCargo.width - placingLane.width) / 2;
+        setPlacement(pinnedPlacement);
+      }
+    }
+  };
+
   const placeCargoFromFrontPlacement = (placement: Placement) => {
     placement.LCG -= currentCargo.length / 2;
     placeCargoFromSVGCoords(placement, setPlacement);
@@ -113,6 +126,7 @@ const DeckMap: React.FC<Props> = ({
             height={currentCargo.width}
             placing={true}
             dragCallback={placeCargoFromDrag}
+            dragEndCallback={pinCargoAfterDrag}
           />
         )}
       </g>
