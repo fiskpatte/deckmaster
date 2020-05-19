@@ -1,3 +1,4 @@
+import { CargoQueueModule } from './cargoQueue/cargoQueue.module';
 import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -12,6 +13,7 @@ import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
+    CargoQueueModule,
     SettingsModule,
     UsersModule,
     AuthModule,
@@ -24,6 +26,8 @@ import { AppGateway } from './app.gateway';
     ),
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [
+    AppService, AppGateway
+  ],
 })
 export class AppModule { }

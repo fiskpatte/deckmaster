@@ -18,9 +18,8 @@ export class CargoPlacementController {
     if (!headers.voyageid) {
       throw new NotFoundException('VoyageId not specified');
     }
-
     const result = await this.cargoPlacementService.getAllByVoyageId(
-      headers.voyageId,
+      headers.voyageid,
     );
     return result;
   }
@@ -32,7 +31,11 @@ export class CargoPlacementController {
   }
 
   @Post()
-  async placeCargo(@Body() cargoPlacement: CargoPlacement) {
+  async placeCargo(@Headers() headers, @Body() cargoPlacement: CargoPlacement) {
+    if (!headers.voyageid) {
+      throw new NotFoundException('VoyageId not specified');
+    }
+    cargoPlacement.voyageId = headers.voyageid;
     const result = await this.cargoPlacementService.placeCargo(cargoPlacement);
     return result;
   }
