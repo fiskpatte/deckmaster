@@ -33,7 +33,7 @@ export class CargoQueueController {
   }
 
   @Delete(':id')
-  async deleteCargo(@Param('id') id: string, @Headers() headers) {
+  async removeFromQueue(@Param('id') id: string, @Headers() headers) {
     await this.cargoQueueService.removeItemFromQueue(id, headers.voyageid);
     return null;
   }

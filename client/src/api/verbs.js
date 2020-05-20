@@ -51,5 +51,21 @@ export const put = async (endpoint, body) => {
   }
 };
 
+// Need to name it axiosDelete since delete is a protected keyword
+export const axiosDelete = async (endpoint, body) => {
+  try {
+    endpoint = removeSlashPrefix(endpoint);
+    const result = await axios.delete(`${serverPrefix + endpoint}`, body);
+    return result.data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      window.location = "/login";
+      return;
+    }
+    console.log(`Delete on ${endpoint} failed. ${error}`);
+    throw error;
+  }
+};
+
 const removeSlashPrefix = (endpoint) =>
   endpoint[0] === "/" ? endpoint.substr(1) : endpoint;

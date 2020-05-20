@@ -10,7 +10,10 @@ import { renderRoutes } from "./routes.functions";
 import socketIOClient from "socket.io-client";
 import { useIsLoggedIn } from "./hooks/useIsLoggedIn";
 import { getCargoPlacements } from "./api/cargoPlacement";
+import { getCargoQueue } from "./api/cargoQueue";
 import deckMapActions from "./store/deckMap/deckMapActions";
+import cargoQueueActions from "./store/cargoQueue/cargoQueueActions";
+import { CargoQueueItem } from "./types/cargoQueueItem";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -47,8 +50,20 @@ const App: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:4000");
+    const fetchCargoPlacements = async () =>
+      dispatch(deckMapActions.setCargoPlacements(await getCargoPlacements()));
 
+    const fetchCargoQueue = async () =>
+      dispatch(cargoQueueActions.setCargoQueue(await getCargoQueue()));
+
+    if (isLoggedIn) {
+      fetchCargoPlacements();
+      fetchCargoQueue();
+    }
+  }, [dispatch, isLoggedIn]);
+
+  useEffect(() => {
+    const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
       socket.on("newCargoPlacement", (payload: any) => {
         console.log("cargoPlacement from websocket: ", payload);
@@ -58,12 +73,12 @@ const App: React.FC = () => {
   }, [dispatch, isLoggedIn]);
 
   useEffect(() => {
-    const fetchCargoPlacements = async () => {
-      const cargoPlacements = await getCargoPlacements();
-      dispatch(deckMapActions.setCargoPlacements(cargoPlacements));
-    };
+    const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
-      fetchCargoPlacements();
+      socket.on("cargoQueueUpdated", (payload: CargoQueueItem[]) => {
+        console.log("cargoQueueUpdated: ", payload);
+        dispatch(cargoQueueActions.setCargoQueue(payload));
+      });
     }
   }, [dispatch, isLoggedIn]);
 
