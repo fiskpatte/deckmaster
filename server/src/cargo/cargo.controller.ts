@@ -16,7 +16,7 @@ import { Cargo } from './cargo.model';
 @UseGuards(JwtAuthGuard)
 @Controller('cargo')
 export class CargoController {
-  constructor(private readonly cargoService: CargoService) { }
+  constructor(private readonly cargoService: CargoService) {}
 
   @Get()
   async getAllCargo() {
@@ -36,8 +36,11 @@ export class CargoController {
   }
 
   @Post('mock')
-  async devMockCargo(@Headers() headers) {
-    const cargo = await this.cargoService.mockCargo(headers.username);
+  async devMockCargo(
+    @Headers('username') userName,
+    @Headers('voyageid') voyageId,
+  ) {
+    const cargo = await this.cargoService.mockCargo(userName, voyageId);
     return cargo;
   }
 

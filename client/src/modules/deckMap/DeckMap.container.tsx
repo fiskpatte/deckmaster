@@ -26,13 +26,22 @@ export const DeckMapContainer: React.FC = () => {
 
   const onConfirm = async () => {
     // set loader
-    await placeCargo({
-      ...currentPlacement,
-      deckId: currentDeck.name,
-      cargo: currentCargo.id,
-    });
-    dispatch(setCurrentPlacement(null));
-    history.push("/placecargo");
+    try {
+      const result: any = await placeCargo({
+        ...currentPlacement,
+        deckId: currentDeck.name,
+        cargo: currentCargo.id,
+      });
+      if (!result) {
+        throw new Error("Couldn't place cargo");
+      }
+
+      dispatch(setCurrentPlacement(null));
+      history.push("/placecargo");
+    } catch (error) {
+      // Handle somehow
+      console.error(error);
+    }
   };
 
   return (

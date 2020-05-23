@@ -1,4 +1,4 @@
-import { CargoQueueItem } from "../../types/cargoQueueItem";
+import { CargoQueueItem } from "../../types/CargoQueueItem";
 import { CARGO_QUEUE_ACTION_TYPES } from "./cargoQueueActionTypes";
 
 export const setCargoQueue = (cargoQueue: CargoQueueItem[]) => ({

@@ -13,7 +13,7 @@ import { getCargoPlacements } from "./api/cargoPlacement";
 import { getCargoQueue } from "./api/cargoQueue";
 import deckMapActions from "./store/deckMap/deckMapActions";
 import cargoQueueActions from "./store/cargoQueue/cargoQueueActions";
-import { CargoQueueItem } from "./types/cargoQueueItem";
+import { CargoQueueItem } from "./types/CargoQueueItem";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);

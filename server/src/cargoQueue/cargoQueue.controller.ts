@@ -1,40 +1,33 @@
-import {
-  Controller,
-  Get,
-  Headers,
-  NotFoundException,
-  Post,
-  Body,
-  Delete,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Headers, Post, Body } from '@nestjs/common';
 import { CargoQueueService } from './cargoQueue.services';
-import { CargoQueueItem } from './cargoQueue.model';
 
 @Controller('cargoqueue')
 export class CargoQueueController {
   constructor(private readonly cargoQueueService: CargoQueueService) {}
 
   @Get()
-  async getAll(@Headers() headers) {
-    if (!headers.voyageid) {
-      throw new NotFoundException('VoyageId not specified');
+  async getAll(@Headers('voyageid') voyageid) {
+    if (!voyageid) {
+      throw new Error('VoyageId not specified');
     }
-    const result = await this.cargoQueueService.getAllByVoyageId(
-      headers.voyageid,
-    );
+    const result = await this.cargoQueueService.getAllByVoyageId(voyageid);
     return result;
   }
 
   @Post()
-  async addToQueue(@Body() cargoQueueItem: CargoQueueItem) {
-    const result = await this.cargoQueueService.addItem(cargoQueueItem);
+  async addToQueue(
+    @Body('registrationNumber') registrationNumber: string,
+    @Body('deckId') deckId: string,
+    @Headers('voyageid') voyageid,
+  ) {
+    if (!voyageid) {
+      throw new Error('Invalid voyage id');
+    }
+    const result = await this.cargoQueueService.addItem(
+      registrationNumber,
+      voyageid,
+      deckId,
+    );
     return result;
-  }
-
-  @Delete(':id')
-  async removeFromQueue(@Param('id') id: string, @Headers() headers) {
-    await this.cargoQueueService.removeItemFromQueue(id, headers.voyageid);
-    return null;
   }
 }

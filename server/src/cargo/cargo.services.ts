@@ -11,7 +11,7 @@ export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
     private readonly logService: LogService,
-  ) { }
+  ) {}
 
   async addCargo(newCargo: Cargo) {
     const newCargoModel = new this.cargoModel(removeReadOnlyFields(newCargo));
@@ -24,8 +24,14 @@ export class CargoService {
     return transformDbModel(cargo);
   }
 
-  async getCargoByRegistrationNumber(registrationNumber: string) {
-    const cargo = await this.cargoModel.findOne({ registrationNumber });
+  async getCargoByRegistrationNumberAndVoyageId(
+    registrationNumber: string,
+    voyageId: string,
+  ) {
+    const cargo = await this.cargoModel.findOne({
+      registrationNumber,
+      voyageId,
+    });
     return transformDbModel(cargo);
   }
 
@@ -40,7 +46,11 @@ export class CargoService {
 
   async updateCargo(cargoId: string, dto: Cargo) {
     try {
-      const cargo = await this.cargoModel.findOneAndUpdate({ _id: cargoId }, removeReadOnlyFields(dto), { new: true });
+      const cargo = await this.cargoModel.findOneAndUpdate(
+        { _id: cargoId },
+        removeReadOnlyFields(dto),
+        { new: true },
+      );
       return cargo;
     } catch (error) {
       throw new NotFoundException('Cargo not found');
@@ -55,7 +65,7 @@ export class CargoService {
     }
   }
 
-  async mockCargo(username: string) {
+  async mockCargo(username: string, voyageId: string) {
     try {
       const chance = new Chance();
 
@@ -79,7 +89,8 @@ export class CargoService {
         width,
         height,
         type,
-        weight
+        weight,
+        voyageId,
       } as Cargo;
 
       const cargo = await this.addCargo(dto);

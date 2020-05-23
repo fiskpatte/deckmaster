@@ -6,7 +6,7 @@ import { Coords, Placement } from "../../types/util";
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.LCG - lane.length / 2)) *
-    DECK_MAP.X_SCALE -
+      DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -14,7 +14,7 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)) *
-    DECK_MAP.Y_SCALE -
+      DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
@@ -71,8 +71,7 @@ const getCoordinatesFromEvent = (
     } else {
       return undefined;
     }
-  }
-  if (event instanceof MouseEvent || event instanceof PointerEvent) {
+  } else if (event instanceof MouseEvent || event instanceof PointerEvent) {
     x = event.clientX;
     y = event.clientY;
   }
@@ -102,8 +101,16 @@ export const placeCargoFromScreenCoords = (
 ) => {
   if (!coords) return;
   if (svgRef.current) {
-    const centerPoint = svgPoint(svgRef.current, svgRef.current, coords.x, coords.y);
-    const center = { x: centerPoint.x / DECK_MAP.X_SCALE, y: centerPoint.y / DECK_MAP.Y_SCALE };
+    const centerPoint = svgPoint(
+      svgRef.current,
+      svgRef.current,
+      coords.x,
+      coords.y
+    );
+    const center = {
+      x: centerPoint.x / DECK_MAP.X_SCALE,
+      y: centerPoint.y / DECK_MAP.Y_SCALE,
+    };
     if (cargo.width > lane.width) {
       //Set a limit in the y displacement
       const max = lane.TCG + (cargo.width - lane.width) / 2;
@@ -158,9 +165,9 @@ export const isAdjacent = (
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
   const matchingSides = contained
     ? newElemEndpoints.aft >= elemEndpoints.aft &&
-    newElemEndpoints.fwd <= elemEndpoints.fwd
+      newElemEndpoints.fwd <= elemEndpoints.fwd
     : newElemEndpoints.aft <= elemEndpoints.fwd &&
-    newElemEndpoints.fwd >= elemEndpoints.aft;
+      newElemEndpoints.fwd >= elemEndpoints.aft;
 
   const noSpaceInBetween = !(
     hasSpaceInBetween(

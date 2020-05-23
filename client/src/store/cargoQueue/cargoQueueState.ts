@@ -1,4 +1,4 @@
-import { CargoQueueItem } from "../../types/cargoQueueItem";
+import { CargoQueueItem } from "../../types/CargoQueueItem";
 
 export interface CargoQueueState {
   cargoQueue: CargoQueueItem[];

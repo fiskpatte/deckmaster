@@ -5,6 +5,5 @@ export const getCargoPlacements = async () => {
   return cargoPlacements;
 };
 
-export const placeCargo = async (cargoPlacement: any) => {
+export const placeCargo = async (cargoPlacement: any) =>
   await post("cargoplacement", cargoPlacement);
-};

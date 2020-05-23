@@ -11,7 +11,7 @@ import { CargoPlacement } from './cargoPlacement.model';
 
 @Controller('cargoplacement')
 export class CargoPlacementController {
-  constructor(private readonly cargoPlacementService: CargoPlacementService) { }
+  constructor(private readonly cargoPlacementService: CargoPlacementService) {}
 
   @Get('voyage')
   async getAllByVoyageId(@Headers() headers) {
@@ -36,7 +36,6 @@ export class CargoPlacementController {
       throw new NotFoundException('VoyageId not specified');
     }
     cargoPlacement.voyageId = headers.voyageid;
-    const result = await this.cargoPlacementService.placeCargo(cargoPlacement);
-    return result;
+    return await this.cargoPlacementService.placeCargo(cargoPlacement);
   }
 }

@@ -1,14 +1,18 @@
 import * as mongoose from 'mongoose';
 import { CargoType } from 'src/utils/enums';
 
-export const CargoSchema = new mongoose.Schema({
-  registrationNumber: String,
-  length: Number,
-  width: Number,
-  height: Number,
-  type: Number,
-  weight: Number,
-}, { timestamps: true });
+export const CargoSchema = new mongoose.Schema(
+  {
+    registrationNumber: String,
+    length: Number,
+    width: Number,
+    height: Number,
+    type: Number,
+    weight: Number,
+    voyageId: String,
+  },
+  { timestamps: true },
+);
 
 export interface Cargo extends mongoose.Document {
   id: string;
@@ -20,4 +24,5 @@ export interface Cargo extends mongoose.Document {
   weight: number;
   createdAt: Date;
   updatedAt: Date;
+  voyageId: string;
 }

@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CargoQueueItem } from './cargoQueue.model';
-import { Model } from 'mongoose';
-import { transformDbModel, removeReadOnlyFields } from 'src/utils/mongo';
+import { Model, Types } from 'mongoose';
+import { transformDbModel, transformDbModelAndRefs } from 'src/utils/mongo';
 import { AppGateway } from 'src/app.gateway';
+import { CargoService } from 'src/cargo/cargo.services';
 
 @Injectable()
 export class CargoQueueService {
@@ -11,34 +12,52 @@ export class CargoQueueService {
     @InjectModel('CargoQueue')
     private readonly cargoQueueModel: Model<CargoQueueItem>,
     private readonly appGateway: AppGateway,
+    private readonly cargoService: CargoService,
   ) {}
 
   async getAllByVoyageId(voyageId: string) {
     try {
-      const allCargoPlacement = await this.cargoQueueModel
+      const cargoQueueItems = await this.cargoQueueModel
         .find({ voyageId })
+        .populate('cargo')
         .exec();
-      return allCargoPlacement.map(transformDbModel) as CargoQueueItem[];
+
+      return cargoQueueItems.map(model =>
+        transformDbModelAndRefs(model, 'cargo'),
+      );
     } catch (error) {
       throw error;
     }
   }
 
-  async addItem(item: CargoQueueItem) {
+  async addItem(registrationNumber: string, voyageId: string, deckId: string) {
     try {
-      const newCargoModel = new this.cargoQueueModel(
-        removeReadOnlyFields(item),
+      const cargo = await this.cargoService.getCargoByRegistrationNumberAndVoyageId(
+        registrationNumber,
+        voyageId,
       );
+
+      if (!cargo) {
+        throw new NotFoundException('Cargo not found');
+      }
+
+      const newCargoQueueItem = new this.cargoQueueModel({
+        voyageId,
+        deckId,
+        registrationNumber,
+        cargo: cargo.id,
+      });
+
       // Delete other entries with same registration number,
-      // perhaps this should be handled differently.
       await this.cargoQueueModel
         .deleteMany({
-          registrationNumber: item.registrationNumber,
+          cargo: cargo.id,
         })
         .exec();
-      const result = await newCargoModel.save();
 
-      this.pushQueueToClients(item.voyageId);
+      const result = await newCargoQueueItem.save();
+
+      this.pushQueueToClients(voyageId);
 
       return transformDbModel(result);
     } catch (error) {
@@ -46,12 +65,15 @@ export class CargoQueueService {
     }
   }
 
-  async removeItemFromQueue(id: string, voyageId: string) {
+  async removeItemFromQueue(cargoId: string, voyageId: string) {
     try {
-      await this.cargoQueueModel.deleteOne({ _id: id }).exec();
+      const cargo = await this.cargoService.getCargo(cargoId);
+      await this.cargoQueueModel.deleteMany({ cargo: cargo.id }).exec();
       this.pushQueueToClients(voyageId);
     } catch (error) {
-      throw new NotFoundException(`CargoQueueItem with id ${id} not found`);
+      throw new NotFoundException(
+        `CargoQueueItem with id ${cargoId} not found`,
+      );
     }
   }
 
