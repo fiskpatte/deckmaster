@@ -1,5 +1,4 @@
 import React from "react";
-import { BlueBackground } from "../../components/blueBackground";
 import { Paper } from "../../components/paper";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -8,6 +7,7 @@ import Text from "../../components/text";
 import Button from "../../components/button";
 import "./ConfirmCargoScreen.scss";
 import Separator from "../../components/separator";
+import ContentContainer from "../../components/contentContainer";
 
 export const ConfirmCargoScreen = () => {
   const { currentCargo: cargo } = useSelector(
@@ -19,7 +19,7 @@ export const ConfirmCargoScreen = () => {
     history.push("/placecargo");
   }
   return (
-    <BlueBackground>
+    <ContentContainer>
       <Paper>
         <Text size="medium" value="Confirm cargo" />
         <table>
@@ -76,7 +76,7 @@ export const ConfirmCargoScreen = () => {
           </div>
         </div>
       </Paper>
-    </BlueBackground>
+    </ContentContainer>
   );
 };
 

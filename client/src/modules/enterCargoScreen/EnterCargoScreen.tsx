@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BlueBackground } from "../../components/blueBackground";
+// import { BlueBackground } from "../../components/blueBackground";
 import { Paper } from "../../components/paper";
 import { getMockCargo } from "../../api/endpoints";
 import { setCurrentCargo } from "../../store/deckMap/deckMapActions";
@@ -11,6 +11,7 @@ import Button from "../../components/button";
 import Text from "../../components/text";
 import Separator from "../../components/separator";
 import { FlexRowEndContainer } from "../../components/flexContainer";
+import ContentContainer from "../../components/contentContainer";
 
 export const EnterCargoScreen = () => {
   const [value, setValue] = useState("");
@@ -33,7 +34,7 @@ export const EnterCargoScreen = () => {
   };
 
   return (
-    <BlueBackground>
+    <ContentContainer>
       <Paper>
         <Text size="medium" value="Enter cargo ID" />
         <TextInput
@@ -47,7 +48,7 @@ export const EnterCargoScreen = () => {
         </FlexRowEndContainer>
         {error && <ErrorMessage message={error} />}
       </Paper>
-    </BlueBackground>
+    </ContentContainer>
   );
 };
 

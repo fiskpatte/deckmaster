@@ -1,0 +1,13 @@
+@import "../../styles/colors.scss";
+@import "../../styles/main.scss";
+
+.ContentContainer {
+  width: 100%;
+  height: 100%-$headerHeight;
+  // background-color:  $darkBlue;
+  background-color: $backgroundGray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+}
