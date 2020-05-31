@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Header.scss";
 import { MenuButton } from "./menuButton";
-import { ViewTitle } from "./viewTitle";
+// import { ViewTitle } from "./viewTitle";
 import { DetailsButton } from "./detailsButton";
 import { NotificationsButton } from "./notificationsButton";
 import { Logo } from "./logo";
@@ -30,9 +30,9 @@ export const Header: React.FC = () => {
           <HeaderItem>
             <MenuButton onClick={() => setSideBarOpen(true)} />
           </HeaderItem>
-          <HeaderItem>
+          {/* <HeaderItem>
             <ViewTitle />
-          </HeaderItem>
+          </HeaderItem> */}
         </div>
         <div className="FlexContainer">
           <HeaderItem>

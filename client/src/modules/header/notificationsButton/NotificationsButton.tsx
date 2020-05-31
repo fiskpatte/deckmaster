@@ -28,7 +28,7 @@ export const NotificationsButton: React.FC = () => {
       setTimeout(() => setBlink(false), 1000);
     }
     prevQueueLengthRef.current = cargoQueue.length;
-  }, [cargoQueue.length])
+  }, [cargoQueue.length]);
 
   const onCargoQueueItemClick = (cargo: Cargo) => {
     dispatch(setCurrentCargo(cargo));
@@ -38,11 +38,15 @@ export const NotificationsButton: React.FC = () => {
     <>
       <div className="NotificationsContainer" onClick={togglePopupVisible}>
         <NotificationsIcon />
-        {cargoQueue.length > 0 && <div className={`Badge ${blink ? "blink" : ""}`}>{cargoQueue.length}</div>}
+        {cargoQueue.length > 0 && (
+          <div className={`Badge ${blink ? "blink" : ""}`}>
+            {cargoQueue.length}
+          </div>
+        )}
         <Popup visible={isPopupVisible}>
-          {cargoQueue.length > 0 ?
+          {cargoQueue.length > 0 ? (
             <div className="CargoQueueList">
-              {cargoQueue.map((cargoQueueItem) =>
+              {cargoQueue.map((cargoQueueItem) => (
                 <div
                   className="CargoQueueItem"
                   key={cargoQueueItem.id}
@@ -51,11 +55,13 @@ export const NotificationsButton: React.FC = () => {
                   <Text
                     value={`Place ${cargoQueueItem.registrationNumber} on ${cargoQueueItem.deckId}`}
                   />
+                  {/* {index < cargoQueue.length - 1 && <Separator />} */}
                 </div>
-              )}
-            </div> :
+              ))}
+            </div>
+          ) : (
             <Text value={"No notifications"} />
-          }
+          )}
         </Popup>
       </div>
       <Overlay

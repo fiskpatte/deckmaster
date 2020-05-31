@@ -21,7 +21,7 @@ export const ConfirmCargoScreen = () => {
   return (
     <ContentContainer>
       <Paper>
-        <Text size="medium" value="Confirm cargo" />
+        <Text size="medium" value="Cargo details" />
         <table>
           <tbody>
             <tr>
@@ -34,19 +34,19 @@ export const ConfirmCargoScreen = () => {
             </tr>
             <tr>
               <td className="LabelCell">Length</td>
-              <td className="ValueCell">{cargo.length}</td>
+              <td className="ValueCell">{cargo.length + " m"}</td>
             </tr>
             <tr>
               <td className="LabelCell">Width</td>
-              <td className="ValueCell">{cargo.width}</td>
+              <td className="ValueCell">{cargo.width + " m"}</td>
             </tr>
             <tr>
               <td className="LabelCell">Height</td>
-              <td className="ValueCell">{cargo.height}</td>
+              <td className="ValueCell">{cargo.height + " m"}</td>
             </tr>
             <tr>
               <td className="LabelCell">Weight</td>
-              <td className="ValueCell">{cargo.weight}</td>
+              <td className="ValueCell">{cargo.weight + " m"}</td>
             </tr>
           </tbody>
         </table>
