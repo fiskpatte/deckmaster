@@ -6,6 +6,7 @@ import { DeckMapContainer } from "./modules/deckMap";
 import { LoginScreen } from "./modules/loginScreen";
 import { RouteProps } from "react-router-dom";
 import SettingsScreen from "./modules/settingsScreen";
+import HistoryScreen from "./modules/historyScreen";
 
 interface Props {
   title: string;
@@ -57,7 +58,7 @@ export const routes: { [key in RouteKey]: Props } = {
     private: true,
     exact: true,
     path: "/history",
-    component: <div>History</div>,
+    component: <HistoryScreen />,
   },
   [RouteKey.Discharge]: {
     title: "Discharge cargo",

@@ -9,6 +9,7 @@ import {
 } from 'src/utils/mongo';
 import { AppGateway } from 'src/app.gateway';
 import { CargoQueueService } from 'src/cargoQueue/cargoQueue.services';
+import { LogService } from 'src/log/log.service.';
 
 @Injectable()
 export class CargoPlacementService {
@@ -17,9 +18,10 @@ export class CargoPlacementService {
     private readonly cargoPlacementModel: Model<CargoPlacement>,
     private readonly appGateway: AppGateway,
     private readonly cargoQueueService: CargoQueueService,
+    private readonly logService: LogService,
   ) {}
 
-  async placeCargo(cp: CargoPlacement) {
+  async placeCargo(cp: CargoPlacement, username: string) {
     try {
       const cargoPlacementModel = new this.cargoPlacementModel(
         removeReadOnlyFields(cp),
@@ -40,6 +42,12 @@ export class CargoPlacementService {
       this.cargoQueueService.removeItemFromQueue(
         cargoPlacement.cargo.id,
         cargoPlacement.cargo.voyageId,
+      );
+
+      this.logService.addLog(
+        `Placed ${cp.registrationNumber} at ${cp.deckId}, lane ${cp.laneId}`,
+        username,
+        cp.voyageId.toString(),
       );
 
       return transformedPlacement;

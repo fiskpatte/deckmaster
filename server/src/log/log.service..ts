@@ -8,12 +8,11 @@ import { transformDbModel } from 'src/utils/mongo';
 export class LogService {
   constructor(@InjectModel('Log') private readonly logModel: Model<Log>) {}
 
-  async addLog(text: string, username: string) {
+  async addLog(text: string, username: string, voyageId: string) {
     const newLog = new this.logModel({
       username,
       text,
-      voyageId: 'dummy-voyage-id',
-      created: new Date().toISOString(),
+      voyageId,
     });
 
     newLog.save();

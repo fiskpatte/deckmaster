@@ -10,7 +10,6 @@ import { LogService } from 'src/log/log.service.';
 export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
-    private readonly logService: LogService,
   ) {}
 
   async addCargo(newCargo: Cargo) {
@@ -94,11 +93,6 @@ export class CargoService {
       } as Cargo;
 
       const cargo = await this.addCargo(dto);
-
-      this.logService.addLog(
-        `Mocked cargo ${cargo.registrationNumber}`,
-        username,
-      );
 
       return cargo;
     } catch (error) {

@@ -31,11 +31,18 @@ export class CargoPlacementController {
   }
 
   @Post()
-  async placeCargo(@Headers() headers, @Body() cargoPlacement: CargoPlacement) {
+  async placeCargo(
+    @Headers() headers,
+    @Body() cargoPlacement: CargoPlacement,
+    @Headers('username') username: string,
+  ) {
     if (!headers.voyageid) {
       throw new NotFoundException('VoyageId not specified');
     }
     cargoPlacement.voyageId = headers.voyageid;
-    return await this.cargoPlacementService.placeCargo(cargoPlacement);
+    return await this.cargoPlacementService.placeCargo(
+      cargoPlacement,
+      username,
+    );
   }
 }

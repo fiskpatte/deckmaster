@@ -6,6 +6,7 @@ import { CargoPlacementService } from './cargoPlacement.services';
 import { AppGateway } from 'src/app.gateway';
 import { CargoModule } from 'src/cargo/cargo.module';
 import { CargoQueueModule } from 'src/cargoQueue/cargoQueue.module';
+import { LogModule } from 'src/log/log.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CargoQueueModule } from 'src/cargoQueue/cargoQueue.module';
     ]),
     CargoModule,
     CargoQueueModule,
+    LogModule,
   ],
   controllers: [CargoPlacementController],
   providers: [CargoPlacementService, AppGateway],
