@@ -9,9 +9,9 @@ import TopBar from "./TopBar";
 import { useIsLoggedIn } from "../../hooks/useIsLoggedIn";
 import Separator from "../../components/separator";
 import { FlexRowEndContainer } from "../../components/flexContainer";
-import { useDispatch } from 'react-redux';
-import { setSessionData } from './../../store/app/appActions';
-import { SessionData } from './../../types/sessionData';
+import { useDispatch } from "react-redux";
+import { setSessionData } from "./../../store/app/appActions";
+import { SessionData } from "./../../types/sessionData";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -24,7 +24,7 @@ export const LoginScreen: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn) history.push("placecargo");
-  }, [history, isLoggedIn])
+  }, [history, isLoggedIn]);
 
   const onLoginButtonClick = async () => {
     if (!username || !password) {
@@ -36,7 +36,8 @@ export const LoginScreen: React.FC = () => {
     }
 
     try {
-      const loginCallback = (data: SessionData) => dispatch(setSessionData(data));
+      const loginCallback = (data: SessionData) =>
+        dispatch(setSessionData(data));
       await login(username, password, loginCallback);
       history.push("/placecargo");
     } catch (error) {

@@ -31,6 +31,7 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
       user_name: user._doc.username,
       voyage_id: 'dummy_voyage_id',
+      vessel_id: 'dummy_vessel_id',
     };
   }
 }

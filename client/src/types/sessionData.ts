@@ -1,5 +1,6 @@
 export interface SessionData {
-  username: string,
-  accessToken: string,
-  voyageId: string,
+  username: string;
+  accessToken: string;
+  voyageId: string;
+  vesselId: string;
 }

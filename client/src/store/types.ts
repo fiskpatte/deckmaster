@@ -4,7 +4,7 @@ import { Settings } from "../types/settings";
 import { SessionData } from "./../types/sessionData";
 
 export interface AppState {
-  settings: Settings | null;
+  settings: Settings;
   sessionData?: SessionData;
 }
 

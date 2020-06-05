@@ -18,10 +18,12 @@ export const login = async (
       username: result.user_name,
       accessToken: result.access_token,
       voyageId: result.voyage_id,
+      vesselId: result.vessel_id,
     };
     setDefaultHeader("Authorization", `Bearer ${result.access_token}`);
     setDefaultHeader("username", result.user_name);
     setDefaultHeader("voyageId", result.voyage_id);
+    setDefaultHeader("vesselId", result.vessel_id);
     callback(data);
   } else {
     throw new Error("Login failed");
@@ -35,14 +37,15 @@ export const getMockCargo = async () => {
   return cargo;
 };
 
-export const getSettings = async (vesselId: string) => {
-  const settings = await get(`settings/${vesselId}`);
+export const getSettings = async () => {
+  const settings = await get(`settings`);
   if (!settings) throw new Error("Failed to get settings");
 
   return settings;
 };
 
 export const updateSettings = async (settings: Settings) => {
+  console.log("settings: ", settings);
   await put("settings", settings);
 };
 

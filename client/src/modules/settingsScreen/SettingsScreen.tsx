@@ -1,54 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { BlueBackground } from "../../components/blueBackground";
+import React, { useState } from "react";
 import { Paper } from "../../components/paper";
-import { getSettings, updateSettings } from "../../api/endpoints";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../../store/store";
+import { updateSettings } from "../../api/endpoints";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+import { Settings } from "../../types/settings";
 import { Loader } from "../../components/loader";
 import Separator from "../../components/separator";
 import Button from "../../components/button";
 import Text from "../../components/text";
-import { settingsFactory } from "../../types/settings";
 import TextInput from "../../components/textInput";
 import { FlexRowEndContainer } from "../../components/flexContainer";
+import ContentContainer from "../../components/contentContainer";
+import { toStringSafe } from "../../functions/string";
 
 export const SettingsScreen = () => {
-  // const { vesselId } = useSelector((state: RootState) => state.appReducer);
-  const vesselId = "TEST";
-  const [settings, setSettings] = useState(settingsFactory());
+  const { settings } = useSelector((state: RootState) => state.appReducer);
+
+  const [tempSettings, setTempSettings] = useState(settings);
+
   const [isSaving, setIsSaving] = useState(false);
-
-  // Fetch settings from API
-  useEffect(() => {
-    fetchSettings(vesselId);
-  }, [vesselId]);
-
-  const fetchSettings = async (vesselId: string) => {
-    const result = await getSettings(vesselId);
-    setSettings(result);
-  };
 
   const saveButtonClick = async () => {
     // Spara ner settings till APIet
-    if (!settings) {
+    if (!tempSettings) {
       return;
     }
 
     try {
+      if (!fieldsAreValid(tempSettings)) {
+        // Inform user and return
+        return;
+      }
       setIsSaving(true);
-      await updateSettings(settings);
+
+      await updateSettings(tempSettings);
     } catch (error) {
       // show error
     }
     setIsSaving(false);
   };
 
-  if (settings.vesselId === "undefined" || isSaving) {
+  const fieldsAreValid = (settings: Settings) =>
+    !isNaN(settings.bumperToBumperDistance) && !isNaN(settings.defaultVCG);
+
+  if (!settings || isSaving) {
     return <Loader />;
   }
 
   return (
-    <BlueBackground>
+    <ContentContainer>
       <Paper>
         <Text size="medium" value="Settings" />
         <Separator />
@@ -61,11 +61,28 @@ export const SettingsScreen = () => {
               <td>
                 <TextInput
                   size="standard"
-                  value={settings.bumperToBumperDistance.toString() || "0"}
+                  value={toStringSafe(tempSettings.bumperToBumperDistance)}
                   onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      bumperToBumperDistance: +e.target.value,
+                    setTempSettings({
+                      ...tempSettings,
+                      bumperToBumperDistance: e.target.value,
+                    })
+                  }
+                />
+              </td>
+            </tr>
+            <tr>
+              <td style={{ width: "200px" }}>
+                <Text size="standard" value="Default VCG" />
+              </td>
+              <td>
+                <TextInput
+                  size="standard"
+                  value={toStringSafe(tempSettings.defaultVCG)}
+                  onChange={(e) =>
+                    setTempSettings({
+                      ...tempSettings,
+                      defaultVCG: e.target.value,
                     })
                   }
                 />
@@ -84,7 +101,7 @@ export const SettingsScreen = () => {
           />
         </FlexRowEndContainer>
       </Paper>
-    </BlueBackground>
+    </ContentContainer>
   );
 };
 

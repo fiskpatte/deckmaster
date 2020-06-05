@@ -1,8 +1,9 @@
 import { AppState } from "../types";
 import { APP_ACTION_TYPES } from "./appActionTypes";
+import { settingsFactory } from "../../types/settings";
 
 const initialState: AppState = {
-  settings: null,
+  settings: settingsFactory(),
   sessionData: undefined,
 };
 

@@ -11,6 +11,7 @@ import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { CargoPlacement } from './cargoPlacement/cargoPlacement.model';
 import { CargoQueueItem } from './cargoQueue/cargoQueue.model';
+import { Settings } from './settings/settings.model';
 
 @WebSocketGateway()
 export class AppGateway
@@ -46,5 +47,9 @@ export class AppGateway
 
   pushCargoQueueToClients(cargoQueueItems: CargoQueueItem[]) {
     this.webSocketServer.emit('cargoQueueUpdated', cargoQueueItems);
+  }
+
+  pushSettingsToClients(settings: Settings) {
+    this.webSocketServer.emit('settingsUpdated', settings);
   }
 }

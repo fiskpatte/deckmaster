@@ -14,6 +14,9 @@ import { getCargoQueue } from "./api/cargoQueue";
 import deckMapActions from "./store/deckMap/deckMapActions";
 import cargoQueueActions from "./store/cargoQueue/cargoQueueActions";
 import { CargoQueueItem } from "./types/CargoQueueItem";
+import appActions from "./store/app/appActions";
+import { getSettings } from "./api/endpoints";
+import { Settings } from "./types/settings";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -56,9 +59,13 @@ const App: React.FC = () => {
     const fetchCargoQueue = async () =>
       dispatch(cargoQueueActions.setCargoQueue(await getCargoQueue()));
 
+    const fetchSettings = async () =>
+      dispatch(appActions.setSettings(await getSettings()));
+
     if (isLoggedIn) {
       fetchCargoPlacements();
       fetchCargoQueue();
+      fetchSettings();
     }
   }, [dispatch, isLoggedIn]);
 
@@ -78,6 +85,16 @@ const App: React.FC = () => {
       socket.on("cargoQueueUpdated", (payload: CargoQueueItem[]) => {
         console.log("cargoQueueUpdated: ", payload);
         dispatch(cargoQueueActions.setCargoQueue(payload));
+      });
+    }
+  }, [dispatch, isLoggedIn]);
+
+  useEffect(() => {
+    const socket = socketIOClient("http://localhost:4000");
+    if (isLoggedIn) {
+      socket.on("settingsUpdated", (payload: Settings) => {
+        console.log("settingsUpdated: ", payload);
+        dispatch(appActions.setSettings(payload));
       });
     }
   }, [dispatch, isLoggedIn]);
