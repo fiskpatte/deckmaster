@@ -19,7 +19,7 @@ export class CargoPlacementService {
     private readonly appGateway: AppGateway,
     private readonly cargoQueueService: CargoQueueService,
     private readonly logService: LogService,
-  ) {}
+  ) { }
 
   async placeCargo(cp: CargoPlacement, username: string) {
     try {
@@ -45,7 +45,7 @@ export class CargoPlacementService {
       );
 
       this.logService.addLog(
-        `Placed ${cp.registrationNumber} at ${cp.deckId}, lane ${cp.laneId}`,
+        `Placed ${cargoPlacement.cargo.registrationNumber} at ${cp.deckId}, lane ${cp.laneId}`,
         username,
         cp.voyageId.toString(),
       );

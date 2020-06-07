@@ -1,4 +1,5 @@
 import axios from "axios";
+import { SessionData } from './../types/sessionData';
 
 export const setDefaultHeader = (name: string, value: string) => {
   axios.defaults.headers.common[name] = value;
@@ -6,6 +7,13 @@ export const setDefaultHeader = (name: string, value: string) => {
 
 export const removeDefaultHeader = (name: string) => {
   delete axios.defaults.headers.common[name];
+}
+
+export const setAllDefaultHeaders = (data: SessionData) => {
+  setDefaultHeader("Authorization", `Bearer ${data.accessToken}`);
+  setDefaultHeader("username", data.username);
+  setDefaultHeader("voyageId", data.voyageId);
+  setDefaultHeader("vesselId", data.vesselId);
 }
 
 // export const setAuthorizationToken = (token?: string) => {

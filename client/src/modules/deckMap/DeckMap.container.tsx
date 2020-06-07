@@ -46,8 +46,8 @@ export const DeckMapContainer: React.FC = () => {
 
   return (
     <div className="DeckMap">
-      <div className="Header">
-        <CargoDetails currentCargo={currentCargo} />
+      <div className="DeckMapHeader">
+        <CargoDetails cargo={currentCargo} />
         <DeckSelector deckMap={deckMap} currentDeck={currentDeck} />
       </div>
       <DeckMap
@@ -55,10 +55,10 @@ export const DeckMapContainer: React.FC = () => {
         currentDeck={currentDeck}
         currentPlacement={currentPlacement}
       />
-      <div className="Footer">
-        {currentPlacement ? (
+      <div className="DeckMapFooter">
+        {currentPlacement &&
           <ConfirmButton onClick={() => onConfirm()} />
-        ) : null}
+        }
       </div>
     </div>
   );

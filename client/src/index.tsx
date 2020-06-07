@@ -4,7 +4,9 @@ import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
-import store from "./store/store";
+import { store, persistor } from "./store";
+import { PersistGate } from 'redux-persist/integration/react'
+import { Loader } from './components/loader/Loader';
 // import { setAuthorizationToken, setUsername } from "./functions/axios";
 
 // if (localStorage.jwtToken) {
@@ -15,11 +17,11 @@ import store from "./store/store";
 // }
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
+    <PersistGate loading={<Loader />} persistor={persistor}>
       <App />
-    </Provider>
-  </React.StrictMode>,
+    </PersistGate>
+  </Provider>,
   document.getElementById("root")
 );
 

@@ -4,6 +4,10 @@ import { logger } from "redux-logger";
 import appReducer from "./app/appReducer";
 import deckMapReducer from "./deckMap/deckMapReducer";
 import cargoQueueReducer from "./cargoQueue/cargoQueueReducer";
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
+import { PersistPartial } from "redux-persist/lib/persistReducer";
 
 const rootReducer = combineReducers({
   appReducer,
@@ -12,7 +16,23 @@ const rootReducer = combineReducers({
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
-const store = createStore(rootReducer, applyMiddleware(logger));
+const persistConfig = {
+  key: 'root',
+  storage,
+  blacklist: [
+    'deckMapReducer',
+    'cargoQueueReducer'
+  ],
+  stateReconciler: autoMergeLevel2
+}
+
+const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer)
+
+const store = createStore<RootState & PersistPartial, any, any, any>(persistedReducer, applyMiddleware(logger));
+const persistor = persistStore(store);
 // const store = createStore(rootReducer);
 
-export default store;
+export {
+  store,
+  persistor
+};

@@ -4,7 +4,7 @@ import "./App.scss";
 import { parseLoadPlan } from "./functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
 import { Header } from "./modules/header";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "./components/loader";
 import { renderRoutes } from "./routes.functions";
 import socketIOClient from "socket.io-client";
@@ -17,11 +17,19 @@ import { CargoQueueItem } from "./types/CargoQueueItem";
 import appActions from "./store/app/appActions";
 import { getSettings } from "./api/endpoints";
 import { Settings } from "./types/settings";
+import { RootState } from "./store";
+import { setAllDefaultHeaders } from './functions/axios';
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
+  const { sessionData } = useSelector(
+    (state: RootState) => state.appReducer
+  );
+  if (!isLoggedIn && sessionData) {
+    setAllDefaultHeaders(sessionData);
+  }
   useEffect(() => {
     parseLoadPlan(loadPlans).then((res) => {
       //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
@@ -51,6 +59,12 @@ const App: React.FC = () => {
       setLoading(false);
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    if (sessionData) {
+      setAllDefaultHeaders(sessionData);
+    }
+  }, [sessionData])
 
   useEffect(() => {
     const fetchCargoPlacements = async () =>

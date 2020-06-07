@@ -6,17 +6,17 @@ import "./CargoDetails.scss";
 import variables from "./CargoDetails.scss";
 import { Overlay } from "../../../components/overlay";
 import { Cargo } from "../../../types/deckMap";
-import { useHistory } from "react-router-dom";
-import Button from "../../../components/button";
+// import { useHistory } from "react-router-dom";
+// import Button from "../../../components/button";
 
 interface Props {
-  currentCargo: Cargo;
+  cargo: Cargo;
 }
 
-export const CargoDetails: React.FC<Props> = ({ currentCargo }) => {
-  const { registrationNumber, length, width, height, weight } = currentCargo;
+export const CargoDetails: React.FC<Props> = ({ cargo }) => {
+  const { registrationNumber, length, width, height, weight } = cargo;
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const history = useHistory();
+  // const history = useHistory();
 
   return (
     <>
@@ -32,16 +32,17 @@ export const CargoDetails: React.FC<Props> = ({ currentCargo }) => {
             <CargoDetailItem label="Height" value={`${height} meters`} />
             <CargoDetailItem label="Weight" value={`${weight} t`} />
             <div className="ButtonContainer">
-              <Button
+              {/* We think edit or change are unnecessary for now. */}
+              {/* <Button
                 className="CargoDetailsButton"
                 onClick={() => console.log("Edit details click")}
                 label="Edit details"
-              />
-              <Button
+              /> */}
+              {/* <Button
                 className="CargoDetailsButton"
                 onClick={() => history.push("/placecargo")}
                 label="Change cargo"
-              />
+              /> */}
             </div>
           </Collapsible>
         </Card>

@@ -1,6 +1,6 @@
 import { post, get, put } from "./verbs";
 import { Settings } from "../types/settings";
-import { setDefaultHeader } from "./../functions/axios";
+import { setAllDefaultHeaders } from "./../functions/axios";
 import { SessionData } from "./../types/sessionData";
 
 export const login = async (
@@ -14,17 +14,14 @@ export const login = async (
   });
 
   if (result?.access_token) {
-    const data = {
+    const sessionData = {
       username: result.user_name,
       accessToken: result.access_token,
       voyageId: result.voyage_id,
       vesselId: result.vessel_id,
-    };
-    setDefaultHeader("Authorization", `Bearer ${result.access_token}`);
-    setDefaultHeader("username", result.user_name);
-    setDefaultHeader("voyageId", result.voyage_id);
-    setDefaultHeader("vesselId", result.vessel_id);
-    callback(data);
+    } as SessionData;
+    setAllDefaultHeaders(sessionData);
+    callback(sessionData);
   } else {
     throw new Error("Login failed");
   }

@@ -3,7 +3,7 @@
 .DeckMap {
   height: 100%-$headerHeight;
   background-color: $backgroundGray;
-  .Header {
+  .DeckMapHeader {
     border: 0;
     height: 20%;
     display: flex;
@@ -20,7 +20,7 @@
       pointer-events: visible;
     }
   }
-  .Footer {
+  .DeckMapFooter {
     @include flexCenter();
     height: 25%;
   }
