@@ -1,25 +1,24 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Deck } from "../../../types/deckMap";
 import Button from "../../../components/button";
 import { setCurrentDeckId } from "../../../store/deckMap/deckMapActions";
 
 interface Props {
-  deck: Deck;
+  name: string;
   isCurrent: boolean;
 }
 
-const DeckSelectorItem: React.FC<Props> = ({ deck, isCurrent }) => {
+const DeckSelectorItem: React.FC<Props> = ({ name, isCurrent }) => {
   const dispatch = useDispatch();
   const onClick = () => {
-    dispatch(setCurrentDeckId(deck.name));
+    dispatch(setCurrentDeckId(name));
   };
 
   return (
     <Button
       className={`DeckSelectorItem ${isCurrent ? "Selected" : ""}`}
       onClick={onClick}
-      label={deck.name}
+      label={name}
     />
   );
 };

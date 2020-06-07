@@ -2,11 +2,12 @@ import { arrayMax, arrayMin } from "../../functions/math";
 import { DECK_MAP, AdjacentSide } from "../../constants";
 import { Deck, Cargo, DeckMapElement, Lane } from "../../types/deckMap";
 import { Coords, Placement } from "../../types/util";
+import { DeckMapType } from './../../types/deckMap';
 
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.LCG - lane.length / 2)) *
-      DECK_MAP.X_SCALE -
+    DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -14,7 +15,7 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)) *
-      DECK_MAP.Y_SCALE -
+    DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
@@ -165,9 +166,9 @@ export const isAdjacent = (
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
   const matchingSides = contained
     ? newElemEndpoints.aft >= elemEndpoints.aft &&
-      newElemEndpoints.fwd <= elemEndpoints.fwd
+    newElemEndpoints.fwd <= elemEndpoints.fwd
     : newElemEndpoints.aft <= elemEndpoints.fwd &&
-      newElemEndpoints.fwd >= elemEndpoints.aft;
+    newElemEndpoints.fwd >= elemEndpoints.aft;
 
   const noSpaceInBetween = !(
     hasSpaceInBetween(
@@ -326,3 +327,6 @@ const getOverflowingPlacementForSide = (
   }
   return undefined;
 };
+
+export const getDeckNames = (deckMap: DeckMapType) =>
+  Object.keys(deckMap).sort((key1, key2) => deckMap[key1].sortOrder - deckMap[key2].sortOrder);

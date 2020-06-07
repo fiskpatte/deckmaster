@@ -10,6 +10,7 @@ import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import { placeCargo } from "../../api/cargoPlacement";
 import { getCurrentDeck } from "../../store/app/appSelectors";
 import { useHistory } from "react-router-dom";
+import { getDeckNames } from "./DeckMap.functions";
 
 export const DeckMapContainer: React.FC = () => {
   const { deckMap, currentCargo, currentPlacement } = useSelector(
@@ -48,7 +49,7 @@ export const DeckMapContainer: React.FC = () => {
     <div className="DeckMap">
       <div className="DeckMapHeader">
         <CargoDetails cargo={currentCargo} />
-        <DeckSelector deckMap={deckMap} currentDeck={currentDeck} />
+        <DeckSelector deckNames={getDeckNames(deckMap)} currentDeckName={currentDeck.name} />
       </div>
       <DeckMap
         currentCargo={currentCargo}
