@@ -39,19 +39,27 @@ const LaneComponent: React.FC<Props> = ({
 
   lanePlacement = getLanePlacement(lane, currentCargo, lanePlacement) ?? { ...lanePlacement, LCG: originX };
   if (lanePlacement.LCG === originX) buttonVisible = false;
-
   return (
     <>
       <rect
         {...rest}
-        className={`Lane ${buttonVisible ? "" : "Full"}`}
+        className={`Lane`}
         x={originX}
         y={originY}
-        width={lane.length}
+        width={lanePlacement.LCG - originX + 2 * DECK_MAP.LANE_BORDER_RADIUS}
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
       // onClick={onClick}
+      />
+      <rect
+        className={`LaneFull`}
+        x={lanePlacement.LCG}
+        y={originY}
+        width={lane.length - (lanePlacement.LCG - originX)}
+        height={lane.width}
+        rx={DECK_MAP.LANE_BORDER_RADIUS}
+        ry={DECK_MAP.LANE_BORDER_RADIUS}
       />
       <Grids
         grids={lane.grids}
