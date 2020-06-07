@@ -8,6 +8,8 @@ import { Lane, Cargo } from "../../../types/deckMap";
 import { Placement } from "../../../types/util";
 import "./Lane.scss";
 import { getLanePlacement } from "../DeckMap.functions";
+import { useSelector } from 'react-redux';
+import { RootState } from "../../../store";
 
 interface Props {
   lane: Lane;
@@ -34,11 +36,13 @@ const LaneComponent: React.FC<Props> = ({
     TCG: originY + lane.width / 2,
     laneId: lane.id,
   } as Placement;
+  const { bumperToBumperDistance } = useSelector((state: RootState) => state.appReducer.settings);
   let buttonVisible = true;
   let isOverflow = currentCargo.width > lane.width;
 
-  lanePlacement = getLanePlacement(lane, currentCargo, lanePlacement) ?? { ...lanePlacement, LCG: originX };
+  lanePlacement = getLanePlacement(lane, currentCargo, lanePlacement, bumperToBumperDistance) ?? { ...lanePlacement, LCG: originX };
   if (lanePlacement.LCG === originX) buttonVisible = false;
+  const freeSpace = lanePlacement.LCG - originX;
   return (
     <>
       <rect
@@ -46,7 +50,7 @@ const LaneComponent: React.FC<Props> = ({
         className={`Lane`}
         x={originX}
         y={originY}
-        width={lanePlacement.LCG - originX + 2 * DECK_MAP.LANE_BORDER_RADIUS}
+        width={freeSpace + 2 * DECK_MAP.LANE_BORDER_RADIUS}
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
@@ -56,7 +60,7 @@ const LaneComponent: React.FC<Props> = ({
         className={`LaneFull`}
         x={lanePlacement.LCG}
         y={originY}
-        width={lane.length - (lanePlacement.LCG - originX)}
+        width={lane.length - freeSpace > bumperToBumperDistance ? lane.length - freeSpace : 0}
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}

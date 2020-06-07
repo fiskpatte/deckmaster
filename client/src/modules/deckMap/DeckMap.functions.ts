@@ -215,7 +215,8 @@ export const getAdjacentSide = (
 export const getLanePlacement = (
   lane: Lane,
   currentCargo: Cargo,
-  lanePlacement: Placement
+  lanePlacement: Placement,
+  bumperToBumperDistance: number
 ) => {
   let resultPlacement = { ...lanePlacement } as Placement;
   const someOverflowingCargo = lane.adjacentLanes.some((al) =>
@@ -249,7 +250,7 @@ export const getLanePlacement = (
     return undefined;
   }
   //TODO: B2B distance from settings
-  resultPlacement.LCG = minLCG - 0.2;
+  resultPlacement.LCG = minLCG - bumperToBumperDistance;
 
   if (currentCargo.width > lane.width) {
     return getOverflowingPlacement(lane, currentCargo, resultPlacement);
@@ -317,7 +318,7 @@ const getOverflowingPlacementForSide = (
   );
   if (
     adjacentLane.length === 1 &&
-    !adjacentLane[0].cargo.some((c) => isAdjacent(c.cargo, cargo))
+    !adjacentLane[0].cargo.some((c) => isAdjacent({ ...c, ...c.cargo }, cargo))
   ) {
     resultPlacement.TCG =
       placingLane.TCG +
