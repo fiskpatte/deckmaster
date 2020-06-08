@@ -1,0 +1,18 @@
+@import "../../styles/main.scss";
+
+tr.HistoryRow th {
+  border-bottom: 1px solid rgb(214, 211, 211);
+}
+
+tr.HistoryRow td {
+  border-bottom: 1px solid rgb(214, 211, 211);
+  padding: 8px 40px 8px 2px;
+}
+
+.HistoryTH {
+  text-align: left;
+}
+
+.HistoryTable {
+  border-spacing: 0;
+}
