@@ -31,12 +31,13 @@ const LaneComponent: React.FC<Props> = ({
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
+  const { bumperToBumperDistance, defaultVCG } = useSelector((state: RootState) => state.appReducer.settings);
   let lanePlacement = {
     LCG: originX + lane.length,
     TCG: originY + lane.width / 2,
+    VCG: lane.VCG + currentCargo.height * defaultVCG,
     laneId: lane.id,
   } as Placement;
-  const { bumperToBumperDistance } = useSelector((state: RootState) => state.appReducer.settings);
   let buttonVisible = true;
   let isOverflow = currentCargo.width > lane.width;
 

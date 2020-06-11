@@ -13,6 +13,7 @@ export const coordsFactory = (): Coords => ({
 export interface Placement {
   LCG: number;
   TCG: number;
+  VCG: number;
   laneId: string;
   overflowingLaneId?: string;
 }
