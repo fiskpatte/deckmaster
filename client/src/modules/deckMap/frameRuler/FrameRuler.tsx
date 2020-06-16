@@ -9,21 +9,35 @@ interface Props {
   originY: number;
 }
 
+interface Distances {
+  minDistance: number,
+  maxDistance: number
+}
+
 export const FrameRuler: React.FC<Props> = ({ frames, originY }) => {
-  const frameDistances = frames.map((f) => f.distance);
-  const minDist = arrayMin(frameDistances);
-  const maxDist = arrayMax(frameDistances);
+  const [distances, setDistances] = React.useState<Distances>();
+
+  React.useEffect(() => {
+    let frameDistances = frames.map((f) => f.distance);
+    setDistances({
+      minDistance: arrayMin(frameDistances),
+      maxDistance: arrayMax(frameDistances)
+    })
+  }, [frames])
+
+  if (!distances) return null;
+
   return (
     <g>
       <rect
         className="FrameRuler"
-        x={minDist}
+        x={distances.minDistance}
         y={originY}
-        width={maxDist - minDist}
+        width={distances.maxDistance - distances.minDistance}
         height={1}
       />
-      {frames.map((f, ix) => (
-        <FrameComponent key={ix} frame={f} originY={originY} />
+      {frames.map((f) => (
+        <FrameComponent key={f.id} frame={f} originY={originY} />
       ))}
     </g>
   );

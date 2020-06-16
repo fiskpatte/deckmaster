@@ -6,33 +6,27 @@ import { Placement } from "../../../types/util";
 
 interface Props {
   lanes: Array<Lane>;
-  svgRef: React.RefObject<SVGSVGElement>;
   rightOrigin: number;
-  onClick: (event: React.MouseEvent | React.TouchEvent) => void;
-  onButtonClick: (placement: Placement) => void;
+  onLanePlacementButtonClick: (placement: Placement) => void;
   currentCargo: Cargo
 }
 
 export const Lanes: React.FC<Props> = ({
   lanes,
-  svgRef,
   rightOrigin,
-  onClick,
-  onButtonClick,
+  onLanePlacementButtonClick,
   currentCargo
 }) => {
   return (
     <>
-      {lanes.map((lane, ix) => {
+      {lanes.map((lane) => {
         return (
           <LaneComponent
-            key={ix}
+            key={lane.id}
             lane={lane}
-            onClick={onClick}
-            onButtonClick={onButtonClick}
+            onLanePlacementButtonClick={onLanePlacementButtonClick}
             rightOrigin={rightOrigin}
             currentCargo={currentCargo}
-            svgRef={svgRef}
           />
         );
       })}

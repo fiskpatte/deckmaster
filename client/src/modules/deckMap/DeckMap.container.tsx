@@ -11,6 +11,7 @@ import { placeCargo } from "../../api/cargoPlacement";
 import { getCurrentDeck } from "../../store/app/appSelectors";
 import { useHistory } from "react-router-dom";
 import { getDeckNames } from "./DeckMap.functions";
+import { routes } from './../../routes';
 
 export const DeckMapContainer: React.FC = () => {
   const { deckMap, currentCargo, currentPlacement } = useSelector(
@@ -24,6 +25,12 @@ export const DeckMapContainer: React.FC = () => {
   useEffect(() => {
     dispatch(setCurrentPlacement(null));
   }, [dispatch, currentDeck]);
+
+  useEffect(() => {
+    if (history.location.pathname.includes(routes.PlaceCargo.path) && !currentCargo?.id) {
+      history.push(routes.PlaceCargo.path);
+    }
+  }, [history, currentCargo])
 
   const onConfirm = async () => {
     // set loader
@@ -53,7 +60,7 @@ export const DeckMapContainer: React.FC = () => {
       </div>
       <DeckMap
         currentCargo={currentCargo}
-        currentDeck={currentDeck}
+        deck={currentDeck}
         currentPlacement={currentPlacement}
       />
       <div className="DeckMapFooter">

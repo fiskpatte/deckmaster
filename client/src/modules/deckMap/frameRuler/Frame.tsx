@@ -8,13 +8,12 @@ interface Props {
   frame: Frame;
   originY: number;
 }
-//TODO: Put this in settings
+
 const bigFrameFrequency = 20;
 const mediumFrameFrequency = bigFrameFrequency / 2;
 export const FrameComponent: React.FC<Props> = ({ frame, originY }) => {
   let isBig = frame.id % bigFrameFrequency === 0;
   let isMedium = frame.id % mediumFrameFrequency === 0;
-
   return (
     <g>
       <FrameTick

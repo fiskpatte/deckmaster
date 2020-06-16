@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect, useState } from "react";
 import { DECK_MAP } from "../../constants";
 import { Lanes } from "./lanes";
 import {
@@ -6,9 +6,10 @@ import {
   getViewBoxOriginY,
   getViewBoxSizeX,
   getViewBoxSizeY,
-  placeCargoFromSVGCoords,
   getRulerOrigin,
-  placeCargoFromEvent,
+  onCargoDrag,
+  pinCargoAfterDrag,
+  updatePlacementFromFrontPlacement
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
@@ -16,17 +17,22 @@ import { useDispatch } from "react-redux";
 import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import { Deck, Cargo } from "../../types/deckMap";
 import "./DeckMap.scss";
-import { useHistory } from "react-router-dom";
 import { FrameRuler } from "./frameRuler";
+import { Loader } from './../../components/loader/Loader';
 
 interface Props {
-  currentDeck: Deck;
+  deck: Deck;
   currentCargo: Cargo;
   currentPlacement: Placement | null;
 }
-
+interface ViewBoxDimensions {
+  sizeX: number,
+  sizeY: number,
+  originX: number,
+  originY: number
+}
 const DeckMap: React.FC<Props> = ({
-  currentDeck,
+  deck,
   currentCargo,
   currentPlacement,
 }) => {
@@ -36,63 +42,24 @@ const DeckMap: React.FC<Props> = ({
     [dispatch]
   );
   const svgRef = useRef<SVGSVGElement>(null);
-  const history = useHistory();
+  const [viewBoxDimensions, setViewBoxDimensions] = useState<ViewBoxDimensions>();
+  useEffect(() => {
+    setViewBoxDimensions({
+      sizeX: getViewBoxSizeX(deck),
+      sizeY: getViewBoxSizeY(deck),
+      originX: getViewBoxOriginX(deck),
+      originY: getViewBoxOriginY(deck)
+    });
+  }, [deck])
 
-  if (currentCargo.registrationNumber === "") {
-    history.push("/placecargo");
-  }
+  if (!viewBoxDimensions) return <Loader />;
 
-  const placeCargoFromClick = (event: React.MouseEvent | React.TouchEvent) => {
-    console.log("lane clicked", event);
-    return;
-    // placeCargoFromEvent(event, svgRef, currentCargo, setPlacement);
-  };
-
-  const placeCargoFromDrag = (
-    event: MouseEvent | TouchEvent | PointerEvent
-  ) => {
-    let placingLane = currentDeck.lanes.find(
-      (l) => l.id === currentPlacement?.laneId
-    );
-    if (currentPlacement && placingLane) {
-      placeCargoFromEvent(
-        event,
-        svgRef,
-        placingLane,
-        currentCargo,
-        currentPlacement,
-        setPlacement
-      );
-    }
-  };
-
-  const pinCargoAfterDrag = () => {
-    const placingLane = currentDeck.lanes.find(
-      (l) => l.id === currentPlacement?.laneId
-    );
-    if (currentPlacement && placingLane) {
-      if (currentCargo.width > placingLane.width) {
-        let pinnedPlacement = { ...currentPlacement };
-        pinnedPlacement.TCG = placingLane.TCG + (currentPlacement.TCG > placingLane.TCG ? 1 : -1) * (currentCargo.width - placingLane.width) / 2;
-        setPlacement(pinnedPlacement);
-      }
-    }
-  };
-
-  const placeCargoFromFrontPlacement = (placement: Placement) => {
-    placement.LCG -= currentCargo.length / 2;
-    placeCargoFromSVGCoords(placement, setPlacement);
-  };
-
-  let viewBoxSizeX = getViewBoxSizeX(currentDeck);
-  let viewBoxSizeY = getViewBoxSizeY(currentDeck);
-  let viewBoxOriginX = getViewBoxOriginX(currentDeck);
-  let viewBoxOriginY = getViewBoxOriginY(currentDeck);
+  const { sizeX, sizeY, originX, originY } = viewBoxDimensions;
 
   return (
     <svg
       className="svgBody"
-      viewBox={`${viewBoxOriginX} ${viewBoxOriginY} ${viewBoxSizeX} ${viewBoxSizeY}`}
+      viewBox={`${originX} ${originY} ${sizeX} ${sizeY}`}
       preserveAspectRatio="xMidYMin"
       ref={svgRef}
     >
@@ -101,19 +68,17 @@ const DeckMap: React.FC<Props> = ({
         transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
       >
         <Lanes
-          lanes={currentDeck.lanes}
-          svgRef={svgRef}
-          rightOrigin={viewBoxSizeX + viewBoxOriginX}
+          lanes={deck.lanes}
+          rightOrigin={sizeX + originX}
           currentCargo={currentCargo}
-          onClick={(ev) => placeCargoFromClick(ev)}
-          onButtonClick={(placement) => placeCargoFromFrontPlacement(placement)}
+          onLanePlacementButtonClick={(placement) => updatePlacementFromFrontPlacement(placement, currentCargo, setPlacement)}
         />
         <FrameRuler
-          frames={currentDeck.frames}
-          originY={getRulerOrigin(currentDeck)}
+          frames={deck.frames}
+          originY={getRulerOrigin(deck)}
         />
         {/* This makes sure that the cargo is always visible over lanes */}
-        {currentDeck.lanes.map((lane, ix) =>
+        {deck.lanes.map((lane, ix) =>
           lane.cargo.map((c, ixc) => {
             return <use key={100 * ix + ixc} href={`#cargoIcon${c.id}`} />;
           })
@@ -125,8 +90,8 @@ const DeckMap: React.FC<Props> = ({
             width={currentCargo.length}
             height={currentCargo.width}
             placing={true}
-            dragCallback={placeCargoFromDrag}
-            dragEndCallback={pinCargoAfterDrag}
+            dragCallback={(ev) => onCargoDrag(ev, deck, currentPlacement, currentCargo, svgRef, setPlacement)}
+            dragEndCallback={() => pinCargoAfterDrag(deck, currentPlacement, currentCargo, setPlacement)}
           />
         )}
       </g>

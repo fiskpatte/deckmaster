@@ -79,7 +79,48 @@ const getCoordinatesFromEvent = (
   return { x, y } as Coords;
 };
 
-export const placeCargoFromEvent = (
+export const onCargoDrag = (
+  event: MouseEvent | TouchEvent | PointerEvent,
+  deck: Deck,
+  placement: Placement,
+  cargo: Cargo,
+  svgRef: React.RefObject<SVGSVGElement>,
+  callback: (position: Placement) => void
+) => {
+  let placingLane = deck.lanes.find(
+    (l) => l.id === placement?.laneId
+  );
+  if (placement && placingLane) {
+    updatePlacementFromEvent(
+      event,
+      svgRef,
+      placingLane,
+      cargo,
+      placement,
+      callback
+    );
+  }
+};
+
+export const pinCargoAfterDrag = (
+  deck: Deck,
+  placement: Placement,
+  cargo: Cargo,
+  callback: (placement: Placement) => void
+) => {
+  const placingLane = deck.lanes.find(
+    (l) => l.id === placement?.laneId
+  );
+  if (placement && placingLane) {
+    if (cargo.width > placingLane.width) {
+      let pinnedPlacement = { ...placement };
+      pinnedPlacement.TCG = placingLane.TCG + (placement.TCG > placingLane.TCG ? 1 : -1) * (cargo.width - placingLane.width) / 2;
+      callback(pinnedPlacement);
+    }
+  }
+};
+
+export const updatePlacementFromEvent = (
   event: MouseEvent | TouchEvent | PointerEvent,
   svgRef: React.RefObject<SVGSVGElement>,
   lane: Lane,
@@ -89,10 +130,10 @@ export const placeCargoFromEvent = (
 ) => {
   event.preventDefault();
   let coords = getCoordinatesFromEvent(event);
-  placeCargoFromScreenCoords(coords, svgRef, lane, cargo, placement, callback);
+  updatePlacementFromScreenCoords(coords, svgRef, lane, cargo, placement, callback);
 };
 
-export const placeCargoFromScreenCoords = (
+export const updatePlacementFromScreenCoords = (
   coords: Coords | undefined,
   svgRef: React.RefObject<SVGSVGElement>,
   lane: Lane,
@@ -134,7 +175,12 @@ export const placeCargoFromScreenCoords = (
   }
 };
 
-export const placeCargoFromSVGCoords = (
+export const updatePlacementFromFrontPlacement = (placement: Placement, cargo: Cargo, callback: (placement: Placement) => void) => {
+  placement.LCG -= cargo.length / 2;
+  updatePlacementFromSVGCoords(placement, callback);
+};
+
+export const updatePlacementFromSVGCoords = (
   placement: Placement | null,
   callback: (placement: Placement) => void
 ) => {

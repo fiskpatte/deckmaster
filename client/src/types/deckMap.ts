@@ -31,7 +31,7 @@ export interface DeckMapElement {
 
 const deckMapElementFactory = (): DeckMapElement => {
   return {
-    id: "0",
+    id: "",
     length: 0,
     width: 0,
     LCG: 0,
