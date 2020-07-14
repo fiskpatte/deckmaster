@@ -7,44 +7,44 @@ import { DeckMapType } from "./../../types/deckMap";
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(
-      currentDeck.lanes.map((lane) => getDeckmapElementAfterPosition(lane))
+      currentDeck.lanes.map((lane) => getEndpoints(lane).aft)
     ) *
-      DECK_MAP.X_SCALE -
+    DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
 
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
-    arrayMin(currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)) *
-      DECK_MAP.Y_SCALE -
+    arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).left)) *
+    DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
 
 export const getViewBoxSizeX = (currentDeck: Deck): number => {
   let xMax = arrayMax(
-    currentDeck.lanes.map((lane) => getDeckmapElementForwardPosition(lane))
+    currentDeck.lanes.map((lane) => getEndpoints(lane).fwd)
   );
   let xMin = arrayMin(
-    currentDeck.lanes.map((lane) => getDeckmapElementAfterPosition(lane))
+    currentDeck.lanes.map((lane) => getEndpoints(lane).aft)
   );
   return xMax - xMin + DECK_MAP.X_MARGIN + 2 * DECK_MAP.LANE_BUTTON_WIDTH;
 };
 
 export const getViewBoxSizeY = (currentDeck: Deck): number => {
   let yMax = arrayMax(
-    currentDeck.lanes.map((lane) => lane.TCG + lane.width / 2)
+    currentDeck.lanes.map((lane) => getEndpoints(lane).right)
   );
   let yMin = arrayMin(
-    currentDeck.lanes.map((lane) => lane.TCG - lane.width / 2)
+    currentDeck.lanes.map((lane) => getEndpoints(lane).left)
   );
   return yMax - yMin + DECK_MAP.Y_MARGIN;
 };
 
 export const getRulerOrigin = (currentDeck: Deck): number => {
   return (
-    arrayMax(currentDeck.lanes.map((lane) => lane.TCG + lane.width / 2)) + 0.5
+    arrayMax(currentDeck.lanes.map((lane) => getEndpoints(lane).right)) + 0.5
   );
 };
 
@@ -116,7 +116,7 @@ export const pinCargoAfterDrag = (
         placingLane.TCG +
         ((placement.TCG > placingLane.TCG ? 1 : -1) *
           (cargo.width - placingLane.width)) /
-          2;
+        2;
       callback(pinnedPlacement);
     }
   }
@@ -158,8 +158,8 @@ export const updatePlacementFromScreenCoords = (
     const centerPoint = svgPoint(
       svgRef.current,
       svgRef.current,
-      coords?.x || 0,
-      coords?.y || 0
+      coords.x,
+      coords.y
     );
     const center = {
       x: centerPoint.x / DECK_MAP.X_SCALE,
@@ -174,8 +174,29 @@ export const updatePlacementFromScreenCoords = (
       //Ignore y displacement
       center.y = placement.TCG;
     }
-
-    if (!isValidPlacement(lane, cargo, center)) return;
+    //Set a limit in the x displacement
+    const someOverflowingCargo = lane.adjacentLanes.some((al) =>
+      al.cargo.some((c) => c.overflowingLaneId === lane.id)
+    );
+    let max = arrayMin(
+      lane.cargo.map((c) => c.LCG - c.cargo.length / 2),
+      getEndpoints(lane).fwd
+    );
+    if (someOverflowingCargo) {
+      const overflowMinLCG = arrayMin(
+        lane.adjacentLanes
+          .map((al) =>
+            al.cargo
+              .filter((c) => c.overflowingLaneId === lane.id)
+              .map((c) => c.LCG - c.cargo.length / 2)
+          )
+          .flat()
+      );
+      max = Math.min(max, overflowMinLCG);
+    }
+    max -= cargo.length / 2;
+    const min = lane.LCG - (lane.length - cargo.length) / 2
+    center.x = Math.min(Math.max(center.x, min), max);
 
     if (center.x !== placement.LCG || center.y !== placement.TCG) {
       //Only do the callback if something changed
@@ -188,21 +209,6 @@ export const updatePlacementFromScreenCoords = (
       callback(newPlacement);
     }
   }
-};
-
-const isValidPlacement = (lane: Lane, cargo: Cargo, coords: Coords) => {
-  if (placementIsOutsideLane(lane, cargo, coords)) {
-    return false;
-  }
-
-  return true;
-};
-
-const placementIsOutsideLane = (lane: Lane, cargo: Cargo, coords: Coords) => {
-  return (
-    coords.x + cargo.length / 2 >= getDeckmapElementForwardPosition(lane) ||
-    coords.x - cargo.length / 2 <= getDeckmapElementAfterPosition(lane)
-  );
 };
 
 export const updatePlacementFromFrontPlacement = (
@@ -246,9 +252,9 @@ export const isAdjacent = (
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
   const matchingSides = contained
     ? newElemEndpoints.aft >= elemEndpoints.aft &&
-      newElemEndpoints.fwd <= elemEndpoints.fwd
+    newElemEndpoints.fwd <= elemEndpoints.fwd
     : newElemEndpoints.aft <= elemEndpoints.fwd &&
-      newElemEndpoints.fwd >= elemEndpoints.aft;
+    newElemEndpoints.fwd >= elemEndpoints.aft;
 
   const noSpaceInBetween = !(
     hasSpaceInBetween(
@@ -308,7 +314,7 @@ export const getLanePlacement = (
     !someOverflowingCargo
   )
     return resultPlacement;
-  const originX = lane.LCG - lane.length / 2;
+  const originX = getEndpoints(lane).aft;
   let minLCG = arrayMin(
     lane.cargo.map((c) => c.LCG - c.cargo.length / 2),
     resultPlacement.LCG
@@ -329,7 +335,7 @@ export const getLanePlacement = (
   if (minLCG < originX + currentCargo.length) {
     return undefined;
   }
-  //TODO: B2B distance from settings
+
   resultPlacement.LCG = minLCG - bumperToBumperDistance;
 
   if (currentCargo.width > lane.width) {
@@ -370,7 +376,7 @@ const handleOverflowRecursive = (
   placement: Placement
 ) => {
   const backstep = 0.5;
-  const laneAft = placingLane.LCG - placingLane.length / 2;
+  const laneAft = getEndpoints(placingLane).aft;
   let tempPlacement = { ...placement };
   if (tempPlacement.LCG - backstep >= laneAft + currentCargo.length / 2) {
     tempPlacement.LCG -= backstep;
@@ -413,9 +419,3 @@ export const getDeckNames = (deckMap: DeckMapType) =>
   Object.keys(deckMap).sort(
     (key1, key2) => deckMap[key1].sortOrder - deckMap[key2].sortOrder
   );
-
-export const getDeckmapElementForwardPosition = (element: DeckMapElement) =>
-  element.LCG + element.length / 2;
-
-export const getDeckmapElementAfterPosition = (element: DeckMapElement) =>
-  element.LCG - element.length / 2;
