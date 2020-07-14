@@ -8,7 +8,7 @@ import { Lane, Cargo } from "../../../types/deckMap";
 import { Placement } from "../../../types/util";
 import "./Lane.scss";
 import { getLanePlacement } from "../DeckMap.functions";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 
 interface Props {
@@ -22,11 +22,13 @@ const LaneComponent: React.FC<Props> = ({
   lane,
   rightOrigin,
   onLanePlacementButtonClick,
-  currentCargo
+  currentCargo,
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
-  const { bumperToBumperDistance, defaultVCG } = useSelector((state: RootState) => state.appReducer.settings);
+  const { bumperToBumperDistance, defaultVCG } = useSelector(
+    (state: RootState) => state.appReducer.settings
+  );
 
   let mostForwardValidPlacement = {
     LCG: originX + lane.length,
@@ -37,9 +39,15 @@ const LaneComponent: React.FC<Props> = ({
   let lanePlacementButtonVisible = true;
   let isOverflow = currentCargo.width > lane.width;
 
-  mostForwardValidPlacement = getLanePlacement(lane, currentCargo, mostForwardValidPlacement, bumperToBumperDistance) ?? { ...mostForwardValidPlacement, LCG: originX };
-  if (mostForwardValidPlacement.LCG === originX) lanePlacementButtonVisible = false;
-  const freeSpace = mostForwardValidPlacement.LCG - originX;
+  mostForwardValidPlacement = getLanePlacement(
+    lane,
+    currentCargo,
+    mostForwardValidPlacement,
+    bumperToBumperDistance
+  ) ?? { ...mostForwardValidPlacement, LCG: originX };
+  if (mostForwardValidPlacement.LCG === originX)
+    lanePlacementButtonVisible = false;
+  // const freeSpace = mostForwardValidPlacement.LCG - originX;
 
   return (
     <>
@@ -47,21 +55,25 @@ const LaneComponent: React.FC<Props> = ({
         className={`Lane`}
         x={originX}
         y={originY}
-        width={freeSpace + 2 * DECK_MAP.LANE_BORDER_RADIUS}
+        width={lane.length + 2 * DECK_MAP.LANE_BORDER_RADIUS}
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
-      // onClick={onClick}
+        // onClick={onClick}
       />
-      <rect
+      {/* <rect
         className={`LaneFull`}
         x={mostForwardValidPlacement.LCG}
         y={originY}
-        width={lane.length - freeSpace > bumperToBumperDistance ? lane.length - freeSpace : 0}
+        width={
+          lane.length - freeSpace > bumperToBumperDistance
+            ? lane.length - freeSpace
+            : 0
+        }
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
-      />
+      /> */}
       <Grids
         grids={lane.grids}
         onClick={(pos) => onLanePlacementButtonClick(pos)}
