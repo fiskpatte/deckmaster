@@ -3,6 +3,7 @@ import useReferenceScale from "../../../hooks/useReferenceScale";
 import { ReactComponent as Icon } from "../../../assets/icons/cargoIcon.svg";
 import "./CargoIcon.scss";
 import { motion } from "framer-motion";
+import usePrevious from './../../../hooks/usePrevious';
 
 interface Props {
   x: number;
@@ -27,17 +28,19 @@ export const CargoIcon: React.FC<Props> = ({
   cargoId,
 }) => {
   const groupRef = useRef<SVGPathElement>(null);
-  const scale = useReferenceScale(groupRef, { width, height });
+  const previousCargoId = usePrevious(cargoId);
+  const newCargo = previousCargoId !== cargoId;
+  const { scale } = useReferenceScale(groupRef, { width, height });
 
-  const handleDragStart = (event: any, info: any) => {
-    console.log("START", event, info); //TODO: save dragOffset
-  };
+  // const handleDragStart = (event: any, info: any) => {
+  //   console.log("START", event, info); //TODO: save dragOffset
+  // };
 
   const corner = { x: x - width / 2, y: y - height / 2 };
   return (
     <motion.svg
       drag={placing}
-      onDragStart={(ev, info) => handleDragStart(ev, info)}
+      // onDragStart={(ev, info) => handleDragStart(ev, info)}
       onDrag={(event) => dragCallback && dragCallback(event)}
       onDragEnd={() => dragEndCallback && dragEndCallback()}
       dragMomentum={false}
@@ -52,7 +55,7 @@ export const CargoIcon: React.FC<Props> = ({
     >
       <g ref={groupRef} className={`CargoIcon ${placing ? "Placing" : ""}`}>
         <g
-          transform={`scale(${scale.width} ${scale.height})`}
+          transform={`scale(${newCargo ? 1 : scale.width} ${newCargo ? 1 : scale.height})`}
           style={{ pointerEvents: "none" }}
         >
           <Icon />

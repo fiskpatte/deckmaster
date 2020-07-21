@@ -9,7 +9,7 @@ interface Props {
 }
 export const FrameName: React.FC<Props> = ({ frame, originY }) => {
   const textRef = React.useRef<SVGTextElement>(null);
-  const scale = useReferenceScale(textRef, { width: 8, height: 2 });
+  const { scale } = useReferenceScale(textRef, { width: 8, height: 2 });
   let fontSize = Math.min(scale.width, scale.height);
   if (scale.height !== 1 && scale.width !== 1) {
     //Avoid changing the font size before the initial render so that the scale applies correctly

@@ -12,7 +12,7 @@ interface Props {
 export const LaneName: React.FC<Props> = ({ lane, rightOrigin }) => {
   const originX = rightOrigin - (3 * DECK_MAP.X_MARGIN) / 2;
   const textRef = useRef<SVGTextElement>(null);
-  const scale = useReferenceScale(textRef, {
+  const { scale } = useReferenceScale(textRef, {
     width: DECK_MAP.LANE_NAME_WIDTH,
     height: lane.width,
   });

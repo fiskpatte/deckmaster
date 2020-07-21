@@ -12,7 +12,7 @@ interface Props {
 
 const ArrowIcon: React.FC<Props> = ({ x, y, width, height }) => {
   const pathRef = useRef<SVGPathElement>(null);
-  const scale = useReferenceScale(pathRef, {
+  const { scale } = useReferenceScale(pathRef, {
     width: width * DECK_MAP.BUTTON_ARROW_RATIO,
     height: height * DECK_MAP.BUTTON_ARROW_RATIO,
   });
@@ -30,7 +30,7 @@ const ArrowIcon: React.FC<Props> = ({ x, y, width, height }) => {
         ref={pathRef}
         transform={`scale(${scale.width} ${scale.height}) translate(${
           (-width / 2) * DECK_MAP.X_SCALE
-        } ${(-height / 2) * DECK_MAP.Y_SCALE})`}
+          } ${(-height / 2) * DECK_MAP.Y_SCALE})`}
       >
         <Icon />
       </g>

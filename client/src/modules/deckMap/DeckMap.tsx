@@ -15,8 +15,7 @@ import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
 import { useDispatch } from "react-redux";
 import {
-  setCurrentPlacement,
-  setCurrentCargo,
+  setCurrentPlacement, setCurrentCargo,
 } from "../../store/deckMap/deckMapActions";
 import { Deck, Cargo, CargoPlacement } from "../../types/deckMap";
 import "./DeckMap.scss";
