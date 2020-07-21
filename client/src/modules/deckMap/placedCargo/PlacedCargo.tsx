@@ -7,6 +7,7 @@ interface Props {
 
 export const PlacedCargo: React.FC<Props> = ({ cargo: cargoPlacements }) => {
   if (cargoPlacements.length === 0) return null;
+
   return (
     <>
       {cargoPlacements.map((cp) => {
@@ -18,6 +19,7 @@ export const PlacedCargo: React.FC<Props> = ({ cargo: cargoPlacements }) => {
                 y={cp.TCG}
                 width={cp.cargo.length}
                 height={cp.cargo.width}
+                cargoId={cp.cargo.id}
               />
             </g>
           </defs>

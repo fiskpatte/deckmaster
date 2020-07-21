@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import useReferenceScale from "../../../hooks/useReferenceScale";
 import { ReactComponent as Icon } from "../../../assets/icons/cargoIcon.svg";
 import "./CargoIcon.scss";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface Props {
   x: number;
@@ -12,6 +12,7 @@ interface Props {
   placing?: boolean;
   dragCallback?: (info: MouseEvent | TouchEvent | PointerEvent) => void;
   dragEndCallback?: () => void;
+  cargoId: string;
 }
 
 //This component uses {x,y} as LCG and TCG coordinates
@@ -22,14 +23,15 @@ export const CargoIcon: React.FC<Props> = ({
   height,
   placing = false,
   dragCallback,
-  dragEndCallback
+  dragEndCallback,
+  cargoId,
 }) => {
   const groupRef = useRef<SVGPathElement>(null);
   const scale = useReferenceScale(groupRef, { width, height });
 
   const handleDragStart = (event: any, info: any) => {
-    console.log("START", event, info);//TODO: save dragOffset
-  }
+    console.log("START", event, info); //TODO: save dragOffset
+  };
 
   const corner = { x: x - width / 2, y: y - height / 2 };
   return (
@@ -46,12 +48,13 @@ export const CargoIcon: React.FC<Props> = ({
       y={corner.y}
       fill="none"
       preserveAspectRatio="xMidYMid meet"
+      onClick={() => console.log(cargoId)}
     >
-      <g
-        ref={groupRef}
-        className={`CargoIcon ${placing ? "Placing" : ""}`}
-      >
-        <g transform={`scale(${scale.width} ${scale.height})`} style={{ pointerEvents: "none" }} >
+      <g ref={groupRef} className={`CargoIcon ${placing ? "Placing" : ""}`}>
+        <g
+          transform={`scale(${scale.width} ${scale.height})`}
+          style={{ pointerEvents: "none" }}
+        >
           <Icon />
         </g>
         <rect
@@ -59,9 +62,10 @@ export const CargoIcon: React.FC<Props> = ({
           y={0}
           height={height}
           width={width}
-          className="BoundingBox" />
+          className="BoundingBox"
+        />
       </g>
-    </motion.svg >
+    </motion.svg>
   );
 };
 

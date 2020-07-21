@@ -31,7 +31,7 @@ export enum RouteKey {
   PlaceCargoConfirm = "PlaceCargoConfirm",
   PlaceCargoDeckMap = "PlaceCargoDeckMap",
   Login = "Login",
-  Discharge = "Discharge",
+  // Discharge = "Discharge",
   History = "History",
   Settings = "Settings",
   NoMatch = "NoMatch",

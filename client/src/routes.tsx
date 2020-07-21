@@ -44,14 +44,14 @@ export const routes: { [key in RouteKey]: Props } = {
     private: true,
     exact: true,
     path: "/placecargo/deckmap",
-    component: <DeckMapContainer />,
+    component: <DeckMapContainer isOverview={false} />,
   },
   [RouteKey.DeckOverview]: {
     title: "Deck overview",
     private: true,
     exact: true,
     path: "/overview",
-    component: <div>Overview</div>,
+    component: <DeckMapContainer isOverview={true} />,
   },
   [RouteKey.History]: {
     title: "History",
@@ -60,13 +60,13 @@ export const routes: { [key in RouteKey]: Props } = {
     path: "/history",
     component: <HistoryScreen />,
   },
-  [RouteKey.Discharge]: {
-    title: "Discharge cargo",
-    private: true,
-    exact: true,
-    path: "/discharge",
-    component: <div>Discharge</div>,
-  },
+  // [RouteKey.Discharge]: {
+  //   title: "Discharge cargo",
+  //   private: true,
+  //   exact: true,
+  //   path: "/discharge",
+  //   component: <div>Discharge</div>,
+  // },
   [RouteKey.Settings]: {
     title: "Settings",
     private: true,

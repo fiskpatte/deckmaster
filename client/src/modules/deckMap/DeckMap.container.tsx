@@ -6,17 +6,27 @@ import DeckMap from "./DeckMap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import { ConfirmButton } from "./confirmButton";
-import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
+import {
+  setCurrentPlacement,
+  setCurrentCargo,
+} from "../../store/deckMap/deckMapActions";
 import { placeCargo } from "../../api/cargoPlacement";
 import { getCurrentDeck } from "../../store/app/appSelectors";
 import { useHistory } from "react-router-dom";
 import { getDeckNames } from "./DeckMap.functions";
-import { routes } from './../../routes';
+import { routes } from "./../../routes";
+import { cargoFactory } from "../../types/deckMap";
 
-export const DeckMapContainer: React.FC = () => {
+interface Props {
+  isOverview: boolean;
+}
+
+export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const { deckMap, currentCargo, currentPlacement } = useSelector(
     (state: RootState) => state.deckMapReducer
   );
+
+  console.log(isOverview);
 
   const currentDeck = useSelector(getCurrentDeck);
   const dispatch = useDispatch();
@@ -24,13 +34,23 @@ export const DeckMapContainer: React.FC = () => {
 
   useEffect(() => {
     dispatch(setCurrentPlacement(null));
-  }, [dispatch, currentDeck]);
+    return () => {
+      dispatch(setCurrentCargo(cargoFactory()));
+    };
+  }, [dispatch, currentDeck, history]);
+
+  // useEffect(() => {
+
+  // }, []);
 
   useEffect(() => {
-    if (history.location.pathname.includes(routes.PlaceCargo.path) && !currentCargo?.id) {
+    if (
+      history.location.pathname.includes(routes.PlaceCargo.path) &&
+      !currentCargo?.id
+    ) {
       history.push(routes.PlaceCargo.path);
     }
-  }, [history, currentCargo])
+  }, [history, currentCargo]);
 
   const onConfirm = async () => {
     // set loader
@@ -44,7 +64,6 @@ export const DeckMapContainer: React.FC = () => {
         throw new Error("Couldn't place cargo");
       }
 
-      dispatch(setCurrentPlacement(null));
       history.push("/placecargo");
     } catch (error) {
       // Handle somehow
@@ -56,7 +75,11 @@ export const DeckMapContainer: React.FC = () => {
     <div className="DeckMap">
       <div className="DeckMapHeader">
         <CargoDetails cargo={currentCargo} />
-        <DeckSelector deckNames={getDeckNames(deckMap)} currentDeckName={currentDeck.name} />
+
+        <DeckSelector
+          deckNames={getDeckNames(deckMap)}
+          currentDeckName={currentDeck.name}
+        />
       </div>
       <DeckMap
         currentCargo={currentCargo}
@@ -64,9 +87,7 @@ export const DeckMapContainer: React.FC = () => {
         currentPlacement={currentPlacement}
       />
       <div className="DeckMapFooter">
-        {currentPlacement &&
-          <ConfirmButton onClick={() => onConfirm()} />
-        }
+        {currentPlacement && <ConfirmButton onClick={() => onConfirm()} />}
       </div>
     </div>
   );

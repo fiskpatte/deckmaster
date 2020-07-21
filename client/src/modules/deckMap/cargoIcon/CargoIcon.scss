@@ -4,16 +4,16 @@
   fill: $gray20;
   stroke-width: 1;
   stroke: $gray20;
-  pointer-events: none;
+  pointer-events: auto;
+}
+.BoundingBox {
+  fill: none;
+  stroke: none;
+  pointer-events: visible;
 }
 .CargoIcon.Placing {
   pointer-events: auto;
   animation: blinker 1.5s linear infinite;
-  .BoundingBox {
-    fill: none;
-    stroke: none;
-    pointer-events: visible;
-  }
 }
 @keyframes blinker {
   50% {

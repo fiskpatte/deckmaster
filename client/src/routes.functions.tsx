@@ -4,11 +4,10 @@ import { routes } from "./routes";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
 
-export const renderRoutes = () => {
-  return Object.keys(routes).map((key, ix) => {
-    return renderRoute(RouteKey[key as keyof typeof RouteKey], ix);
-  });
-};
+export const renderRoutes = () =>
+  Object.keys(routes).map((key, ix) =>
+    renderRoute(RouteKey[key as keyof typeof RouteKey], ix)
+  );
 
 export const renderRoute = (key: RouteKey, index: number) => {
   const route = routes[key];
