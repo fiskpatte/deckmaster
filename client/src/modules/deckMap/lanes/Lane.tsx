@@ -34,7 +34,6 @@ const LaneComponent: React.FC<Props> = ({
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
       />
-
       <Grids
         grids={lane.grids}
         onClick={(pos) => onLanePlacementButtonClick(pos)}

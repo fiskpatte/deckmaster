@@ -2,7 +2,8 @@ import * as React from "react";
 import { RouteKey } from "./constants";
 import { EnterCargoScreen } from "./modules/enterCargoScreen";
 import { ConfirmCargoScreen } from "./modules/confirmCargoScreen";
-import { DeckMapContainer } from "./modules/deckMap";
+// import { DeckMapContainer } from "./modules/deckMap";
+import { DeckMapContainer } from "./modules/deckMapNoLogic";
 import { LoginScreen } from "./modules/loginScreen";
 import { RouteProps } from "react-router-dom";
 import SettingsScreen from "./modules/settingsScreen";
@@ -44,14 +45,14 @@ export const routes: { [key in RouteKey]: Props } = {
     private: true,
     exact: true,
     path: "/placecargo/deckmap",
-    component: <DeckMapContainer isOverview={false} />,
+    component: <DeckMapContainer />,
   },
   [RouteKey.DeckOverview]: {
     title: "Deck overview",
     private: true,
     exact: true,
     path: "/overview",
-    component: <DeckMapContainer isOverview={true} />,
+    component: <DeckMapContainer isEditable={true} />,
   },
   [RouteKey.History]: {
     title: "History",

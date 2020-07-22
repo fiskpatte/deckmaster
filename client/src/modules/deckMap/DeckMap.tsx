@@ -26,6 +26,7 @@ interface Props {
   deck: Deck;
   currentCargo: Cargo;
   currentPlacement: Placement | null;
+  isOverview: boolean;
 }
 interface ViewBoxDimensions {
   sizeX: number;
@@ -33,7 +34,7 @@ interface ViewBoxDimensions {
   originX: number;
   originY: number;
 }
-const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement }) => {
+const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement, isOverview }) => {
   console.log("curr: ", currentCargo);
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -96,7 +97,7 @@ const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement }) => {
                 <use
                   key={100 * ix + ixc}
                   href={`#cargoIcon${c.id}`}
-                  onClick={() => onCargoPlacementClick(c)}
+                  onClick={() => isOverview && onCargoPlacementClick(c)}
                 />
               )
           )

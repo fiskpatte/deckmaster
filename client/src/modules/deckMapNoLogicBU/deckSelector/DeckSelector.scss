@@ -1,0 +1,22 @@
+@import "../../../styles/main.scss";
+
+.DeckSelector {
+  @include flexRow();
+  margin: 2vh 2vw;
+  height: min-content;
+  .DeckSelectorItem {
+    font-family: FoundrySterling;
+    white-space: nowrap;
+    font-size: $standardFont;
+    cursor: pointer;
+    background-color: white;
+    color: $gray20;
+    margin: 0.5vh 0.5vw;
+    padding: 1vh 1vw;
+  }
+  .Selected {
+    background-color: $primaryBlue;
+    color: white;
+    box-shadow: 0px 0px 0px;
+  }
+}
