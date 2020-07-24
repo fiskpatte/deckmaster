@@ -6,10 +6,8 @@ import { DeckMapType } from "./../../types/deckMap";
 
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
-    arrayMin(
-      currentDeck.lanes.map((lane) => getEndpoints(lane).aft)
-    ) *
-    DECK_MAP.X_SCALE -
+    arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).aft)) *
+      DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -17,18 +15,14 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).left)) *
-    DECK_MAP.Y_SCALE -
+      DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
 
 export const getViewBoxSizeX = (currentDeck: Deck): number => {
-  let xMax = arrayMax(
-    currentDeck.lanes.map((lane) => getEndpoints(lane).fwd)
-  );
-  let xMin = arrayMin(
-    currentDeck.lanes.map((lane) => getEndpoints(lane).aft)
-  );
+  let xMax = arrayMax(currentDeck.lanes.map((lane) => getEndpoints(lane).fwd));
+  let xMin = arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).aft));
   return xMax - xMin + DECK_MAP.X_MARGIN + 2 * DECK_MAP.LANE_BUTTON_WIDTH;
 };
 
@@ -36,9 +30,7 @@ export const getViewBoxSizeY = (currentDeck: Deck): number => {
   let yMax = arrayMax(
     currentDeck.lanes.map((lane) => getEndpoints(lane).right)
   );
-  let yMin = arrayMin(
-    currentDeck.lanes.map((lane) => getEndpoints(lane).left)
-  );
+  let yMin = arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).left));
   return yMax - yMin + DECK_MAP.Y_MARGIN;
 };
 
@@ -116,7 +108,7 @@ export const pinCargoAfterDrag = (
         placingLane.TCG +
         ((placement.TCG > placingLane.TCG ? 1 : -1) *
           (cargo.width - placingLane.width)) /
-        2;
+          2;
       callback(pinnedPlacement);
     }
   }
@@ -195,7 +187,7 @@ export const updatePlacementFromScreenCoords = (
       max = Math.min(max, overflowMinLCG);
     }
     max -= cargo.length / 2;
-    const min = lane.LCG - (lane.length - cargo.length) / 2
+    const min = lane.LCG - (lane.length - cargo.length) / 2;
     center.x = Math.min(Math.max(center.x, min), max);
 
     if (center.x !== placement.LCG || center.y !== placement.TCG) {
@@ -252,9 +244,9 @@ export const isAdjacent = (
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
   const matchingSides = contained
     ? newElemEndpoints.aft >= elemEndpoints.aft &&
-    newElemEndpoints.fwd <= elemEndpoints.fwd
+      newElemEndpoints.fwd <= elemEndpoints.fwd
     : newElemEndpoints.aft <= elemEndpoints.fwd &&
-    newElemEndpoints.fwd >= elemEndpoints.aft;
+      newElemEndpoints.fwd >= elemEndpoints.aft;
 
   const noSpaceInBetween = !(
     hasSpaceInBetween(
@@ -419,3 +411,8 @@ export const getDeckNames = (deckMap: DeckMapType) =>
   Object.keys(deckMap).sort(
     (key1, key2) => deckMap[key1].sortOrder - deckMap[key2].sortOrder
   );
+
+export const cargoIsEmpty = (cargo: Cargo) => cargo.id === "";
+
+export const placementsHasDifferentPositions = (a: Placement, b: Placement) =>
+  a.LCG !== b.LCG || a.TCG !== b.TCG;

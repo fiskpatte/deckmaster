@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./DeckMap.scss";
 import { CargoDetails } from "./cargoDetails";
 import { DeckSelector } from "./deckSelector";
@@ -13,9 +13,13 @@ import {
 import { placeCargo } from "../../api/cargoPlacement";
 import { getCurrentDeck } from "../../store/app/appSelectors";
 import { useHistory } from "react-router-dom";
-import { getDeckNames } from "./DeckMap.functions";
+import {
+  getDeckNames,
+  placementsHasDifferentPositions,
+} from "./DeckMap.functions";
 import { routes } from "./../../routes";
-import { cargoFactory } from "../../types/deckMap";
+import { cargoFactory, cargoPlacementFactory } from "../../types/deckMap";
+import Button from "../../components/button";
 
 interface Props {
   isOverview: boolean;
@@ -26,7 +30,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     (state: RootState) => state.deckMapReducer
   );
 
-  console.log(isOverview);
+  const [initialCargoPlacement, setInitialCargoPlacement] = useState(
+    cargoPlacementFactory()
+  );
 
   const currentDeck = useSelector(getCurrentDeck);
   const dispatch = useDispatch();
@@ -38,10 +44,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       dispatch(setCurrentCargo(cargoFactory()));
     };
   }, [dispatch, currentDeck, history]);
-
-  // useEffect(() => {
-
-  // }, []);
 
   useEffect(() => {
     if (
@@ -71,6 +73,42 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   };
 
+  const undoButtonClick = () => {
+    if (isOverview) {
+      dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
+    } else {
+      dispatch(setCurrentPlacement(null));
+    }
+  };
+
+  const showConfirmButton = () => {
+    if (isOverview) {
+      if (currentPlacement === null) {
+        return false;
+      }
+
+      return placementsHasDifferentPositions(
+        currentPlacement,
+        initialCargoPlacement
+      );
+    } else {
+      return !!currentPlacement;
+    }
+  };
+
+  const showUndoButton = () => {
+    if (currentPlacement === null) {
+      return false;
+    }
+
+    return placementsHasDifferentPositions(
+      currentPlacement,
+      initialCargoPlacement
+    );
+  };
+
+  const showDischargeButton = () => false;
+
   return (
     <div className="DeckMap">
       <div className="DeckMapHeader">
@@ -85,9 +123,25 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         currentCargo={currentCargo}
         deck={currentDeck}
         currentPlacement={currentPlacement}
+        isOverview={isOverview}
+        setInitialCargoPlacement={setInitialCargoPlacement}
       />
       <div className="DeckMapFooter">
-        {currentPlacement && <ConfirmButton onClick={() => onConfirm()} />}
+        {showUndoButton() && (
+          <Button
+            onClick={() => undoButtonClick()}
+            type="neutral"
+            label="UNDO"
+          />
+        )}
+        {showConfirmButton() && <ConfirmButton onClick={() => onConfirm()} />}
+        {showDischargeButton() && (
+          <Button
+            onClick={() => onConfirm()}
+            type="warning"
+            label="DISCHARGE"
+          />
+        )}
       </div>
     </div>
   );

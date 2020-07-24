@@ -28,6 +28,9 @@
   background-color: $gray80;
   color: transparentize($gray20, 0.2);
 }
+.type-warning {
+  background-color: $primaryOrange;
+}
 .size-small {
   font-size: $smallFont;
 }

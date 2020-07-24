@@ -15,7 +15,8 @@ import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
 import { useDispatch } from "react-redux";
 import {
-  setCurrentPlacement, setCurrentCargo,
+  setCurrentPlacement,
+  setCurrentCargo,
 } from "../../store/deckMap/deckMapActions";
 import { Deck, Cargo, CargoPlacement } from "../../types/deckMap";
 import "./DeckMap.scss";
@@ -26,6 +27,8 @@ interface Props {
   deck: Deck;
   currentCargo: Cargo;
   currentPlacement: Placement | null;
+  isOverview: boolean;
+  setInitialCargoPlacement: (d: CargoPlacement) => void;
 }
 interface ViewBoxDimensions {
   sizeX: number;
@@ -33,8 +36,13 @@ interface ViewBoxDimensions {
   originX: number;
   originY: number;
 }
-const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement }) => {
-  console.log("curr: ", currentCargo);
+const DeckMap: React.FC<Props> = ({
+  deck,
+  currentCargo,
+  currentPlacement,
+  isOverview = false,
+  setInitialCargoPlacement,
+}) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
     (placement: Placement) => dispatch(setCurrentPlacement(placement)),
@@ -54,7 +62,9 @@ const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement }) => {
   }, [deck]);
 
   const onCargoPlacementClick = (cargoPlacement: CargoPlacement) => {
-    console.log(cargoPlacement);
+    if (isOverview && currentCargo.id !== cargoPlacement.cargo.id) {
+      setInitialCargoPlacement({ ...cargoPlacement });
+    }
 
     dispatch(setCurrentCargo({ ...cargoPlacement.cargo }));
     dispatch(setCurrentPlacement({ ...cargoPlacement }));

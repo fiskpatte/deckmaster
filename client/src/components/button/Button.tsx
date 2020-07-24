@@ -5,7 +5,7 @@ interface Props {
   className?: string;
   label: string;
   onClick: () => void;
-  type?: "positive" | "danger" | "navigation" | "neutral";
+  type?: "positive" | "danger" | "navigation" | "neutral" | "warning";
   size?: "small" | "standard" | "medium" | "big";
   disabled?: boolean;
 }

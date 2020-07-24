@@ -95,6 +95,21 @@ export interface CargoPlacement {
   cargo: Cargo;
 }
 
+export const cargoPlacementFactory = (): CargoPlacement => ({
+  id: "",
+  registrationNumber: "",
+  deckId: "",
+  laneId: "",
+  LCG: 0,
+  TCG: 0,
+  VCG: 0,
+  overflowingLaneId: "",
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  voyageId: "",
+  cargo: cargoFactory(),
+});
+
 export const cargoFactory = (): Cargo => {
   let elem = deckMapElementFactory() as Cargo;
   elem.registrationNumber = "";
