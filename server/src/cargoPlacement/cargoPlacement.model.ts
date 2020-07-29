@@ -11,7 +11,8 @@ export const CargoPlacementSchema = new mongoose.Schema(
     VCG: Number,
     overflowingLaneId: String,
     voyageId: String,
-    cargo: { type: mongoose.Schema.Types.ObjectId, ref: 'Cargo' }
+    cargo: { type: mongoose.Schema.Types.ObjectId, ref: 'Cargo' },
+    discharged: Boolean,
   },
   { timestamps: true },
 );
@@ -29,4 +30,5 @@ export interface CargoPlacement extends mongoose.Document {
   updatedAt: Date;
   voyageId: String;
   cargo: Cargo;
+  discharged: boolean;
 }

@@ -208,6 +208,7 @@ export const updatePlacementFromFrontPlacement = (
   cargo: Cargo,
   callback: (placement: Placement) => void
 ) => {
+  console.log("placement: ", placement);
   placement.LCG -= cargo.length / 2;
   updatePlacementFromSVGCoords(placement, callback);
 };

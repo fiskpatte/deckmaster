@@ -35,9 +35,11 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
       };
     case DECK_MAP_ACTION_TYPES.ADD_CARGO_PLACEMENT: {
       const deckMap = _.cloneDeep(state.deckMap);
+
       deckMap[payload.deckId].lanes
         .find((l) => l.id === payload.laneId)
-        ?.cargo.push(payload);
+        ?.cargo.filter((placement) => placement.id !== payload.id)
+        .push(payload);
       return {
         ...state,
         deckMap,
@@ -46,8 +48,8 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
     case DECK_MAP_ACTION_TYPES.SET_CARGO_PLACEMENTS: {
       let deckMap = _.cloneDeep(state.deckMap);
 
-      Object.keys(deckMap).forEach(k => {
-        deckMap[k].lanes.forEach(l => l.cargo = [])
+      Object.keys(deckMap).forEach((k) => {
+        deckMap[k].lanes.forEach((l) => (l.cargo = []));
       });
 
       for (let cargoPlacement of payload) {
@@ -55,22 +57,33 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
           (lane) => lane.id === cargoPlacement.laneId
         );
 
-        if (!lane) throw new Error(`Incorrect laneId on cargoPlacement ${cargoPlacement.id}`);
+        if (!lane)
+          throw new Error(
+            `Incorrect laneId on cargoPlacement ${cargoPlacement.id}`
+          );
         lane.cargo.push(cargoPlacement);
 
-        let adjacentLanes = deckMap[cargoPlacement.deckId].lanes.filter(l => l.adjacentLanes.some(al => al.id === cargoPlacement.laneId));
+        let adjacentLanes = deckMap[cargoPlacement.deckId].lanes.filter((l) =>
+          l.adjacentLanes.some((al) => al.id === cargoPlacement.laneId)
+        );
         if (adjacentLanes?.length > 0) {
-          adjacentLanes.forEach(al => {
-            let adjacent = al.adjacentLanes.find(lane => lane.id === cargoPlacement.laneId);
+          adjacentLanes.forEach((al) => {
+            let adjacent = al.adjacentLanes.find(
+              (lane) => lane.id === cargoPlacement.laneId
+            );
             if (adjacent) {
-              adjacent = { ...lane, adjacentSide: adjacent.adjacentSide } as AdjacentLane;
-              al.adjacentLanes = al.adjacentLanes.filter(lane => lane.id !== cargoPlacement.laneId)
+              adjacent = {
+                ...lane,
+                adjacentSide: adjacent.adjacentSide,
+              } as AdjacentLane;
+              al.adjacentLanes = al.adjacentLanes.filter(
+                (lane) => lane.id !== cargoPlacement.laneId
+              );
               al.adjacentLanes.push(adjacent);
             }
-          })
+          });
         }
       }
-
 
       return { ...state, deckMap };
     }

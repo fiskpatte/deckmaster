@@ -5,6 +5,7 @@ import {
   Body,
   Headers,
   NotFoundException,
+  Put,
 } from '@nestjs/common';
 import { CargoPlacementService } from './cargoPlacement.services';
 import { CargoPlacement } from './cargoPlacement.model';
@@ -43,6 +44,20 @@ export class CargoPlacementController {
     return await this.cargoPlacementService.placeCargo(
       cargoPlacement,
       username,
+    );
+  }
+
+  @Put()
+  async updateCargoPlacement(
+    @Headers() headers,
+    @Body() cargoPlacement: CargoPlacement,
+  ) {
+    if (!headers.voyageid) {
+      throw new NotFoundException('VoyageId not specified');
+    }
+    cargoPlacement.voyageId = headers.voyageid;
+    return await this.cargoPlacementService.updateCargoPlacement(
+      cargoPlacement,
     );
   }
 }

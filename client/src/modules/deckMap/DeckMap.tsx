@@ -91,7 +91,7 @@ const DeckMap: React.FC<Props> = ({
           currentCargo={currentCargo}
           onLanePlacementButtonClick={(placement) =>
             updatePlacementFromFrontPlacement(
-              placement,
+              { ...currentPlacement, ...placement },
               currentCargo,
               setPlacement
             )

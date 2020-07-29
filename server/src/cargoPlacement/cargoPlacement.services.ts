@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CargoPlacement } from './cargoPlacement.model';
@@ -19,7 +19,7 @@ export class CargoPlacementService {
     private readonly appGateway: AppGateway,
     private readonly cargoQueueService: CargoQueueService,
     private readonly logService: LogService,
-  ) { }
+  ) {}
 
   async placeCargo(cp: CargoPlacement, username: string) {
     try {
@@ -55,6 +55,30 @@ export class CargoPlacementService {
       console.log(error);
       throw 'Failed to place cargo';
     }
+  }
+
+  async updateCargoPlacement(cp: CargoPlacement) {
+    // async updateCargo(cargoId: string, dto: Cargo) {
+    try {
+      let updatedCargoPlacement = await this.cargoPlacementModel.findOneAndUpdate(
+        { _id: cp.id },
+        cp,
+        { new: true },
+      );
+      await updatedCargoPlacement.populate('cargo').execPopulate();
+
+      const transformedPlacement = transformDbModelAndRefs(
+        updatedCargoPlacement,
+        'cargo',
+      );
+
+      this.appGateway.pushCargoPlacementToClients(transformedPlacement);
+
+      return updatedCargoPlacement;
+    } catch (error) {
+      throw new NotFoundException('Cargo not found');
+    }
+    // }
   }
 
   async getCargoPlacements() {

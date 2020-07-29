@@ -10,7 +10,7 @@ import {
   setCurrentPlacement,
   setCurrentCargo,
 } from "../../store/deckMap/deckMapActions";
-import { placeCargo } from "../../api/cargoPlacement";
+import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
 import { getCurrentDeck } from "../../store/app/appSelectors";
 import { useHistory } from "react-router-dom";
 import {
@@ -56,6 +56,23 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   const onConfirm = async () => {
     // set loader
+
+    if (updateExistingPlacement()) {
+      try {
+        await updateCargoPlacement({
+          ...currentPlacement,
+          deckId: currentDeck.name,
+          cargo: currentCargo.id,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+      console.log("updated...");
+      dispatch(setCurrentPlacement(null));
+      dispatch(setCurrentCargo(cargoFactory()));
+      return;
+    }
+
     try {
       const result: any = await placeCargo({
         ...currentPlacement,
@@ -79,6 +96,28 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     } else {
       dispatch(setCurrentPlacement(null));
     }
+  };
+
+  const dischargeButtonClick = async () => {
+    // anropa server, sätt den till discharged.
+    try {
+      await updateCargoPlacement({
+        ...currentPlacement,
+        deckId: currentDeck.name,
+        cargo: currentCargo.id,
+        discharged: true,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    console.log("updated...");
+    dispatch(setCurrentPlacement(null));
+    dispatch(setCurrentCargo(cargoFactory()));
+    return;
+  };
+
+  const updateExistingPlacement = () => {
+    return isOverview;
   };
 
   const showConfirmButton = () => {
@@ -107,7 +146,20 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     );
   };
 
-  const showDischargeButton = () => false;
+  const showDischargeButton = () => {
+    if (currentPlacement === null) {
+      return false;
+    }
+
+    if (!isOverview) {
+      return false;
+    }
+
+    return !placementsHasDifferentPositions(
+      currentPlacement,
+      initialCargoPlacement
+    );
+  };
 
   return (
     <div className="DeckMap">
@@ -137,7 +189,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         {showConfirmButton() && <ConfirmButton onClick={() => onConfirm()} />}
         {showDischargeButton() && (
           <Button
-            onClick={() => onConfirm()}
+            onClick={dischargeButtonClick}
             type="warning"
             label="DISCHARGE"
           />
