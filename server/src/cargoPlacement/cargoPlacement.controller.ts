@@ -6,6 +6,7 @@ import {
   Headers,
   NotFoundException,
   Put,
+  Param,
 } from '@nestjs/common';
 import { CargoPlacementService } from './cargoPlacement.services';
 import { CargoPlacement } from './cargoPlacement.model';
@@ -59,5 +60,10 @@ export class CargoPlacementController {
     return await this.cargoPlacementService.updateCargoPlacement(
       cargoPlacement,
     );
+  }
+
+  @Post('discharge:id')
+  async discharge(@Param('id') cargoPlacementId: string) {
+    await this.cargoPlacementService.discharge(cargoPlacementId);
   }
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import "./Button.scss";
+import Rings from "./Rings";
 
 interface Props {
   className?: string;
@@ -8,6 +9,7 @@ interface Props {
   type?: "positive" | "danger" | "navigation" | "neutral" | "warning";
   size?: "small" | "standard" | "medium" | "big";
   disabled?: boolean;
+  loading?: boolean;
 }
 
 export const Button: React.FC<Props> = ({
@@ -17,14 +19,27 @@ export const Button: React.FC<Props> = ({
   className = "",
   disabled,
   size = "standard",
+  loading = false,
 }) => (
   <button
     className={`Button type-${type} size-${size} ${className}`}
     onClick={onClick}
     disabled={disabled}
   >
-    {label}
+    {loading ? <Rings /> : label}
   </button>
 );
 
 export default Button;
+
+{
+  /* <Button onClick={onClick} type={type}>
+{loading ? (
+  <div style={{ color: "white" }}>
+    <Rings />
+  </div>
+) : (
+  text
+)}
+</Button> */
+}

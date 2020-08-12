@@ -3,7 +3,7 @@ import { LaneButton } from "./laneButton";
 import { DECK_MAP } from "../../../constants";
 import { LaneName } from "./laneName";
 import { Grids } from "../grids";
-import { PlacedCargo } from "../placedCargo";
+// import { PlacedCargo } from "../placedCargo";
 import { Lane, Cargo } from "../../../types/deckMap";
 import { Placement } from "../../../types/util";
 import "./Lane.scss";
@@ -82,7 +82,7 @@ const LaneComponent: React.FC<Props> = ({
         isOverflow={isOverflow}
         lane={lane}
       />
-      <PlacedCargo cargo={lane.cargo} />
+      {/* <PlacedCargo cargo={lane.cargo} /> */}
       <LaneName lane={lane} rightOrigin={rightOrigin} />
       <LaneButton
         onClick={(ev) => {

@@ -10,6 +10,7 @@ import {
 import { AppGateway } from 'src/app.gateway';
 import { CargoQueueService } from 'src/cargoQueue/cargoQueue.services';
 import { LogService } from 'src/log/log.service.';
+import { errorMonitor } from 'events';
 
 @Injectable()
 export class CargoPlacementService {
@@ -79,6 +80,35 @@ export class CargoPlacementService {
       throw new NotFoundException('Cargo not found');
     }
     // }
+  }
+
+  async discharge(cargoPlacementId: string) {
+    let updatedCargoPlacement = null;
+    try {
+      updatedCargoPlacement = await this.cargoPlacementModel.findOneAndUpdate(
+        {
+          _id: cargoPlacementId,
+        },
+        { discharged: true },
+        { new: true },
+      );
+      await updatedCargoPlacement.populate('cargo').execPopulate();
+    } catch (error) {
+      console.log(`CargoPlacement with id ${cargoPlacementId} not found`);
+      throw error;
+    }
+
+    try {
+      const transformedPlacement = transformDbModelAndRefs(
+        updatedCargoPlacement,
+        'cargo',
+      );
+
+      this.appGateway.pushCargoPlacementToClients(transformedPlacement);
+    } catch (error) {
+      console.log('pushCargoPlacementToClients failed');
+      throw error;
+    }
   }
 
   async getCargoPlacements() {

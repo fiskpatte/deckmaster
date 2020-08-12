@@ -8,6 +8,7 @@ const initialState: CargoState = {
   currentPlacement: null,
   deckMap: {},
   currentDeckId: undefined,
+  cargoPlacements: [],
 };
 const deckMapReducer = (state = initialState, action: any): CargoState => {
   const { type, payload } = action;
@@ -36,10 +37,43 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
     case DECK_MAP_ACTION_TYPES.ADD_CARGO_PLACEMENT: {
       const deckMap = _.cloneDeep(state.deckMap);
 
+      deckMap[payload.deckId].lanes.flat();
+
       deckMap[payload.deckId].lanes
         .find((l) => l.id === payload.laneId)
-        ?.cargo.filter((placement) => placement.id !== payload.id)
-        .push(payload);
+        ?.cargo.push(payload);
+
+      // New stuff
+      const cargoPlacements = [
+        ...state.cargoPlacements.filter((cp) => cp.id !== payload.id),
+        payload,
+      ];
+
+      return {
+        ...state,
+        deckMap,
+        cargoPlacements,
+      };
+    }
+    case DECK_MAP_ACTION_TYPES.REMOVE_CARGO_PLACEMENT: {
+      let deckMap = _.cloneDeep(state.deckMap);
+
+      Object.keys(deckMap).forEach((deckName: string) => {
+        if (payload.deckId === deckName) {
+          let lanes = deckMap[deckName].lanes;
+          lanes = lanes.map((lane) =>
+            lane.id === payload.laneId
+              ? {
+                  ...lane,
+                  cargo: lane.cargo.filter(
+                    (c) => c.id !== payload.cargoPlacementId
+                  ),
+                }
+              : lane
+          );
+          deckMap[deckName].lanes = lanes;
+        }
+      });
       return {
         ...state,
         deckMap,
@@ -85,7 +119,7 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
         }
       }
 
-      return { ...state, deckMap };
+      return { ...state, deckMap, cargoPlacements: payload };
     }
     default:
       return state;

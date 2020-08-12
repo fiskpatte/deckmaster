@@ -37,8 +37,21 @@ export const addCargoPlacement = (cargoPlacement: any) => ({
 
 export const setCargoPlacements = (cargoPlacements: any) => ({
   type: DECK_MAP_ACTION_TYPES.SET_CARGO_PLACEMENTS,
-  payload: cargoPlacements
-})
+  payload: cargoPlacements,
+});
+
+export const removeCargoPlacement = (
+  cargoPlacementId: string,
+  deckId: string,
+  laneId: string
+) => ({
+  type: DECK_MAP_ACTION_TYPES.REMOVE_CARGO_PLACEMENT,
+  payload: {
+    cargoPlacementId,
+    deckId,
+    laneId,
+  },
+});
 
 // export const setCargoInDeckMap =
 
@@ -49,6 +62,7 @@ const deckMapActions = {
   setCurrentDeckId,
   addCargoPlacement,
   setCargoPlacements,
+  removeCargoPlacement,
 };
 
 export default deckMapActions;

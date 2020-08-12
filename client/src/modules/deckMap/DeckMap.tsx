@@ -22,6 +22,7 @@ import { Deck, Cargo, CargoPlacement } from "../../types/deckMap";
 import "./DeckMap.scss";
 import { FrameRuler } from "./frameRuler";
 import { Loader } from "./../../components/loader/Loader";
+import { PlacedCargo } from "./placedCargo";
 
 interface Props {
   deck: Deck;
@@ -29,6 +30,7 @@ interface Props {
   currentPlacement: Placement | null;
   isOverview: boolean;
   setInitialCargoPlacement: (d: CargoPlacement) => void;
+  cargoPlacements: Array<CargoPlacement>;
 }
 interface ViewBoxDimensions {
   sizeX: number;
@@ -42,6 +44,7 @@ const DeckMap: React.FC<Props> = ({
   currentPlacement,
   isOverview = false,
   setInitialCargoPlacement,
+  cargoPlacements,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -74,6 +77,17 @@ const DeckMap: React.FC<Props> = ({
 
   const { sizeX, sizeY, originX, originY } = viewBoxDimensions;
 
+  const onLaneClick = (placement: any) => {
+    if (!currentPlacement) {
+      return;
+    }
+    updatePlacementFromFrontPlacement(
+      { ...currentPlacement, ...placement },
+      currentCargo,
+      setPlacement
+    );
+  };
+
   return (
     <svg
       className="svgBody"
@@ -89,28 +103,28 @@ const DeckMap: React.FC<Props> = ({
           lanes={deck.lanes}
           rightOrigin={sizeX + originX}
           currentCargo={currentCargo}
-          onLanePlacementButtonClick={(placement) =>
-            updatePlacementFromFrontPlacement(
-              { ...currentPlacement, ...placement },
-              currentCargo,
-              setPlacement
-            )
-          }
+          onLanePlacementButtonClick={onLaneClick}
         />
         <FrameRuler frames={deck.frames} originY={getRulerOrigin(deck)} />
         {/* This makes sure that the cargo is always visible over lanes */}
-        {deck.lanes.map((lane, ix) =>
-          lane.cargo.map(
-            (c, ixc) =>
-              c.cargo.id !== currentCargo.id && (
-                <use
-                  key={100 * ix + ixc}
-                  href={`#cargoIcon${c.id}`}
-                  onClick={() => onCargoPlacementClick(c)}
-                />
-              )
-          )
-        )}
+        {/* {cargoPlacements.map(
+          (cp) =>
+            cp.cargo.id !== currentCargo.id && (
+              <use
+                key={cp.id}
+                href={`#cargoIcon${cp.id}`}
+                onClick={() => onCargoPlacementClick(cp)}
+              />
+            )
+        )} */}
+        <PlacedCargo
+          cargo={cargoPlacements.filter(
+            (cp) => cp.cargo.id !== currentCargo.id
+          )}
+          onCargoPlacementClick={(cp: CargoPlacement) =>
+            onCargoPlacementClick(cp)
+          }
+        />
         {!!currentPlacement && (
           <CargoIcon
             x={currentPlacement.LCG}

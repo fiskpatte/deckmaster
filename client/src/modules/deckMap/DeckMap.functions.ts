@@ -171,7 +171,9 @@ export const updatePlacementFromScreenCoords = (
       al.cargo.some((c) => c.overflowingLaneId === lane.id)
     );
     let max = arrayMin(
-      lane.cargo.map((c) => c.LCG - c.cargo.length / 2),
+      lane.cargo
+        .filter((c) => c.cargo.id !== cargo.id)
+        .map((c) => c.LCG - c.cargo.length / 2),
       getEndpoints(lane).fwd
     );
     if (someOverflowingCargo) {

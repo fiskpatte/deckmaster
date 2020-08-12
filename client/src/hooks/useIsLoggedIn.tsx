@@ -7,11 +7,12 @@ export const useIsLoggedIn = () => {
   // const token = localStorage.getItem("jwtToken");
   if (!sessionData) return false;
 
-  const { accessToken } = sessionData
+  const { accessToken } = sessionData;
 
   if (!accessToken) return false;
 
-  const decoded: any = jwt_decode(accessToken);
-  const expirationDate = new Date(decoded.exp * 1000);
-  return new Date() < expirationDate;
+  return tokenIsValid(jwt_decode(accessToken));
 };
+
+const tokenIsValid = (decoded: any) =>
+  new Date() < new Date(decoded.exp * 1000);

@@ -18,15 +18,13 @@ import appActions from "./store/app/appActions";
 import { getSettings } from "./api/endpoints";
 import { Settings } from "./types/settings";
 import { RootState } from "./store";
-import { setAllDefaultHeaders } from './functions/axios';
+import { setAllDefaultHeaders } from "./functions/axios";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
-  const { sessionData } = useSelector(
-    (state: RootState) => state.appReducer
-  );
+  const { sessionData } = useSelector((state: RootState) => state.appReducer);
   if (!isLoggedIn && sessionData) {
     setAllDefaultHeaders(sessionData);
   }
@@ -64,7 +62,7 @@ const App: React.FC = () => {
     if (sessionData) {
       setAllDefaultHeaders(sessionData);
     }
-  }, [sessionData])
+  }, [sessionData]);
 
   useEffect(() => {
     const fetchCargoPlacements = async () =>
@@ -87,7 +85,6 @@ const App: React.FC = () => {
     const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
       socket.on("newCargoPlacement", (payload: any) => {
-        console.log("cargoPlacement from websocket: ", payload);
         dispatch(deckMapActions.addCargoPlacement(payload));
       });
     }
@@ -97,7 +94,6 @@ const App: React.FC = () => {
     const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
       socket.on("cargoQueueUpdated", (payload: CargoQueueItem[]) => {
-        console.log("cargoQueueUpdated: ", payload);
         dispatch(cargoQueueActions.setCargoQueue(payload));
       });
     }
@@ -107,7 +103,6 @@ const App: React.FC = () => {
     const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
       socket.on("settingsUpdated", (payload: Settings) => {
-        console.log("settingsUpdated: ", payload);
         dispatch(appActions.setSettings(payload));
       });
     }

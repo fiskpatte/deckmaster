@@ -2,7 +2,7 @@ import React from "react";
 import { DECK_MAP } from "../../../constants";
 import { LaneName } from "./laneName";
 import { Grids } from "../grids";
-import { PlacedCargo } from "../placedCargo";
+// import { PlacedCargo } from "../placedCargo";
 import { Lane, Cargo } from "../../../types/deckMap";
 import { Placement } from "../../../types/util";
 import "./Lane.scss";
@@ -18,7 +18,7 @@ const LaneComponent: React.FC<Props> = ({
   lane,
   rightOrigin,
   onLanePlacementButtonClick,
-  currentCargo
+  currentCargo,
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
@@ -48,7 +48,7 @@ const LaneComponent: React.FC<Props> = ({
         isOverflow={false}
         lane={lane}
       />
-      <PlacedCargo cargo={lane.cargo} />
+      {/* <PlacedCargo cargo={lane.cargo} /> */}
       <LaneName lane={lane} rightOrigin={rightOrigin} />
     </>
   );
