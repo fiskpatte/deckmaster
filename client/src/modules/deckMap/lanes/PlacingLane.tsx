@@ -7,9 +7,13 @@ import { Grids } from "../grids";
 import { Lane, Cargo } from "../../../types/deckMap";
 import { Placement } from "../../../types/util";
 import "./Lane.scss";
-import { getLanePlacement } from "../DeckMap.functions";
+import { getMostForwardValidPlacementForLane } from "../DeckMap.functions";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import {
+  getCargoPlacementsForLane,
+  getOverflowingCargoPlacementsIntoLane,
+} from "../../../store/deckMap/deckMapSelectors";
 
 interface Props {
   lane: Lane;
@@ -29,7 +33,12 @@ const LaneComponent: React.FC<Props> = ({
   const { bumperToBumperDistance, defaultVCG } = useSelector(
     (state: RootState) => state.appReducer.settings
   );
-
+  const cargoPlacementsForLane = useSelector(
+    getCargoPlacementsForLane(lane.id)
+  );
+  const overflowingCargoPlacementsIntoLane = useSelector(
+    getOverflowingCargoPlacementsIntoLane(lane.id)
+  );
   let mostForwardValidPlacement = {
     LCG: originX + lane.length,
     TCG: originY + lane.width / 2,
@@ -39,8 +48,10 @@ const LaneComponent: React.FC<Props> = ({
   let lanePlacementButtonVisible = true;
   let isOverflow = currentCargo.width > lane.width;
 
-  mostForwardValidPlacement = getLanePlacement(
+  mostForwardValidPlacement = getMostForwardValidPlacementForLane(
     lane,
+    cargoPlacementsForLane,
+    overflowingCargoPlacementsIntoLane,
     currentCargo,
     mostForwardValidPlacement,
     bumperToBumperDistance

@@ -65,7 +65,8 @@ const DeckMap: React.FC<Props> = ({
   }, [deck]);
 
   const onCargoPlacementClick = (cargoPlacement: CargoPlacement) => {
-    if (isOverview && currentCargo.id !== cargoPlacement.cargo.id) {
+    if (!isOverview) return null;
+    if (currentCargo.id !== cargoPlacement.cargo.id) {
       setInitialCargoPlacement({ ...cargoPlacement });
     }
 
@@ -78,7 +79,7 @@ const DeckMap: React.FC<Props> = ({
   const { sizeX, sizeY, originX, originY } = viewBoxDimensions;
 
   const onLaneClick = (placement: any) => {
-    if (!currentPlacement) {
+    if (currentCargo.id === "") {
       return;
     }
     updatePlacementFromFrontPlacement(

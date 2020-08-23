@@ -12,7 +12,7 @@ import {
   // removeCargoPlacement,
 } from "../../store/deckMap/deckMapActions";
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
-import { getCurrentDeck } from "../../store/app/appSelectors";
+import { getCurrentDeck } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
 import {
   getDeckNames,
@@ -145,11 +145,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const showConfirmButton = () => {
+    console.log("isOverview ", isOverview);
     if (isOverview) {
       if (currentPlacement === null) {
         return false;
       }
-
+      console.log("initiat, ", initialCargoPlacement);
       return placementsHasDifferentPositions(
         currentPlacement,
         initialCargoPlacement
