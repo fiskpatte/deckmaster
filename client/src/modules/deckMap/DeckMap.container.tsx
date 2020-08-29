@@ -81,7 +81,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         console.error(error);
       }
       // Here socket updates
-      console.log("updated...");
 
       // dispatch(
       //   removeCargoPlacement(
@@ -107,10 +106,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       history.push("/placecargo");
     } catch (error) {
       // Handle somehow
+      setLoading(false);
 
       console.error(error);
     }
-    setLoading(false);
   };
 
   const undoButtonClick = () => {

@@ -94,7 +94,7 @@ export class CargoPlacementService {
   private async pushAllWithWebsocket(voyageId: string) {
     try {
       const placements = await this.getAllByVoyageId(voyageId);
-      this.appGateway.pushCargoPlacements(placements);
+      this.appGateway.pushCargoPlacements(placements, voyageId);
     } catch (error) {
       console.error('pushAllWithWebsocket failed. ', error);
     }

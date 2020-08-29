@@ -25,6 +25,14 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
+
+  const voyageId = sessionData && sessionData.voyageId;
+  let socket: SocketIOClient.Socket;
+  if (isLoggedIn) {
+    socket = socketIOClient("http://localhost:4000");
+    console.log("connecting to socket");
+  }
+
   if (!isLoggedIn && sessionData) {
     setAllDefaultHeaders(sessionData);
   }
@@ -82,9 +90,8 @@ const App: React.FC = () => {
   }, [dispatch, isLoggedIn]);
 
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
-      socket.on("cargoPlacements", (payload: any) => {
+      socket.on(`cargoPlacements___${voyageId}`, (payload: any) => {
         console.log("cargo placements updated, ", payload);
         dispatch(deckMapActions.setCargoPlacements(payload));
       });
@@ -92,18 +99,20 @@ const App: React.FC = () => {
   }, [dispatch, isLoggedIn]);
 
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
-      socket.on("cargoQueueUpdated", (payload: CargoQueueItem[]) => {
-        dispatch(cargoQueueActions.setCargoQueue(payload));
-      });
+      socket.on(
+        `cargoQueueUpdated___${voyageId}`,
+        (payload: CargoQueueItem[]) => {
+          dispatch(cargoQueueActions.setCargoQueue(payload));
+        }
+      );
     }
   }, [dispatch, isLoggedIn]);
 
   useEffect(() => {
     const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
-      socket.on("settingsUpdated", (payload: Settings) => {
+      socket.on(`settingsUpdated___${voyageId}`, (payload: Settings) => {
         dispatch(appActions.setSettings(payload));
       });
     }
@@ -112,6 +121,8 @@ const App: React.FC = () => {
   if (loading) {
     return <Loader />;
   }
+
+  console.log("app");
   return (
     <Router>
       <div className="App">

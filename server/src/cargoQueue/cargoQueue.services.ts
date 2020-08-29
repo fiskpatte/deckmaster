@@ -80,7 +80,7 @@ export class CargoQueueService {
   private async pushQueueToClients(voyageId: string) {
     try {
       const cargoQueueItems = await this.getAllByVoyageId(voyageId);
-      this.appGateway.pushCargoQueueToClients(cargoQueueItems);
+      this.appGateway.pushCargoQueueToClients(cargoQueueItems, voyageId);
     } catch (error) {}
   }
 }

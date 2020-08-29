@@ -21,10 +21,11 @@ export class AppGateway
   @WebSocketServer() webSocketServer: Server;
 
   afterInit(server: Server) {
-    this.logger.log('Initialized!');
+    this.logger.log('WebSocketGateway initialized');
   }
 
   handleConnection(client: Socket, ...args: any[]) {
+    // console.log('connected client: ', client);
     this.logger.log(`Client ${client.id} connected.`);
   }
 
@@ -32,28 +33,36 @@ export class AppGateway
     this.logger.log(`Client ${client.id} disconnected.`);
   }
 
-  @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, text: string): WsResponse<string> {
-    return { event: 'msgToClient', data: text };
+  // @SubscribeMessage('msgToServer')
+  // handleMessage(client: Socket, text: string): WsResponse<string> {
+  //   return { event: 'msgToClient', data: text };
 
-    // this sends to same client that initiate the message
+  //   // this sends to same client that initiate the message
 
-    // Same as client.emit('msgToClient', text);
+  //   // Same as client.emit('msgToClient', text);
+  // }
+
+  pushCargoPlacements(cargoPlacements: CargoPlacement[], voyageId: string) {
+    if (!voyageId) {
+      this.logger.error('voyageId not provided to pushCargoPlacements');
+      return;
+    }
+    this.webSocketServer.emit(`cargoPlacements___${voyageId}`, cargoPlacements);
   }
 
-  pushCargoPlacementToClients(cargoPlacement: CargoPlacement) {
-    this.webSocketServer.emit('newCargoPlacement', cargoPlacement);
+  pushCargoQueueToClients(cargoQueueItems: CargoQueueItem[], voyageId: string) {
+    if (!voyageId) {
+      this.logger.error('voyageId not provided to pushCargoQueueToClients');
+      return;
+    }
+    this.webSocketServer.emit(
+      `cargoQueueUpdated___${voyageId}`,
+      cargoQueueItems,
+    );
   }
 
-  pushCargoPlacements(cargoPlacements: CargoPlacement[]) {
-    this.webSocketServer.emit('cargoPlacements', cargoPlacements);
-  }
-
-  pushCargoQueueToClients(cargoQueueItems: CargoQueueItem[]) {
-    this.webSocketServer.emit('cargoQueueUpdated', cargoQueueItems);
-  }
-
-  pushSettingsToClients(settings: Settings) {
-    this.webSocketServer.emit('settingsUpdated', settings);
+  pushSettingsToClients(settings: Settings, voyageId: string = '') {
+    // TODO: This needs to be rebuilt so that it only sends the settings to a user on the specific vessel
+    this.webSocketServer.emit(`settingsUpdated___${voyageId}`, settings);
   }
 }
