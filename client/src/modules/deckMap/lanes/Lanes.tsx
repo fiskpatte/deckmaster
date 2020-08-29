@@ -15,11 +15,11 @@ export const Lanes: React.FC<Props> = ({
   lanes,
   rightOrigin,
   onLanePlacementButtonClick,
-  currentCargo,
+  currentCargo
 }) => {
   return (
     <>
-      {lanes.map((lane) => {
+      {lanes.map(lane => {
         return (
           <LaneComponent
             key={lane.id}

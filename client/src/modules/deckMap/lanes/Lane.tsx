@@ -18,7 +18,7 @@ const LaneComponent: React.FC<Props> = ({
   lane,
   rightOrigin,
   onLanePlacementButtonClick,
-  currentCargo,
+  currentCargo
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
@@ -37,12 +37,12 @@ const LaneComponent: React.FC<Props> = ({
 
       <Grids
         grids={lane.grids}
-        onClick={(pos) => onLanePlacementButtonClick(pos)}
+        onClick={pos => onLanePlacementButtonClick(pos)}
         lanePlacement={{
           LCG: originX + lane.length,
           TCG: originY + lane.width / 2,
           VCG: lane.VCG + currentCargo.height * 0.45,
-          laneId: lane.id,
+          laneId: lane.id
         }}
         currentCargo={currentCargo}
         isOverflow={false}

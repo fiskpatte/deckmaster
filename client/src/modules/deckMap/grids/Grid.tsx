@@ -33,12 +33,17 @@ const GridComponent: React.FC<Props> = ({
   let gridPlacement = {
     LCG: grid.LCG + grid.length / 2,
     TCG: grid.TCG,
-    laneId: lanePlacement.laneId,
+    laneId: lanePlacement.laneId
   } as Placement;
   let isVisible = grid.LCG + grid.length / 2 <= lanePlacement.LCG;
 
   if (isOverflow) {
-    const overflowingPlacement = getOverflowingPlacement(lane, currentCargo, gridPlacement, false)
+    const overflowingPlacement = getOverflowingPlacement(
+      lane,
+      currentCargo,
+      gridPlacement,
+      false
+    );
     if (!overflowingPlacement) return null;
     gridPlacement = overflowingPlacement;
   }
@@ -47,7 +52,7 @@ const GridComponent: React.FC<Props> = ({
 
   return (
     <g
-      onClick={(ev) => {
+      onClick={ev => {
         ev.stopPropagation();
         onClick(gridPlacement);
       }}

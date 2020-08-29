@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import {
   getCargoPlacementsForLane,
-  getOverflowingCargoPlacementsIntoLane,
+  getOverflowingCargoPlacementsIntoLane
 } from "../../../store/deckMap/deckMapSelectors";
 
 interface Props {
@@ -26,7 +26,7 @@ const LaneComponent: React.FC<Props> = ({
   lane,
   rightOrigin,
   onLanePlacementButtonClick,
-  currentCargo,
+  currentCargo
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
@@ -43,7 +43,7 @@ const LaneComponent: React.FC<Props> = ({
     LCG: originX + lane.length,
     TCG: originY + lane.width / 2,
     VCG: lane.VCG + currentCargo.height * defaultVCG,
-    laneId: lane.id,
+    laneId: lane.id
   } as Placement;
   let lanePlacementButtonVisible = true;
   let isOverflow = currentCargo.width > lane.width;
@@ -87,7 +87,7 @@ const LaneComponent: React.FC<Props> = ({
       /> */}
       <Grids
         grids={lane.grids}
-        onClick={(pos) => onLanePlacementButtonClick(pos)}
+        onClick={pos => onLanePlacementButtonClick(pos)}
         lanePlacement={mostForwardValidPlacement}
         currentCargo={currentCargo}
         isOverflow={isOverflow}
@@ -96,7 +96,7 @@ const LaneComponent: React.FC<Props> = ({
       {/* <PlacedCargo cargo={lane.cargo} /> */}
       <LaneName lane={lane} rightOrigin={rightOrigin} />
       <LaneButton
-        onClick={(ev) => {
+        onClick={ev => {
           ev.stopPropagation();
           onLanePlacementButtonClick(mostForwardValidPlacement);
         }}

@@ -2,15 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CargoPlacement } from './cargoPlacement.model';
-import {
-  transformDbModel,
-  removeReadOnlyFields,
-  transformDbModelAndRefs,
-} from 'src/utils/mongo';
+import { removeReadOnlyFields, transformDbModelAndRefs } from 'src/utils/mongo';
 import { AppGateway } from 'src/app.gateway';
 import { CargoQueueService } from 'src/cargoQueue/cargoQueue.services';
 import { LogService } from 'src/log/log.service.';
-import { errorMonitor } from 'events';
 
 @Injectable()
 export class CargoPlacementService {
@@ -24,21 +19,14 @@ export class CargoPlacementService {
 
   async placeCargo(cp: CargoPlacement, username: string) {
     try {
+      console.log('placing cargo: ', cp);
       const cargoPlacementModel = new this.cargoPlacementModel(
         removeReadOnlyFields(cp),
       );
-      // save
+
       let cargoPlacement = await cargoPlacementModel.save();
-
       await cargoPlacement.populate('cargo').execPopulate();
-
-      const transformedPlacement = transformDbModelAndRefs(
-        cargoPlacement,
-        'cargo',
-      );
-
-      // // send through websocket
-      this.appGateway.pushCargoPlacementToClients(transformedPlacement);
+      this.pushAllWithWebsocket(cargoPlacement.voyageId.toString());
 
       this.cargoQueueService.removeItemFromQueue(
         cargoPlacement.cargo.id,
@@ -50,8 +38,6 @@ export class CargoPlacementService {
         username,
         cp.voyageId.toString(),
       );
-
-      return transformedPlacement;
     } catch (error) {
       console.log(error);
       throw 'Failed to place cargo';
@@ -59,63 +45,31 @@ export class CargoPlacementService {
   }
 
   async updateCargoPlacement(cp: CargoPlacement) {
-    // async updateCargo(cargoId: string, dto: Cargo) {
     try {
       let updatedCargoPlacement = await this.cargoPlacementModel.findOneAndUpdate(
         { _id: cp.id },
         cp,
         { new: true },
       );
-      await updatedCargoPlacement.populate('cargo').execPopulate();
 
-      const transformedPlacement = transformDbModelAndRefs(
-        updatedCargoPlacement,
-        'cargo',
-      );
-
-      this.appGateway.pushCargoPlacementToClients(transformedPlacement);
-
-      return updatedCargoPlacement;
+      this.pushAllWithWebsocket(updatedCargoPlacement.voyageId.toString());
     } catch (error) {
       throw new NotFoundException('Cargo not found');
     }
-    // }
   }
 
   async discharge(cargoPlacementId: string) {
-    let updatedCargoPlacement = null;
     try {
-      updatedCargoPlacement = await this.cargoPlacementModel.findOneAndUpdate(
+      const updatedCargoPlacement = await this.cargoPlacementModel.findOneAndUpdate(
         {
           _id: cargoPlacementId,
         },
         { discharged: true },
         { new: true },
       );
-      await updatedCargoPlacement.populate('cargo').execPopulate();
+      this.pushAllWithWebsocket(updatedCargoPlacement.voyageId.toString());
     } catch (error) {
-      console.log(`CargoPlacement with id ${cargoPlacementId} not found`);
-      throw error;
-    }
-
-    try {
-      const transformedPlacement = transformDbModelAndRefs(
-        updatedCargoPlacement,
-        'cargo',
-      );
-
-      this.appGateway.pushCargoPlacementToClients(transformedPlacement);
-    } catch (error) {
-      console.log('pushCargoPlacementToClients failed');
-      throw error;
-    }
-  }
-
-  async getCargoPlacements() {
-    try {
-      const allCargoPlacement = await this.cargoPlacementModel.find().exec();
-      return allCargoPlacement.map(transformDbModel) as CargoPlacement[];
-    } catch (error) {
+      console.error(`CargoPlacement with id ${cargoPlacementId} not found`);
       throw error;
     }
   }
@@ -134,6 +88,15 @@ export class CargoPlacementService {
       return placements;
     } catch (error) {
       throw error;
+    }
+  }
+
+  private async pushAllWithWebsocket(voyageId: string) {
+    try {
+      const placements = await this.getAllByVoyageId(voyageId);
+      this.appGateway.pushCargoPlacements(placements);
+    } catch (error) {
+      console.error('pushAllWithWebsocket failed. ', error);
     }
   }
 }

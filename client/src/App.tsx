@@ -29,28 +29,28 @@ const App: React.FC = () => {
     setAllDefaultHeaders(sessionData);
   }
   useEffect(() => {
-    parseLoadPlan(loadPlans).then((res) => {
+    parseLoadPlan(loadPlans).then(res => {
       //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
       res["Lower Hold"] = {
         name: "Lower Hold",
         lanes: [],
         grids: [],
         frames: [],
-        sortOrder: 1,
+        sortOrder: 1
       };
       res["Main Deck"] = {
         name: "Main Deck",
         lanes: [],
         grids: [],
         frames: [],
-        sortOrder: 2,
+        sortOrder: 2
       };
       res["Upper Deck"] = {
         name: "Upper Deck",
         lanes: [],
         grids: [],
         frames: [],
-        sortOrder: 3,
+        sortOrder: 3
       };
       dispatch(deckMapActions.setDeckMap(res));
       dispatch(deckMapActions.setCurrentDeckId("Weather Deck"));
@@ -84,8 +84,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const socket = socketIOClient("http://localhost:4000");
     if (isLoggedIn) {
-      socket.on("newCargoPlacement", (payload: any) => {
-        dispatch(deckMapActions.addCargoPlacement(payload));
+      socket.on("cargoPlacements", (payload: any) => {
+        console.log("cargo placements updated, ", payload);
+        dispatch(deckMapActions.setCargoPlacements(payload));
       });
     }
   }, [dispatch, isLoggedIn]);

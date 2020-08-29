@@ -45,6 +45,10 @@ export class AppGateway
     this.webSocketServer.emit('newCargoPlacement', cargoPlacement);
   }
 
+  pushCargoPlacements(cargoPlacements: CargoPlacement[]) {
+    this.webSocketServer.emit('cargoPlacements', cargoPlacements);
+  }
+
   pushCargoQueueToClients(cargoQueueItems: CargoQueueItem[]) {
     this.webSocketServer.emit('cargoQueueUpdated', cargoQueueItems);
   }

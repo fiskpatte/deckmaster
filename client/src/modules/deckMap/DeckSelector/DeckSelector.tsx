@@ -7,17 +7,19 @@ interface Props {
   currentDeckName: string;
 }
 
-export const DeckSelector: React.FC<Props> = ({ deckNames, currentDeckName }) => {
+export const DeckSelector: React.FC<Props> = ({
+  deckNames,
+  currentDeckName
+}) => {
   return (
     <div className="DeckSelector">
-      {deckNames
-        .map((name) => (
-          <DeckSelectorItem
-            name={name}
-            isCurrent={name === currentDeckName}
-            key={name}
-          />
-        ))}
+      {deckNames.map(name => (
+        <DeckSelectorItem
+          name={name}
+          isCurrent={name === currentDeckName}
+          key={name}
+        />
+      ))}
     </div>
   );
 };

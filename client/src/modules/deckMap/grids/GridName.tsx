@@ -12,7 +12,7 @@ export const GridName: React.FC<Props> = ({ grid }) => {
   const textRef = useRef<SVGTextElement>(null);
   const { scale } = useReferenceScale(textRef, {
     width: grid.length,
-    height: grid.width,
+    height: grid.width
   });
   let fontSize = Math.min(scale.width, scale.height);
   if (scale.height !== 1 && scale.width !== 1) {

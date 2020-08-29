@@ -8,27 +8,27 @@ interface Props {
 
 export const PlacedCargo: React.FC<Props> = ({
   cargo: cargoPlacements,
-  onCargoPlacementClick,
+  onCargoPlacementClick
 }) => {
   if (cargoPlacements.length === 0) return null;
 
   return (
     <>
-      {cargoPlacements.map((cp) => {
-        return (
-          // <defs key={cp.id}>
-          <g id={`cargoIcon${cp.id}`} onClick={() => onCargoPlacementClick(cp)}>
-            <CargoIcon
-              x={cp.LCG}
-              y={cp.TCG}
-              width={cp.cargo.length}
-              height={cp.cargo.width}
-              cargoId={cp.cargo.id}
-            />
-          </g>
-          // </defs>
-        );
-      })}
+      {cargoPlacements.map(cp => (
+        <g
+          key={`cargoIcon${cp.id}`}
+          id={`cargoIcon${cp.id}`}
+          onClick={() => onCargoPlacementClick(cp)}
+        >
+          <CargoIcon
+            x={cp.LCG}
+            y={cp.TCG}
+            width={cp.cargo.length}
+            height={cp.cargo.width}
+            cargoId={cp.cargo.id}
+          />
+        </g>
+      ))}
     </>
   );
 };

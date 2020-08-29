@@ -26,12 +26,6 @@ export class CargoPlacementController {
     return result;
   }
 
-  @Get()
-  async getAll() {
-    const result = await this.cargoPlacementService.getCargoPlacements();
-    return result;
-  }
-
   @Post()
   async placeCargo(
     @Headers() headers,

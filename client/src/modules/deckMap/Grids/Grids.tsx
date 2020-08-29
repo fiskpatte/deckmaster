@@ -12,7 +12,14 @@ interface Props {
   lane: Lane;
 }
 
-export const Grids: React.FC<Props> = ({ grids, onClick, lanePlacement, isOverflow, currentCargo, lane }) => {
+export const Grids: React.FC<Props> = ({
+  grids,
+  onClick,
+  lanePlacement,
+  isOverflow,
+  currentCargo,
+  lane
+}) => {
   return (
     <>
       {grids.map((grid, ix) => {

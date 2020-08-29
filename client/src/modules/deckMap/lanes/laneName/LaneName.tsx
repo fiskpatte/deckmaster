@@ -14,7 +14,7 @@ export const LaneName: React.FC<Props> = ({ lane, rightOrigin }) => {
   const textRef = useRef<SVGTextElement>(null);
   const { scale } = useReferenceScale(textRef, {
     width: DECK_MAP.LANE_NAME_WIDTH,
-    height: lane.width,
+    height: lane.width
   });
   let fontSize = Math.min(scale.width, scale.height);
   if (scale.height !== 1 && scale.width !== 1) {

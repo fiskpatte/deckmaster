@@ -8,7 +8,7 @@ import { RootState } from "../../store/store";
 // import { ConfirmButton } from "./confirmButton";
 import {
   setCurrentPlacement,
-  setCurrentCargo,
+  setCurrentCargo
   // removeCargoPlacement,
 } from "../../store/deckMap/deckMapActions";
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
@@ -16,7 +16,7 @@ import { getCurrentDeck } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
 import {
   getDeckNames,
-  placementsHasDifferentPositions,
+  placementsHasDifferentPositions
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { cargoFactory, cargoPlacementFactory } from "../../types/deckMap";
@@ -32,7 +32,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     deckMap,
     currentCargo,
     currentPlacement,
-    cargoPlacements,
+    cargoPlacements
   } = useSelector((state: RootState) => state.deckMapReducer);
 
   const [initialCargoPlacement, setInitialCargoPlacement] = useState(
@@ -68,7 +68,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         await updateCargoPlacement({
           ...currentPlacement,
           deckId: currentDeck.name,
-          cargo: currentCargo.id,
+          cargo: currentCargo.id
         });
         // dispatch(
         //   removeCargoPlacement(
@@ -98,17 +98,16 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
 
     try {
-      const result: any = await placeCargo({
+      await placeCargo({
         ...currentPlacement,
         deckId: currentDeck.name,
-        cargo: currentCargo.id,
+        cargo: currentCargo.id
       });
-      if (!result) {
-        throw new Error("Couldn't place cargo");
-      }
+
       history.push("/placecargo");
     } catch (error) {
       // Handle somehow
+
       console.error(error);
     }
     setLoading(false);
@@ -129,7 +128,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         ...currentPlacement,
         deckId: currentDeck.name,
         cargo: currentCargo.id,
-        discharged: true,
+        discharged: true
       });
     } catch (error) {
       console.error(error);
@@ -145,12 +144,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const showConfirmButton = () => {
-    console.log("isOverview ", isOverview);
     if (isOverview) {
       if (currentPlacement === null) {
         return false;
       }
-      console.log("initiat, ", initialCargoPlacement);
       return placementsHasDifferentPositions(
         currentPlacement,
         initialCargoPlacement
