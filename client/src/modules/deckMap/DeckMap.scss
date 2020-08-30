@@ -24,4 +24,11 @@
     @include flexCenter();
     height: 25%;
   }
+
+  .DeckMapFooterDischarge {
+    @include flexSpaceBetween();
+    align-items: center;
+    height: 25%;
+    margin: 0 5% 0 0;
+  }
 }

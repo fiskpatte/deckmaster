@@ -19,7 +19,6 @@ export class CargoPlacementService {
 
   async placeCargo(cp: CargoPlacement, username: string) {
     try {
-      console.log('placing cargo: ', cp);
       const cargoPlacementModel = new this.cargoPlacementModel(
         removeReadOnlyFields(cp),
       );
@@ -76,12 +75,12 @@ export class CargoPlacementService {
 
   async getAllByVoyageId(voyageId: string) {
     try {
-      const allCargoPlacement = await this.cargoPlacementModel
-        .find({ voyageId })
+      const cargoPlacements = await this.cargoPlacementModel
+        .find({ voyageId, discharged: false })
         .populate('cargo')
         .exec();
 
-      const placements = allCargoPlacement.map(model =>
+      const placements = cargoPlacements.map(model =>
         transformDbModelAndRefs(model, 'cargo'),
       ) as CargoPlacement[];
 

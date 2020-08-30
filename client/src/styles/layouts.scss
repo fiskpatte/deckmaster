@@ -24,6 +24,10 @@ $standardMargin: 1vh 0;
   justify-content: center;
   align-items: center;
 }
+@mixin flexSpaceBetween() {
+  display: flex;
+  justify-content: space-between;
+}
 @mixin flexStart() {
   display: flex;
   justify-content: flex-start;

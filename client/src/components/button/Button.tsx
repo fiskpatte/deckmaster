@@ -1,6 +1,5 @@
 import React from "react";
 import "./Button.scss";
-import Rings from "./Rings";
 
 interface Props {
   className?: string;
@@ -19,27 +18,15 @@ export const Button: React.FC<Props> = ({
   className = "",
   disabled,
   size = "standard",
-  loading = false,
+  loading = false
 }) => (
   <button
     className={`Button type-${type} size-${size} ${className}`}
     onClick={onClick}
     disabled={disabled}
   >
-    {loading ? <Rings /> : label}
+    {loading ? "Processing..." : label}
   </button>
 );
 
 export default Button;
-
-{
-  /* <Button onClick={onClick} type={type}>
-{loading ? (
-  <div style={{ color: "white" }}>
-    <Rings />
-  </div>
-) : (
-  text
-)}
-</Button> */
-}

@@ -12,7 +12,7 @@ export const CargoPlacementSchema = new mongoose.Schema(
     overflowingLaneId: String,
     voyageId: String,
     cargo: { type: mongoose.Schema.Types.ObjectId, ref: 'Cargo' },
-    discharged: Boolean,
+    discharged: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

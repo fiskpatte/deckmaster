@@ -43,6 +43,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const [discharging, setDischarging] = useState(false);
 
   useEffect(() => {
     dispatch(setCurrentPlacement(null));
@@ -123,6 +124,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const dischargeButtonClick = async () => {
     // anropa server, sätt den till discharged.
     try {
+      setDischarging(true);
       await updateCargoPlacement({
         ...currentPlacement,
         deckId: currentDeck.name,
@@ -135,6 +137,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     console.log("updated...");
     dispatch(setCurrentPlacement(null));
     dispatch(setCurrentCargo(cargoFactory()));
+    setDischarging(false);
     return;
   };
 
@@ -200,30 +203,35 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         setInitialCargoPlacement={setInitialCargoPlacement}
         cargoPlacements={cargoPlacements}
       />
-      <div className="DeckMapFooter">
-        {showUndoButton() && (
-          <Button
-            onClick={() => undoButtonClick()}
-            type="neutral"
-            label="UNDO"
-          />
-        )}
-        {showConfirmButton() && (
-          <Button
-            type="positive"
-            label="CONFIRM"
-            onClick={() => onConfirm()}
-            loading={loading}
-          />
-        )}
-        {showDischargeButton() && (
+      {showDischargeButton() ? (
+        <div className="DeckMapFooterDischarge">
+          <div></div>
           <Button
             onClick={dischargeButtonClick}
             type="warning"
             label="DISCHARGE"
+            loading={discharging}
           />
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="DeckMapFooter">
+          {showUndoButton() && (
+            <Button
+              onClick={() => undoButtonClick()}
+              type="neutral"
+              label="UNDO"
+            />
+          )}
+          {showConfirmButton() && (
+            <Button
+              type="positive"
+              label="CONFIRM"
+              onClick={() => onConfirm()}
+              loading={loading}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };
