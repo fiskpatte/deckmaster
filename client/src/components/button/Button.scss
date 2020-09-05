@@ -10,6 +10,7 @@
   font-size: $standardFont;
   border: none;
   width: 20vh;
+  outline: none;
 }
 
 .type-positive {
@@ -21,6 +22,10 @@
 }
 
 .type-navigation {
+  background-color: $primaryBlue;
+}
+
+.type-search {
   background-color: $primaryBlue;
 }
 
@@ -37,6 +42,8 @@
 
 .size-standard {
   font-size: $standardFont;
+  // Todo: calculate based on screen width
+  height: 60px;
 }
 
 .size-medium {

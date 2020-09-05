@@ -16,6 +16,7 @@ import ContentContainer from "../../components/contentContainer";
 export const EnterCargoScreen = () => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -24,11 +25,13 @@ export const EnterCargoScreen = () => {
       if (error) {
         setError("");
       }
+      setLoading(true);
       const cargo = await getMockCargo();
       dispatch(setCurrentCargo(cargo));
       history.push("/placecargo/confirmcargo");
       // go to mapscreen
     } catch (error) {
+      setLoading(false);
       setError("Cargo not found");
     }
   };
@@ -39,12 +42,17 @@ export const EnterCargoScreen = () => {
         <Text size="medium" value="Enter cargo ID" />
         <TextInput
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={e => setValue(e.target.value)}
           size="big"
         />
         <Separator />
         <FlexRowEndContainer>
-          <Button type="positive" label="Next" onClick={onNextButtonClick} />
+          <Button
+            type="positive"
+            label="Next"
+            onClick={onNextButtonClick}
+            loading={loading}
+          />
         </FlexRowEndContainer>
         {error && <ErrorMessage message={error} />}
       </Paper>

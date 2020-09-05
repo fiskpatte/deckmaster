@@ -56,7 +56,7 @@ export const ConfirmCargoScreen = () => {
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-evenly",
+            justifyContent: "space-evenly"
           }}
         >
           <div style={{ flex: 1 }}></div>

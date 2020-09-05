@@ -19,6 +19,7 @@ export const LoginScreen: React.FC = () => {
   const [username, setUsername] = useState("Pontus2");
   const [password, setPassword] = useState("testtest");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
 
@@ -35,12 +36,14 @@ export const LoginScreen: React.FC = () => {
       setError("");
     }
 
+    setLoading(true);
     try {
       const loginCallback = (data: SessionData) =>
         dispatch(setSessionData(data));
       await login(username, password, loginCallback);
       history.push("/placecargo");
     } catch (error) {
+      setLoading(false);
       setError("Login failed");
     }
   };
@@ -52,7 +55,7 @@ export const LoginScreen: React.FC = () => {
         <Separator />
         <TextInput
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={e => setUsername(e.target.value)}
           placeholder="Email adress"
           size="big"
         />
@@ -60,7 +63,7 @@ export const LoginScreen: React.FC = () => {
         <TextInput
           value={password}
           type={"password"}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={e => setPassword(e.target.value)}
           placeholder="Password"
           size="big"
         />
@@ -70,7 +73,8 @@ export const LoginScreen: React.FC = () => {
             label="Log in"
             onClick={onLoginButtonClick}
             type="positive"
-            size="medium"
+            size="standard"
+            loading={loading}
           />
         </FlexRowEndContainer>
       </Paper>
