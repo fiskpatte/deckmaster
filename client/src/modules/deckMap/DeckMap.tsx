@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { DECK_MAP } from "../../constants";
 import { Lanes } from "./lanes";
 import {
@@ -7,26 +7,20 @@ import {
   getViewBoxSizeX,
   getViewBoxSizeY,
   getRulerOrigin,
-  onCargoDrag,
-  pinCargoAfterDrag,
-  updatePlacementFromFrontPlacement,
 } from "./DeckMap.functions";
-import { CargoIcon } from "./cargoIcon";
-import { Placement } from "../../types/util";
-import { useDispatch } from "react-redux";
-import {
-  setCurrentPlacement, setCurrentCargo,
-} from "../../store/deckMap/deckMapActions";
-import { Deck, Cargo, CargoPlacement } from "../../types/deckMap";
+import { Deck, Cargo } from "../../types/deckMap";
 import "./DeckMap.scss";
 import { FrameRuler } from "./frameRuler";
-import { Loader } from "./../../components/loader/Loader";
+import { Loader } from "../../components/loader/Loader";
+import { PlacedCargoUse } from "./cargo";
+import { Placement } from "../../types/util";
+import { PlacingCargo } from "./cargo/PlacingCargo";
 
 interface Props {
   deck: Deck;
   currentCargo: Cargo;
-  currentPlacement: Placement | null;
-  isOverview: boolean;
+  currentPlacement: Placement;
+  isEditable: boolean;
 }
 interface ViewBoxDimensions {
   sizeX: number;
@@ -34,13 +28,7 @@ interface ViewBoxDimensions {
   originX: number;
   originY: number;
 }
-const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement, isOverview }) => {
-  console.log("curr: ", currentCargo);
-  const dispatch = useDispatch();
-  const setPlacement = useCallback(
-    (placement: Placement) => dispatch(setCurrentPlacement(placement)),
-    [dispatch]
-  );
+const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement, isEditable }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [viewBoxDimensions, setViewBoxDimensions] = useState<
     ViewBoxDimensions
@@ -54,15 +42,9 @@ const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement, isOver
     });
   }, [deck]);
 
-  const onCargoPlacementClick = (cargoPlacement: CargoPlacement) => {
-    console.log(cargoPlacement);
-
-    dispatch(setCurrentCargo({ ...cargoPlacement.cargo }));
-    dispatch(setCurrentPlacement({ ...cargoPlacement }));
-  };
-
+  if (deck.lanes.length === 0) return null;
   if (!viewBoxDimensions) return <Loader />;
-
+  console.log("currentCargo", currentCargo)
   const { sizeX, sizeY, originX, originY } = viewBoxDimensions;
 
   return (
@@ -79,57 +61,10 @@ const DeckMap: React.FC<Props> = ({ deck, currentCargo, currentPlacement, isOver
         <Lanes
           lanes={deck.lanes}
           rightOrigin={sizeX + originX}
-          currentCargo={currentCargo}
-          onLanePlacementButtonClick={(placement) =>
-            updatePlacementFromFrontPlacement(
-              placement,
-              currentCargo,
-              setPlacement
-            )
-          }
         />
         <FrameRuler frames={deck.frames} originY={getRulerOrigin(deck)} />
-        {/* This makes sure that the cargo is always visible over lanes */}
-        {deck.lanes.map((lane, ix) =>
-          lane.cargo.map(
-            (c, ixc) =>
-              c.cargo.id !== currentCargo.id && (
-                <use
-                  key={100 * ix + ixc}
-                  href={`#cargoIcon${c.id}`}
-                  onClick={() => isOverview && onCargoPlacementClick(c)}
-                />
-              )
-          )
-        )}
-        {!!currentPlacement && (
-          <CargoIcon
-            x={currentPlacement.LCG}
-            y={currentPlacement.TCG}
-            width={currentCargo.length}
-            height={currentCargo.width}
-            placing={true}
-            dragCallback={(ev) =>
-              onCargoDrag(
-                ev,
-                deck,
-                currentPlacement,
-                currentCargo,
-                svgRef,
-                setPlacement
-              )
-            }
-            dragEndCallback={() =>
-              pinCargoAfterDrag(
-                deck,
-                currentPlacement,
-                currentCargo,
-                setPlacement
-              )
-            }
-            cargoId={currentCargo.id}
-          />
-        )}
+        <PlacedCargoUse lanes={deck.lanes} isEditable={isEditable} />
+        <PlacingCargo cargo={currentCargo} placement={currentPlacement} />
       </g>
     </svg>
   );

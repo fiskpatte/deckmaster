@@ -2,10 +2,11 @@ import { cargoFactory, AdjacentLane } from "../../types/deckMap";
 import { CargoState } from "../types";
 import { DECK_MAP_ACTION_TYPES } from "./deckMapActionTypes";
 import _ from "lodash";
+import { placementFactory } from './../../types/util';
 
 const initialState: CargoState = {
   currentCargo: cargoFactory(),
-  currentPlacement: null,
+  currentPlacement: placementFactory(),
   deckMap: {},
   currentDeckId: undefined,
 };

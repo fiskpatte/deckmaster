@@ -17,3 +17,9 @@ export interface Placement {
   laneId: string;
   overflowingLaneId?: string;
 }
+export const placementFactory = (): Placement => ({
+  LCG: 0,
+  TCG: 0,
+  VCG: 0,
+  laneId: "",
+})

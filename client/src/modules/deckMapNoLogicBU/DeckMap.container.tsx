@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 import { setCurrentPlacement, setCurrentCargo } from "../../store/deckMap/deckMapActions";
 import { cargoFactory } from "../../types/deckMap";
 import { routes } from "../../routes";
+import { placementFactory } from './../../types/util';
 
 interface Props {
   isEditable?: boolean;
@@ -25,7 +26,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isEditable = false }) => {
   const history = useHistory();
 
   useEffect(() => {
-    dispatch(setCurrentPlacement(null));
+    dispatch(setCurrentPlacement(placementFactory()));
     return () => {
       dispatch(setCurrentCargo(cargoFactory()));
     };

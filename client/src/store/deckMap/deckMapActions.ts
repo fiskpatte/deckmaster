@@ -9,7 +9,7 @@ export const setCurrentCargo = (cargo: Cargo) => {
   };
 };
 
-export const setCurrentPlacement = (placement: Placement | null) => {
+export const setCurrentPlacement = (placement: Placement) => {
   return {
     type: DECK_MAP_ACTION_TYPES.SET_CURRENT_PLACEMENT,
     payload: placement,

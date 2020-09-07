@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ReactComponent as NotificationsIcon } from "../../../assets/icons/notificationsIcon.svg";
 import "./NotificationsButton.scss";
 import { Popup } from "../../../components/popup";
@@ -11,6 +11,7 @@ import { setCurrentCargo } from "../../../store/deckMap/deckMapActions";
 import { Cargo } from "../../../types/deckMap";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../../routes";
+import usePrevious from './../../../hooks/usePrevious';
 
 export const NotificationsButton: React.FC = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -21,14 +22,13 @@ export const NotificationsButton: React.FC = () => {
   const { cargoQueue } = useSelector(
     (state: RootState) => state.cargoQueueReducer
   );
-  const prevQueueLengthRef = useRef(cargoQueue.length);
+  const prevQueueLength = usePrevious(cargoQueue.length);
   useEffect(() => {
-    if (cargoQueue.length > prevQueueLengthRef.current) {
+    if (cargoQueue.length > (prevQueueLength ?? 0)) {
       setBlink(true);
       setTimeout(() => setBlink(false), 1000);
     }
-    prevQueueLengthRef.current = cargoQueue.length;
-  }, [cargoQueue.length]);
+  }, [cargoQueue.length, prevQueueLength]);
 
   const onCargoQueueItemClick = (cargo: Cargo) => {
     dispatch(setCurrentCargo(cargo));
@@ -60,8 +60,8 @@ export const NotificationsButton: React.FC = () => {
               ))}
             </div>
           ) : (
-            <Text value={"No notifications"} />
-          )}
+              <Text value={"No notifications"} />
+            )}
         </Popup>
       </div>
       <Overlay

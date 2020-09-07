@@ -8,7 +8,7 @@ interface Props {
   upper?: boolean;
 }
 
-const GridItem: React.FC<Props> = ({ grid, upper, radius, ...rest }) => {
+const GridItem: React.FC<Props> = ({ grid, upper, radius }) => {
   let cy = 0;
   const borderMargin = 3 * radius;
   if (upper) {
@@ -18,7 +18,6 @@ const GridItem: React.FC<Props> = ({ grid, upper, radius, ...rest }) => {
   }
   return (
     <circle
-      {...rest}
       className="GridItem"
       transform={`scale(${1 / DECK_MAP.X_SCALE} ${1 / DECK_MAP.Y_SCALE})`}
       cx={(grid.LCG + grid.length / 2) * DECK_MAP.X_SCALE}

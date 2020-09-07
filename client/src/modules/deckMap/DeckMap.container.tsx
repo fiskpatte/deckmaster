@@ -5,23 +5,19 @@ import { DeckSelector } from "./deckSelector";
 import DeckMap from "./DeckMap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
-import { ConfirmButton } from "./confirmButton";
-import {
-  setCurrentPlacement,
-  setCurrentCargo,
-} from "../../store/deckMap/deckMapActions";
-import { placeCargo } from "../../api/cargoPlacement";
 import { getCurrentDeck } from "../../store/app/appSelectors";
-import { useHistory } from "react-router-dom";
 import { getDeckNames } from "./DeckMap.functions";
-import { routes } from "./../../routes";
+import { useHistory } from "react-router-dom";
+import { setCurrentPlacement, setCurrentCargo } from "../../store/deckMap/deckMapActions";
 import { cargoFactory } from "../../types/deckMap";
+import { routes } from "../../routes";
+import { placementFactory } from '../../types/util';
 
 interface Props {
-  isOverview?: boolean;
+  isEditable?: boolean;
 }
 
-export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
+export const DeckMapContainer: React.FC<Props> = ({ isEditable = false }) => {
   const { deckMap, currentCargo, currentPlacement } = useSelector(
     (state: RootState) => state.deckMapReducer
   );
@@ -30,12 +26,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
 
   useEffect(() => {
-    dispatch(setCurrentPlacement(null));
-    return () => {
-      dispatch(setCurrentCargo(cargoFactory()));
-    };
+    dispatch(setCurrentPlacement(placementFactory()));
   }, [dispatch, currentDeck, history]);
-
+  useEffect(() => {
+    if (!history.location.pathname.includes(routes.PlaceCargoDeckMap.path)) {
+      dispatch(setCurrentCargo(cargoFactory()));
+    }
+  }, [dispatch, history])
   useEffect(() => {
     if (
       history.location.pathname.includes(routes.PlaceCargo.path) &&
@@ -44,25 +41,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       history.push(routes.PlaceCargo.path);
     }
   }, [history, currentCargo]);
-
-  const onConfirm = async () => {
-    // set loader
-    try {
-      const result: any = await placeCargo({
-        ...currentPlacement,
-        deckId: currentDeck.name,
-        cargo: currentCargo.id,
-      });
-      if (!result) {
-        throw new Error("Couldn't place cargo");
-      }
-
-      history.push("/placecargo");
-    } catch (error) {
-      // Handle somehow
-      console.error(error);
-    }
-  };
 
   return (
     <div className="DeckMap">
@@ -75,13 +53,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         />
       </div>
       <DeckMap
-        currentCargo={currentCargo}
         deck={currentDeck}
+        currentCargo={currentCargo}
         currentPlacement={currentPlacement}
-        isOverview={isOverview}
+        isEditable={isEditable}
       />
       <div className="DeckMapFooter">
-        {currentPlacement && <ConfirmButton onClick={() => onConfirm()} />}
       </div>
     </div>
   );

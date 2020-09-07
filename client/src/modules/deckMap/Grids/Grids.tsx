@@ -1,30 +1,19 @@
 import React from "react";
 import GridComponent from "./Grid";
-import { Grid, Cargo, Lane } from "../../../types/deckMap";
-import { Placement } from "../../../types/util";
+import { Grid } from "../../../types/deckMap";
 
 interface Props {
   grids: Array<Grid>;
-  onClick: (placement: Placement) => void;
-  lanePlacement: Placement;
-  currentCargo: Cargo;
-  isOverflow: boolean;
-  lane: Lane;
 }
 
-export const Grids: React.FC<Props> = ({ grids, onClick, lanePlacement, isOverflow, currentCargo, lane }) => {
+export const Grids: React.FC<Props> = ({ grids }) => {
   return (
     <>
-      {grids.map((grid, ix) => {
+      {grids.map((grid) => {
         return (
           <GridComponent
             grid={grid}
-            onClick={onClick}
-            key={ix}
-            isOverflow={isOverflow}
-            currentCargo={currentCargo}
-            lanePlacement={lanePlacement}
-            lane={lane}
+            key={grid.id}
           />
         );
       })}

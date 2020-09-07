@@ -1,6 +1,6 @@
 import { PARSER_FIELD_MODE } from "../constants";
 import { Deck, Lane, Grid, DeckMapType, Frame } from "../types/deckMap";
-import { getAdjacentSide } from "../modules/deckMap/DeckMap.functions";
+import { getAdjacentSide } from "./deckMap";
 
 let fieldMode = PARSER_FIELD_MODE.INIT;
 let currentKey = "";

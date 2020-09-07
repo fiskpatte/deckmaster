@@ -10,7 +10,7 @@ export interface AppState {
 
 export interface CargoState {
   currentCargo: Cargo;
-  currentPlacement: Placement | null;
+  currentPlacement: Placement;
   deckMap: DeckMapType;
   currentDeckId?: string;
 }
