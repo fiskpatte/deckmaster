@@ -9,8 +9,8 @@ interface Props {
 const CargoDetailsItem: React.FC<Props> = ({ label, value }) => {
   return (
     <div className="CargoDetailItem">
-      <Text size="small" weight="light" value={`${label}:`} />
-      <Text size="small" weight="medium" value={value} />
+      <Text size="standard" weight="light" value={`${label}`} />
+      <Text size="standard" weight="bold" value={value} />
     </div>
   );
 };

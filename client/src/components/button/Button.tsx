@@ -1,5 +1,6 @@
 import React from "react";
 import { BsSearch } from "react-icons/bs";
+import { ImArrowRight } from "react-icons/im";
 import "./Button.scss";
 import { FlexContainer } from "../flexContainer";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -18,6 +19,8 @@ interface Props {
   size?: "small" | "standard" | "medium" | "big";
   disabled?: boolean;
   loading?: boolean;
+  isDischarge?: boolean;
+  isSearch?: boolean;
 }
 
 export const Button: React.FC<Props> = ({
@@ -27,7 +30,9 @@ export const Button: React.FC<Props> = ({
   className = "",
   disabled,
   size = "standard",
-  loading = false
+  loading = false,
+  isDischarge = false,
+  isSearch = false
 }) => (
   <button
     className={`Button type-${type} size-${size} ${className}`}
@@ -44,7 +49,8 @@ export const Button: React.FC<Props> = ({
       ) : (
         label
       )}
-      {type === "search" && <BsSearch />}
+      {isSearch && <BsSearch />}
+      {isDischarge && !loading && <ImArrowRight />}
     </FlexContainer>
   </button>
 );

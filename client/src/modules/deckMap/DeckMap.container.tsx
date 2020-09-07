@@ -48,18 +48,24 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   useEffect(() => {
     dispatch(setCurrentPlacement(null));
     return () => {
+      console.log("hello");
       dispatch(setCurrentCargo(cargoFactory()));
     };
   }, [dispatch, currentDeck, history]);
 
   useEffect(() => {
-    if (
-      history.location.pathname.includes(routes.PlaceCargo.path) &&
-      !currentCargo?.id
-    ) {
+    if (shouldLeaveDeckmap()) {
       history.push(routes.PlaceCargo.path);
     }
   }, [history, currentCargo]);
+
+  const shouldLeaveDeckmap = () => {
+    return (
+      history.location.pathname.includes(routes.PlaceCargo.path) &&
+      !currentCargo?.id &&
+      !isOverview
+    );
+  };
 
   const onConfirm = async () => {
     // set loader
@@ -211,6 +217,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             type="warning"
             label="DISCHARGE"
             loading={discharging}
+            isDischarge={true}
           />
         </div>
       ) : (

@@ -101,7 +101,7 @@ const LaneComponent: React.FC<Props> = ({
           onLanePlacementButtonClick(mostForwardValidPlacement);
         }}
         lane={lane}
-        visible={lanePlacementButtonVisible}
+        visible={lanePlacementButtonVisible && !!currentCargo.id}
       />
     </>
   );

@@ -1,59 +1,31 @@
-import React, { useState } from "react";
-import { Card } from "../../../components/card";
+import React from "react";
 import CargoDetailItem from "./CargoDetailsItem";
-import { Collapsible } from "../../../components/collapsible";
 import "./CargoDetails.scss";
-import variables from "./CargoDetails.scss";
-import { Overlay } from "../../../components/overlay";
 import { Cargo } from "../../../types/deckMap";
-// import { useHistory } from "react-router-dom";
-// import Button from "../../../components/button";
+import Button from "../../../components/button";
 
 interface Props {
   cargo: Cargo;
 }
 
 export const CargoDetails: React.FC<Props> = ({ cargo }) => {
-  const { registrationNumber, length, width, height, weight } = cargo;
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  // const history = useHistory();
+  const { registrationNumber } = cargo;
 
   return (
     <>
       <div className="CargoDetails">
-        <Card className="Card">
-          <CargoDetailItem label="Cargo ID" value={registrationNumber} />
-          <CargoDetailItem label="Length" value={`${length} meters`} />
-          <CargoDetailItem label="Width" value={`${width} meters`} />
-          <Collapsible
-            isCollapsedParent={isCollapsed}
-            setIsCollapsedParent={() => setIsCollapsed(!isCollapsed)}
-          >
-            <CargoDetailItem label="Height" value={`${height} meters`} />
-            <CargoDetailItem label="Weight" value={`${weight} t`} />
-            <div className="ButtonContainer">
-              {/* We think edit or change are unnecessary for now. */}
-              {/* <Button
-                className="CargoDetailsButton"
-                onClick={() => console.log("Edit details click")}
-                label="Edit details"
-              /> */}
-              {/* <Button
-                className="CargoDetailsButton"
-                onClick={() => history.push("/placecargo")}
-                label="Change cargo"
-              /> */}
-            </div>
-          </Collapsible>
-        </Card>
+        <CargoDetailItem
+          label={!registrationNumber ? "No cargo selected" : "Cargo"}
+          value={registrationNumber}
+        />
+        <Button
+          label={""}
+          type="neutral"
+          isSearch={true}
+          onClick={() => console.log("search cargo")}
+          size="small"
+        />
       </div>
-      <Overlay
-        visible={!isCollapsed}
-        transparent={true}
-        onClick={() => setIsCollapsed(true)}
-        animate={false}
-        zIndex={variables.cargoDetailsOverlayZIndex}
-      />
     </>
   );
 };

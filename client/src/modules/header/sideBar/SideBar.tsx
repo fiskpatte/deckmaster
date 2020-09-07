@@ -12,8 +12,11 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
   const hiddenWidth = -1 * variables.sideBarWidth.slice(0, -4);
 
   const variants = {
-    visible: { left: "0px", transition: { ease: "linear" } },
-    hidden: { left: `${hiddenWidth}vmax`, transition: { ease: "linear" } },
+    visible: { left: "0px", transition: { ease: "linear", duration: 0.14 } },
+    hidden: {
+      left: `${hiddenWidth}vmax`,
+      transition: { ease: "linear", duration: 0.14 }
+    }
   };
 
   return (
@@ -35,7 +38,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
       </div>
       <nav className="Body">
         <NavItem path="/placecargo" label="Place cargo" />
-        <NavItem path="/overview" label="Deck overview" />
+        <NavItem path="/overview" label="Move cargo" />
         {/* <NavItem path="/discharge" label="Discharge" /> */}
         <NavItem path="/history" label="History" />
         <NavItem path="/settings" label="Settings" />

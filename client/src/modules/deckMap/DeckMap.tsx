@@ -9,14 +9,14 @@ import {
   getRulerOrigin,
   onCargoDrag,
   pinCargoAfterDrag,
-  updatePlacementFromFrontPlacement,
+  updatePlacementFromFrontPlacement
 } from "./DeckMap.functions";
 import { CargoIcon } from "./cargoIcon";
 import { Placement } from "../../types/util";
 import { useDispatch } from "react-redux";
 import {
   setCurrentPlacement,
-  setCurrentCargo,
+  setCurrentCargo
 } from "../../store/deckMap/deckMapActions";
 import { Deck, Cargo, CargoPlacement } from "../../types/deckMap";
 import "./DeckMap.scss";
@@ -44,7 +44,7 @@ const DeckMap: React.FC<Props> = ({
   currentPlacement,
   isOverview = false,
   setInitialCargoPlacement,
-  cargoPlacements,
+  cargoPlacements
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -60,7 +60,7 @@ const DeckMap: React.FC<Props> = ({
       sizeX: getViewBoxSizeX(deck),
       sizeY: getViewBoxSizeY(deck),
       originX: getViewBoxOriginX(deck),
-      originY: getViewBoxOriginY(deck),
+      originY: getViewBoxOriginY(deck)
     });
   }, [deck]);
 
@@ -120,7 +120,7 @@ const DeckMap: React.FC<Props> = ({
         )} */}
         <PlacedCargo
           cargo={cargoPlacements.filter(
-            (cp) => cp.cargo.id !== currentCargo.id
+            cp => cp.cargo.id !== currentCargo.id && cp.deckId === deck.name
           )}
           onCargoPlacementClick={(cp: CargoPlacement) =>
             onCargoPlacementClick(cp)
@@ -133,7 +133,7 @@ const DeckMap: React.FC<Props> = ({
             width={currentCargo.length}
             height={currentCargo.width}
             placing={true}
-            dragCallback={(ev) =>
+            dragCallback={ev =>
               onCargoDrag(
                 ev,
                 deck,
