@@ -7,8 +7,8 @@ import variables from "./NotificationsButton.scss";
 import { Overlay } from "../../../components/overlay";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store/store";
-import { setCurrentCargo } from "../../../store/deckMap/deckMapActions";
-import { Cargo } from "../../../types/deckMap";
+import { setCurrentPlacement } from "../../../store/deckMap/deckMapActions";
+import { Cargo, cargoPlacementFactory } from "../../../types/deckMap";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../../routes";
 
@@ -31,7 +31,9 @@ export const NotificationsButton: React.FC = () => {
   }, [cargoQueue.length]);
 
   const onCargoQueueItemClick = (cargo: Cargo) => {
-    dispatch(setCurrentCargo(cargo));
+    let newPlacement = cargoPlacementFactory();
+    newPlacement.cargo = cargo;
+    dispatch(setCurrentPlacement(newPlacement));
     history.push(routes.PlaceCargoConfirm.path);
   };
   return (
@@ -60,8 +62,8 @@ export const NotificationsButton: React.FC = () => {
               ))}
             </div>
           ) : (
-            <Text value={"No notifications"} />
-          )}
+              <Text value={"No notifications"} />
+            )}
         </Popup>
       </div>
       <Overlay

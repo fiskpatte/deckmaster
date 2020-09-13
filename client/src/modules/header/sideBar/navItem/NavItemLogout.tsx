@@ -1,5 +1,5 @@
 import React from "react";
-import { removeDefaultHeader } from "../../../../functions/axios";
+import { removeAllDefaultHeaders } from "../../../../functions/axios";
 import { useHistory } from "react-router-dom";
 import { NavItemProps } from "./types";
 import Text from './../../../../components/text';
@@ -11,9 +11,7 @@ const NavItemLogout: React.FC<NavItemProps> = ({ label, path }) => {
   const dispatch = useDispatch();
 
   const logout = () => {
-    removeDefaultHeader("Authorization");
-    removeDefaultHeader("username");
-    removeDefaultHeader("voyageId");
+    removeAllDefaultHeaders();
     dispatch(setSessionData(undefined));
     history.push(path);
   };

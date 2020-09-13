@@ -15,6 +15,11 @@ export const getCurrentDeck = createSelector(
   (currentDeckId, deckMap) => deckMap[currentDeckId]
 );
 
+export const getCargoPlacementsForDeck = createSelector(
+  [getCurrentDeckId, getCargoPlacements],
+  (currentDeckId, cargoPlacements) => cargoPlacements.filter(cp => cp.deckId === currentDeckId)
+);
+
 export const getCargoPlacementsForLane = (laneId: string) =>
   createSelector(getCargoPlacements, (cargoPlacements) =>
     cargoPlacements.filter((cp) => cp.laneId === laneId)

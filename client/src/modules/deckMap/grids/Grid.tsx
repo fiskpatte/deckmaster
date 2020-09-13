@@ -2,18 +2,19 @@ import React from "react";
 import GridItem from "./GridItem";
 import { DECK_MAP } from "../../../constants";
 import { Grid, Cargo, Lane } from "../../../types/deckMap";
-import { Placement } from "../../../types/util";
 import "./Grid.scss";
 import { GridName } from "./GridName";
 import { getOverflowingPlacement } from "../DeckMap.functions";
+import { CargoPlacement } from './../../../types/deckMap';
 
 interface Props {
   grid: Grid;
-  onClick: (placement: Placement) => void;
+  onClick: (placement: CargoPlacement) => void;
   isOverflow: boolean;
   currentCargo: Cargo;
-  lanePlacement: Placement;
+  overflowingCargoPlacementsIntoLane: CargoPlacement[] | null;
   lane: Lane;
+  mostForwardValidPlacementForLane: CargoPlacement;
 }
 
 const radius =
@@ -26,25 +27,26 @@ const GridComponent: React.FC<Props> = ({
   onClick,
   isOverflow,
   currentCargo,
-  lanePlacement,
+  overflowingCargoPlacementsIntoLane,
   lane,
-  ...rest
+  mostForwardValidPlacementForLane
 }) => {
   let gridPlacement = {
     LCG: grid.LCG + grid.length / 2,
     TCG: grid.TCG,
-    laneId: lanePlacement.laneId
-  } as Placement;
-  let isVisible = grid.LCG + grid.length / 2 <= lanePlacement.LCG;
+    laneId: lane.id
+  } as CargoPlacement;
+  let isVisible = grid.LCG + grid.length / 2 <= mostForwardValidPlacementForLane.LCG;
 
-  if (isOverflow) {
+  if (isOverflow && overflowingCargoPlacementsIntoLane) {
     const overflowingPlacement = getOverflowingPlacement(
       lane,
       currentCargo,
       gridPlacement,
+      overflowingCargoPlacementsIntoLane,
       false
     );
-    if (!overflowingPlacement) return null;
+    if (overflowingPlacement.laneId === "") return null;
     gridPlacement = overflowingPlacement;
   }
 
@@ -57,8 +59,8 @@ const GridComponent: React.FC<Props> = ({
         onClick(gridPlacement);
       }}
     >
-      <GridItem {...rest} grid={grid} radius={radius} upper />
-      <GridItem {...rest} grid={grid} radius={radius} />
+      <GridItem grid={grid} radius={radius} upper />
+      <GridItem grid={grid} radius={radius} />
       <GridName grid={grid} />
       <rect
         className="BoundingBox"

@@ -10,10 +10,3 @@ export const coordsFactory = (): Coords => ({
   x: 0,
   y: 0,
 });
-export interface Placement {
-  LCG: number;
-  TCG: number;
-  VCG: number;
-  laneId: string;
-  overflowingLaneId?: string;
-}

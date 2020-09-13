@@ -9,6 +9,13 @@ export const removeDefaultHeader = (name: string) => {
   delete axios.defaults.headers.common[name];
 }
 
+export const removeAllDefaultHeaders = () => {
+  removeDefaultHeader("Authorization");
+  removeDefaultHeader("username");
+  removeDefaultHeader("voyageId");
+  removeDefaultHeader("vesselId");
+}
+
 export const setAllDefaultHeaders = (data: SessionData) => {
   setDefaultHeader("Authorization", `Bearer ${data.accessToken}`);
   setDefaultHeader("username", data.username);

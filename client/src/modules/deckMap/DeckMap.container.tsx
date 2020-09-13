@@ -8,20 +8,21 @@ import { RootState } from "../../store/store";
 // import { ConfirmButton } from "./confirmButton";
 import {
   setCurrentPlacement,
-  setCurrentCargo
-  // removeCargoPlacement,
 } from "../../store/deckMap/deckMapActions";
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
-import { getCurrentDeck } from "../../store/deckMap/deckMapSelectors";
+import { getCurrentDeck, getCargoPlacementsForDeck } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
 import {
   getDeckNames,
-  placementsHasDifferentPositions
+  placementsHaveDifferentPositions,
+  cargoPlacementIsEmpty,
+  cargoIsEmpty,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
-import { cargoFactory, cargoPlacementFactory } from "../../types/deckMap";
+import { cargoPlacementFactory } from "../../types/deckMap";
 import Button from "../../components/button";
 // import { Loader } from "../../components/loader";
+import usePrevious from './../../hooks/usePrevious';
 
 interface Props {
   isOverview: boolean;
@@ -30,42 +31,42 @@ interface Props {
 export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const {
     deckMap,
-    currentCargo,
-    currentPlacement,
-    cargoPlacements
+    currentCargoPlacement,
   } = useSelector((state: RootState) => state.deckMapReducer);
-
+  const { bumperToBumperDistance, defaultVCG } = useSelector(
+    (state: RootState) => state.appReducer.settings
+  );
   const [initialCargoPlacement, setInitialCargoPlacement] = useState(
     cargoPlacementFactory()
   );
 
   const currentDeck = useSelector(getCurrentDeck);
+  const cargoPlacementsForDeck = useSelector(getCargoPlacementsForDeck);
   const dispatch = useDispatch();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [discharging, setDischarging] = useState(false);
+  const previousDeckId = usePrevious(currentDeck?.name);
 
   useEffect(() => {
-    dispatch(setCurrentPlacement(null));
-    return () => {
-      console.log("hello");
-      dispatch(setCurrentCargo(cargoFactory()));
-    };
-  }, [dispatch, currentDeck, history]);
+    let resetPlacement = cargoPlacementFactory();
+    resetPlacement.cargo = currentCargoPlacement.cargo;
+    if (previousDeckId && previousDeckId !== currentDeck?.name) {
+      dispatch(setCurrentPlacement(isOverview ? cargoPlacementFactory() : resetPlacement));
+    }
+  }, [dispatch, isOverview, currentDeck, previousDeckId, currentCargoPlacement.cargo]);
 
   useEffect(() => {
-    if (shouldLeaveDeckmap()) {
+    if (isOverview) {
+      dispatch(setCurrentPlacement(cargoPlacementFactory()));
+    }
+  }, [dispatch, isOverview]);
+
+  useEffect(() => {
+    if (!isOverview && cargoIsEmpty(currentCargoPlacement.cargo)) {
       history.push(routes.PlaceCargo.path);
     }
-  }, [history, currentCargo]);
-
-  const shouldLeaveDeckmap = () => {
-    return (
-      history.location.pathname.includes(routes.PlaceCargo.path) &&
-      !currentCargo?.id &&
-      !isOverview
-    );
-  };
+  }, [history, currentCargoPlacement.cargo, isOverview]);
 
   const onConfirm = async () => {
     // set loader
@@ -73,57 +74,38 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     if (updateExistingPlacement()) {
       try {
         await updateCargoPlacement({
-          ...currentPlacement,
+          ...currentCargoPlacement,
           deckId: currentDeck.name,
-          cargo: currentCargo.id
+          cargo: currentCargoPlacement.cargo.id
         });
-        // dispatch(
-        //   removeCargoPlacement(
-        //     initialCargoPlacement.id,
-        //     initialCargoPlacement.deckId,
-        //     initialCargoPlacement.laneId
-        //   )
-        // );
       } catch (error) {
         console.error(error);
       }
-      // Here socket updates
 
-      // dispatch(
-      //   removeCargoPlacement(
-      //     initialCargoPlacement.id,
-      //     initialCargoPlacement.deckId,
-      //     initialCargoPlacement.laneId
-      //   )
-      // );
-
-      dispatch(setCurrentPlacement(null));
-      dispatch(setCurrentCargo(cargoFactory()));
+      dispatch(setCurrentPlacement(cargoPlacementFactory()));
       setLoading(false);
       return;
     }
 
     try {
       await placeCargo({
-        ...currentPlacement,
+        ...currentCargoPlacement,
         deckId: currentDeck.name,
-        cargo: currentCargo.id
+        cargo: currentCargoPlacement.cargo.id
       });
 
-      history.push("/placecargo");
+      history.push(routes.PlaceCargo.path);
     } catch (error) {
-      // Handle somehow
-      setLoading(false);
-
       console.error(error);
     }
+    setLoading(false);
   };
 
   const undoButtonClick = () => {
     if (isOverview) {
       dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
     } else {
-      dispatch(setCurrentPlacement(null));
+      dispatch(setCurrentPlacement(cargoPlacementFactory()));
     }
   };
 
@@ -132,17 +114,15 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     try {
       setDischarging(true);
       await updateCargoPlacement({
-        ...currentPlacement,
+        ...currentCargoPlacement,
         deckId: currentDeck.name,
-        cargo: currentCargo.id,
+        cargo: currentCargoPlacement.cargo.id,
         discharged: true
       });
+      dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
       console.error(error);
     }
-    console.log("updated...");
-    dispatch(setCurrentPlacement(null));
-    dispatch(setCurrentCargo(cargoFactory()));
     setDischarging(false);
     return;
   };
@@ -152,49 +132,39 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const showConfirmButton = () => {
+    if (currentCargoPlacement.laneId === "") return false;
     if (isOverview) {
-      if (currentPlacement === null) {
-        return false;
-      }
-      return placementsHasDifferentPositions(
-        currentPlacement,
+      return placementsHaveDifferentPositions(
+        currentCargoPlacement,
         initialCargoPlacement
       );
-    } else {
-      return !!currentPlacement;
     }
+    return true;
   };
 
   const showUndoButton = () => {
-    if (currentPlacement === null) {
-      return false;
-    }
+    if (currentCargoPlacement.laneId === "") return false;
 
-    return placementsHasDifferentPositions(
-      currentPlacement,
+    return placementsHaveDifferentPositions(
+      currentCargoPlacement,
       initialCargoPlacement
     );
   };
 
   const showDischargeButton = () => {
-    if (currentPlacement === null) {
-      return false;
-    }
+    if (cargoPlacementIsEmpty(currentCargoPlacement) || !isOverview) return false;
 
-    if (!isOverview) {
-      return false;
-    }
-
-    return !placementsHasDifferentPositions(
-      currentPlacement,
+    return !placementsHaveDifferentPositions(
+      currentCargoPlacement,
       initialCargoPlacement
     );
   };
 
+  if (!currentDeck) return null;
   return (
     <div className="DeckMap">
       <div className="DeckMapHeader">
-        <CargoDetails cargo={currentCargo} />
+        <CargoDetails cargo={currentCargoPlacement.cargo} />
 
         <DeckSelector
           deckNames={getDeckNames(deckMap)}
@@ -202,12 +172,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         />
       </div>
       <DeckMap
-        currentCargo={currentCargo}
+        currentCargoPlacement={currentCargoPlacement}
         deck={currentDeck}
-        currentPlacement={currentPlacement}
         isOverview={isOverview}
         setInitialCargoPlacement={setInitialCargoPlacement}
-        cargoPlacements={cargoPlacements}
+        cargoPlacements={cargoPlacementsForDeck}
+        bumperToBumperDistance={bumperToBumperDistance}
+        defaultVCG={defaultVCG}
       />
       {showDischargeButton() ? (
         <div className="DeckMapFooterDischarge">
@@ -221,24 +192,24 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           />
         </div>
       ) : (
-        <div className="DeckMapFooter">
-          {showUndoButton() && (
-            <Button
-              onClick={() => undoButtonClick()}
-              type="neutral"
-              label="UNDO"
-            />
-          )}
-          {showConfirmButton() && (
-            <Button
-              type="positive"
-              label="CONFIRM"
-              onClick={() => onConfirm()}
-              loading={loading}
-            />
-          )}
-        </div>
-      )}
+          <div className="DeckMapFooter">
+            {showUndoButton() && (
+              <Button
+                onClick={() => undoButtonClick()}
+                type="neutral"
+                label="UNDO"
+              />
+            )}
+            {showConfirmButton() && (
+              <Button
+                type="positive"
+                label="CONFIRM"
+                onClick={() => onConfirm()}
+                loading={loading}
+              />
+            )}
+          </div>
+        )}
     </div>
   );
 };

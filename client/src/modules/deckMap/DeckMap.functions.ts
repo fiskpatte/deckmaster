@@ -6,14 +6,15 @@ import {
   DeckMapElement,
   Lane,
   CargoPlacement,
+  cargoPlacementFactory,
 } from "../../types/deckMap";
-import { Coords, Placement } from "../../types/util";
-import { DeckMapType } from "./../../types/deckMap";
+import { Coords } from "../../types/util";
+import { DeckMapType, MostForwardValidPlacementForLanes } from "./../../types/deckMap";
 
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).after)) *
-      DECK_MAP.X_SCALE -
+    DECK_MAP.X_SCALE -
     DECK_MAP.X_MARGIN
   );
 };
@@ -21,7 +22,7 @@ export const getViewBoxOriginX = (currentDeck: Deck): number => {
 export const getViewBoxOriginY = (currentDeck: Deck): number => {
   return (
     arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).left)) *
-      DECK_MAP.Y_SCALE -
+    DECK_MAP.Y_SCALE -
     DECK_MAP.Y_MARGIN / 2
   );
 };
@@ -83,77 +84,39 @@ const getCoordinatesFromEvent = (
   return { x, y } as Coords;
 };
 
-export const onCargoDrag = (
-  event: MouseEvent | TouchEvent | PointerEvent,
-  deck: Deck,
-  placement: Placement,
-  cargo: Cargo,
-  svgRef: React.RefObject<SVGSVGElement>,
-  callback: (position: Placement) => void
-) => {
-  let placingLane = deck.lanes.find((l) => l.id === placement?.laneId);
-  if (placement && placingLane) {
-    updatePlacementFromEvent(
-      event,
-      svgRef,
-      placingLane,
-      cargo,
-      placement,
-      callback
-    );
-  }
-};
-
-export const pinCargoAfterDrag = (
-  deck: Deck,
-  placement: Placement,
-  cargo: Cargo,
-  callback: (placement: Placement) => void
-) => {
-  const placingLane = deck.lanes.find((l) => l.id === placement?.laneId);
-  if (placement && placingLane) {
-    if (cargo.width > placingLane.width) {
-      let pinnedPlacement = { ...placement };
-      pinnedPlacement.TCG =
-        placingLane.TCG +
-        ((placement.TCG > placingLane.TCG ? 1 : -1) *
-          (cargo.width - placingLane.width)) /
-          2;
-      callback(pinnedPlacement);
-    }
-  }
-};
-
-export const updatePlacementFromEvent = (
+export const getPlacementFromEvent = (
   event: MouseEvent | TouchEvent | PointerEvent,
   svgRef: React.RefObject<SVGSVGElement>,
+  cargoPlacementsForLane: Array<CargoPlacement>,
+  overflowingCargoPlacementsIntoLane: Array<CargoPlacement>,
   lane: Lane,
-  cargo: Cargo,
-  placement: Placement,
-  callback: (position: Placement) => void
+  placement: CargoPlacement,
+  bumperToBumperDistance: number
 ) => {
   event.preventDefault();
   let coords = getCoordinatesFromEvent(event);
-  updatePlacementFromScreenCoords(
+  return getPlacementFromScreenCoords(
     coords,
     svgRef,
+    cargoPlacementsForLane,
+    overflowingCargoPlacementsIntoLane,
     lane,
-    cargo,
     placement,
-    callback
+    bumperToBumperDistance
   );
 };
 
-export const updatePlacementFromScreenCoords = (
+export const getPlacementFromScreenCoords = (
   coords: Coords | undefined,
   svgRef: React.RefObject<SVGSVGElement>,
+  cargoPlacementsForLane: Array<CargoPlacement>,
+  overflowingCargoPlacementsIntoLane: Array<CargoPlacement>,
   lane: Lane,
-  cargo: Cargo,
-  placement: Placement,
-  callback: (position: Placement) => void
+  placement: CargoPlacement,
+  bumperToBumperDistance: number
 ) => {
   if (!coords) {
-    return;
+    return cargoPlacementFactory();
   }
 
   if (svgRef.current) {
@@ -163,74 +126,60 @@ export const updatePlacementFromScreenCoords = (
       coords.x,
       coords.y
     );
-    const center = {
+    const scaledCenter = {
       x: centerPoint.x / DECK_MAP.X_SCALE,
       y: centerPoint.y / DECK_MAP.Y_SCALE,
     };
+    const { cargo } = placement;
     if (cargo.width > lane.width) {
       //Set a limit in the y displacement
       const max = lane.TCG + (cargo.width - lane.width) / 2;
       const min = lane.TCG - (cargo.width - lane.width) / 2;
-      center.y = Math.min(Math.max(center.y, min), max);
+      scaledCenter.y = Math.min(Math.max(scaledCenter.y, min), max);
     } else {
       //Ignore y displacement
-      center.y = placement.TCG;
+      scaledCenter.y = placement.TCG;
     }
     //Set a limit in the x displacement
-    const someOverflowingCargo = lane.adjacentLanes.some((al) =>
-      al.cargo.some((c) => c.overflowingLaneId === lane.id)
-    );
-    let max = arrayMin(
-      lane.cargo
-        .filter((c) => c.cargo.id !== cargo.id)
-        .map((c) => c.LCG - c.cargo.length / 2),
-      getEndpoints(lane).forward
-    );
-    if (someOverflowingCargo) {
+    let max = arrayMin(cargoPlacementsForLane.filter(c => c.cargo.id !== cargo.id).map(c => c.LCG - c.cargo.length / 2), getEndpoints(lane).forward)
+    if (overflowingCargoPlacementsIntoLane.length > 0) {
       const overflowMinLCG = arrayMin(
-        lane.adjacentLanes
-          .map((al) =>
-            al.cargo
-              .filter((c) => c.overflowingLaneId === lane.id)
-              .map((c) => c.LCG - c.cargo.length / 2)
-          )
-          .flat()
+        overflowingCargoPlacementsIntoLane.map((c) => c.LCG - c.cargo.length / 2)
       );
       max = Math.min(max, overflowMinLCG);
     }
-    max -= cargo.length / 2;
+    max -= cargo.length / 2 + bumperToBumperDistance;
     const min = lane.LCG - (lane.length - cargo.length) / 2;
-    center.x = Math.min(Math.max(center.x, min), max);
+    scaledCenter.x = Math.min(Math.max(scaledCenter.x, min), max);
 
-    if (center.x !== placement.LCG || center.y !== placement.TCG) {
-      //Only do the callback if something changed
+    if (scaledCenter.x !== placement.LCG || scaledCenter.y !== placement.TCG) {
       let newPlacement = {
         ...placement,
-        LCG: center.x,
-        TCG: center.y,
+        LCG: scaledCenter.x,
+        TCG: scaledCenter.y,
       };
-      // let corner = { x: center.x / DECK_MAP.X_SCALE - cargo.length / 2, y: center.y / DECK_MAP.Y_SCALE - cargo.width / 2 }
-      callback(newPlacement);
+      return newPlacement
     }
   }
+  return cargoPlacementFactory();
 };
 
-export const updatePlacementFromFrontPlacement = (
-  placement: Placement,
-  cargo: Cargo,
-  callback: (placement: Placement) => void
-) => {
-  placement.LCG -= cargo.length / 2;
-  updatePlacementFromSVGCoords(placement, callback);
-};
+// export const updatePlacementFromFrontPlacement = (
+//   placement: CargoPlacement,
+//   cargo: Cargo,
+//   callback: (cargoPlacement: CargoPlacement) => void
+// ) => {
+//   placement.LCG -= cargo.length / 2;
+//   updatePlacementFromSVGCoords(placement, callback);
+// };
 
-export const updatePlacementFromSVGCoords = (
-  placement: Placement | null,
-  callback: (placement: Placement) => void
-) => {
-  if (!placement) return;
-  callback(placement);
-};
+// export const updatePlacementFromSVGCoords = (
+//   placement: CargoPlacement,
+//   callback: (cargoPlacement: CargoPlacement) => void
+// ) => {
+//   if (cargoPlacementIsEmpty(placement)) return;
+//   callback(placement);
+// };
 
 const getEndpoints = (elem: DeckMapElement) => {
   const left = elem.TCG - elem.width / 2;
@@ -256,9 +205,9 @@ export const isAdjacent = (
   //Two elements are considered adjacent if there is no space for an additional element in between them and if they have matching sides
   const matchingSides = contained
     ? newElemEndpoints.after >= elemEndpoints.after &&
-      newElemEndpoints.forward <= elemEndpoints.forward
+    newElemEndpoints.forward <= elemEndpoints.forward
     : newElemEndpoints.after <= elemEndpoints.forward &&
-      newElemEndpoints.forward >= elemEndpoints.after;
+    newElemEndpoints.forward >= elemEndpoints.after;
 
   const noSpaceInBetween = !(
     hasSpaceInBetween(
@@ -302,15 +251,32 @@ export const getAdjacentSide = (
   return AdjacentSide.Undefined;
 };
 
+export const getMostForwardValidPlacementForLanes = (lanes: Array<Lane>, cargoPlacements: CargoPlacement[], currentCargo: Cargo, bumperToBumperDistance: number, defaultVCG: number) => {
+  let result = {} as MostForwardValidPlacementForLanes;
+  for (let lane of lanes) {
+    const mostForwardLanePlacement = {
+      LCG: lane.LCG + lane.length / 2,
+      TCG: lane.TCG,
+      VCG: lane.VCG + currentCargo.height * defaultVCG,
+      laneId: lane.id
+    } as CargoPlacement;
+    const cargoPlacementsForLane = cargoPlacements.filter(cp => cp.laneId === lane.id && cp.cargo.id !== currentCargo.id);
+    const overflowingCargoPlacementsIntoLane = cargoPlacements.filter(cp => cp.overflowingLaneId === lane.id && cp.cargo.id !== currentCargo.id);
+    const adjacentCargoPlacementsForLane = cargoPlacements.filter(cp => lane.adjacentLanes.some(al => al.id === cp.laneId) && cp.cargo.id !== currentCargo.id)
+    result[lane.id] = getMostForwardValidPlacementForLane(lane, cargoPlacementsForLane, overflowingCargoPlacementsIntoLane, adjacentCargoPlacementsForLane, currentCargo, mostForwardLanePlacement, bumperToBumperDistance);
+  }
+  return result;
+}
 export const getMostForwardValidPlacementForLane = (
   lane: Lane,
   cargoPlacementsForLane: Array<CargoPlacement>,
   overflowingCargoPlacementsIntoLane: Array<CargoPlacement>,
+  adjacentCargoPlacementsForLane: Array<CargoPlacement>,
   currentCargo: Cargo,
-  mostForwardLanePlacement: Placement,
+  mostForwardLanePlacement: CargoPlacement,
   bumperToBumperDistance: number
-) => {
-  let resultPlacement = { ...mostForwardLanePlacement } as Placement;
+): CargoPlacement => {
+  let resultPlacement = { ...mostForwardLanePlacement };
   // there are no other vehicles blocking the forward most position, just return it
   if (
     cargoPlacementsForLane.length === 0 &&
@@ -340,13 +306,13 @@ export const getMostForwardValidPlacementForLane = (
     afterOfLane + currentCargo.length + bumperToBumperDistance
   ) {
     // no room in lane
-    return undefined;
+    return cargoPlacementFactory();
   }
 
   resultPlacement.LCG = mostAfterCargoPlacement - bumperToBumperDistance;
 
   if (currentCargo.width > lane.width) {
-    return getOverflowingPlacement(lane, currentCargo, resultPlacement);
+    return getOverflowingPlacement(lane, currentCargo, resultPlacement, adjacentCargoPlacementsForLane);
   }
   return resultPlacement;
 };
@@ -354,25 +320,28 @@ export const getMostForwardValidPlacementForLane = (
 export const getOverflowingPlacement = (
   placingLane: Lane,
   currentCargo: Cargo,
-  placement: Placement,
+  placement: CargoPlacement,
+  adjacentCargoPlacementsForLane: CargoPlacement[],
   recursive = true
-): Placement | undefined => {
+): CargoPlacement => {
   let resultPlacement = getOverflowingPlacementForSide(
     placingLane,
     currentCargo,
     placement,
+    adjacentCargoPlacementsForLane,
     AdjacentSide.Right
   );
-  if (resultPlacement) return resultPlacement;
+  if (resultPlacement.laneId !== "") return resultPlacement;
   resultPlacement = getOverflowingPlacementForSide(
     placingLane,
     currentCargo,
     placement,
+    adjacentCargoPlacementsForLane,
     AdjacentSide.Left
   );
-  if (resultPlacement) return resultPlacement;
+  if (resultPlacement.laneId !== "") return resultPlacement;
   if (recursive) {
-    return handleOverflowRecursive(placingLane, currentCargo, placement);
+    return handleOverflowRecursive(placingLane, currentCargo, placement, adjacentCargoPlacementsForLane);
   }
   return resultPlacement;
 };
@@ -380,27 +349,29 @@ export const getOverflowingPlacement = (
 const handleOverflowRecursive = (
   placingLane: Lane,
   currentCargo: Cargo,
-  placement: Placement
-) => {
+  placement: CargoPlacement,
+  adjacentCargoPlacementsForLane: CargoPlacement[],
+): CargoPlacement => {
   const backstep = 0.5;
   const laneAft = getEndpoints(placingLane).after;
   let tempPlacement = { ...placement };
   if (tempPlacement.LCG - backstep >= laneAft + currentCargo.length / 2) {
     tempPlacement.LCG -= backstep;
-    return getOverflowingPlacement(placingLane, currentCargo, tempPlacement);
+    return getOverflowingPlacement(placingLane, currentCargo, tempPlacement, adjacentCargoPlacementsForLane);
   } else {
-    return undefined;
+    return cargoPlacementFactory();
   }
 };
 
 const getOverflowingPlacementForSide = (
   placingLane: Lane,
   currentCargo: Cargo,
-  placement: Placement,
+  placement: CargoPlacement,
+  adjacentCargoPlacementsForLane: CargoPlacement[],
   overflowSide: AdjacentSide,
   frontPlacement = true
-) => {
-  if (overflowSide === AdjacentSide.Undefined) return undefined;
+): CargoPlacement => {
+  if (overflowSide === AdjacentSide.Undefined) return cargoPlacementFactory();
   let resultPlacement = { ...placement };
   let cargo = { ...currentCargo, ...placement };
   if (frontPlacement) {
@@ -411,7 +382,7 @@ const getOverflowingPlacementForSide = (
   );
   if (
     adjacentLane.length === 1 &&
-    !adjacentLane[0].cargo.some((c) => isAdjacent({ ...c, ...c.cargo }, cargo))
+    !adjacentCargoPlacementsForLane.some(ocp => ocp.laneId === adjacentLane[0].id && isAdjacent({ ...ocp, ...ocp.cargo }, cargo))
   ) {
     resultPlacement.TCG =
       placingLane.TCG +
@@ -419,7 +390,7 @@ const getOverflowingPlacementForSide = (
     resultPlacement.overflowingLaneId = adjacentLane[0].id;
     return resultPlacement;
   }
-  return undefined;
+  return cargoPlacementFactory();
 };
 
 export const getDeckNames = (deckMap: DeckMapType) =>
@@ -429,5 +400,11 @@ export const getDeckNames = (deckMap: DeckMapType) =>
 
 export const cargoIsEmpty = (cargo: Cargo) => cargo.id === "";
 
-export const placementsHasDifferentPositions = (a: Placement, b: Placement) =>
+export const cargoPlacementIsEmpty = (cargoPlacement: CargoPlacement) => cargoPlacement.id === "";
+
+export const cargoPlacementIsEmptyWithCargo = (cargoPlacement: CargoPlacement) => cargoPlacementIsEmpty(cargoPlacement) && !cargoIsEmpty(cargoPlacement.cargo);
+
+export const cargoPlacementIsEmptyWithoutCargo = (cargoPlacement: CargoPlacement) => cargoPlacementIsEmpty(cargoPlacement) && cargoIsEmpty(cargoPlacement.cargo);
+
+export const placementsHaveDifferentPositions = (a: CargoPlacement, b: CargoPlacement) =>
   a.LCG !== b.LCG || a.TCG !== b.TCG;

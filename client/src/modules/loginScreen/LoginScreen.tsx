@@ -12,6 +12,7 @@ import { FlexRowEndContainer } from "../../components/flexContainer";
 import { useDispatch } from "react-redux";
 import { setSessionData } from "./../../store/app/appActions";
 import { SessionData } from "./../../types/sessionData";
+import { routes } from './../../routes';
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -24,7 +25,7 @@ export const LoginScreen: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
 
   useEffect(() => {
-    if (isLoggedIn) history.push("placecargo");
+    if (isLoggedIn) history.push(routes.PlaceCargo.path);
   }, [history, isLoggedIn]);
 
   const onLoginButtonClick = async () => {
@@ -41,7 +42,7 @@ export const LoginScreen: React.FC = () => {
       const loginCallback = (data: SessionData) =>
         dispatch(setSessionData(data));
       await login(username, password, loginCallback);
-      history.push("/placecargo");
+      history.push(routes.PlaceCargo.path);
     } catch (error) {
       setLoading(false);
       setError("Login failed");

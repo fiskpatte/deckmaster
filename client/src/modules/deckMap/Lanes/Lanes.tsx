@@ -1,21 +1,22 @@
 import React from "react";
-import LaneComponent from "./PlacingLane";
+import LaneComponent from "./Lane";
 import "./Lane.scss";
-import { Lane, Cargo } from "../../../types/deckMap";
-import { Placement } from "../../../types/util";
+import { Lane, Cargo, CargoPlacement, MostForwardValidPlacementForLanes } from "../../../types/deckMap";
 
 interface Props {
   lanes: Array<Lane>;
   rightOrigin: number;
-  onLanePlacementButtonClick: (placement: Placement) => void;
+  onLanePlacementButtonClick: (placement: CargoPlacement) => void;
   currentCargo: Cargo;
+  mostForwardValidPlacementForLanes: MostForwardValidPlacementForLanes;
 }
 
 export const Lanes: React.FC<Props> = ({
   lanes,
   rightOrigin,
   onLanePlacementButtonClick,
-  currentCargo
+  currentCargo,
+  mostForwardValidPlacementForLanes
 }) => {
   return (
     <>
@@ -27,6 +28,7 @@ export const Lanes: React.FC<Props> = ({
             onLanePlacementButtonClick={onLanePlacementButtonClick}
             rightOrigin={rightOrigin}
             currentCargo={currentCargo}
+            mostForwardValidPlacementForLane={mostForwardValidPlacementForLanes[lane.id]}
           />
         );
       })}

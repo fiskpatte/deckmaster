@@ -2,7 +2,7 @@ import React, { useState } from "react";
 // import { BlueBackground } from "../../components/blueBackground";
 import { Paper } from "../../components/paper";
 import { getMockCargo } from "../../api/endpoints";
-import { setCurrentCargo } from "../../store/deckMap/deckMapActions";
+import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import { ErrorMessage } from "../../components/errorMessage";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -12,6 +12,8 @@ import Text from "../../components/text";
 import Separator from "../../components/separator";
 import { FlexRowEndContainer } from "../../components/flexContainer";
 import ContentContainer from "../../components/contentContainer";
+import { cargoPlacementFactory } from "../../types/deckMap";
+import { routes } from './../../routes';
 
 export const EnterCargoScreen = () => {
   const [value, setValue] = useState("");
@@ -27,8 +29,10 @@ export const EnterCargoScreen = () => {
       }
       setLoading(true);
       const cargo = await getMockCargo();
-      dispatch(setCurrentCargo(cargo));
-      history.push("/placecargo/confirmcargo");
+      let newPlacement = cargoPlacementFactory();
+      newPlacement.cargo = cargo;
+      dispatch(setCurrentPlacement(newPlacement));
+      history.push(routes.PlaceCargoConfirm.path);
       // go to mapscreen
     } catch (error) {
       setLoading(false);

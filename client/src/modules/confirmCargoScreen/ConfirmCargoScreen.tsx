@@ -8,15 +8,17 @@ import Button from "../../components/button";
 import "./ConfirmCargoScreen.scss";
 import Separator from "../../components/separator";
 import ContentContainer from "../../components/contentContainer";
+import { cargoIsEmpty } from "../deckMap/DeckMap.functions";
+import { routes } from './../../routes';
 
 export const ConfirmCargoScreen = () => {
-  const { currentCargo: cargo } = useSelector(
+  const { currentCargoPlacement } = useSelector(
     (state: RootState) => state.deckMapReducer
   );
-
+  const { cargo } = currentCargoPlacement;
   const history = useHistory();
-  if (cargo.registrationNumber === "") {
-    history.push("/placecargo");
+  if (cargoIsEmpty(cargo)) {
+    history.push(routes.PlaceCargo.path);
   }
   return (
     <ContentContainer>
@@ -62,14 +64,14 @@ export const ConfirmCargoScreen = () => {
           <div style={{ flex: 1 }}></div>
           <div style={{ flex: 1 }}>
             <Button
-              onClick={() => history.push("/placecargo")}
+              onClick={() => history.push(routes.PlaceCargo.path)}
               label="Cancel"
               type="neutral"
             />
           </div>
           <div style={{ flex: 1, margin: "0 0 0 10px" }}>
             <Button
-              onClick={() => history.push("/placecargo/deckmap")}
+              onClick={() => history.push(routes.PlaceCargoDeckMap.path)}
               label="Next"
               type="positive"
             />

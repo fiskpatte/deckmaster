@@ -43,8 +43,6 @@ const deckMapElementFactory = (): DeckMapElement => {
 export interface Lane extends DeckMapElement {
   name: string;
   partial: boolean;
-  grids: Array<Grid>;
-  cargo: Array<CargoPlacement>;
   adjacentLanes: Array<AdjacentLane>;
 }
 
@@ -52,8 +50,6 @@ export const laneFactory = (): Lane => {
   let elem = deckMapElementFactory() as Lane;
   elem.name = "";
   elem.partial = false;
-  elem.grids = [];
-  elem.cargo = [];
   elem.adjacentLanes = [];
   return elem;
 };
@@ -64,21 +60,28 @@ export interface AdjacentLane extends Lane {
 
 export interface Grid extends DeckMapElement {
   name: string;
+  laneId: string;
 }
 
 export const gridFactory = (): Grid => {
   let elem = deckMapElementFactory() as Grid;
   elem.name = "";
+  elem.laneId = "";
   return elem;
 };
 
-export interface Cargo extends DeckMapElement {
+export interface Cargo {
+  id: string;
   registrationNumber: string;
+  length: number;
+  width: number;
   height: number;
   weight: number;
-  laneId: string;
-  overflowingLaneId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+
 
 export interface CargoPlacement {
   id: string;
@@ -110,16 +113,21 @@ export const cargoPlacementFactory = (): CargoPlacement => ({
   cargo: cargoFactory(),
 });
 
-export const cargoFactory = (): Cargo => {
-  let elem = deckMapElementFactory() as Cargo;
-  elem.registrationNumber = "";
-  elem.height = 0;
-  elem.weight = 0;
-  elem.overflowingLaneId = "0";
-  return elem;
-};
+export const cargoFactory = (): Cargo => ({
+  id: "",
+  registrationNumber: "",
+  length: 0,
+  width: 0,
+  height: 0,
+  weight: 0,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+});
 
 export interface Frame {
   id: number;
   distance: number;
 }
+
+export interface MostForwardValidPlacementForLanes { [id: string]: CargoPlacement }
+

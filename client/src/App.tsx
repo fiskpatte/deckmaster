@@ -7,70 +7,61 @@ import { Header } from "./modules/header";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "./components/loader";
 import { renderRoutes } from "./routes.functions";
-import socketIOClient from "socket.io-client";
 import { useIsLoggedIn } from "./hooks/useIsLoggedIn";
 import { getCargoPlacements } from "./api/cargoPlacement";
 import { getCargoQueue } from "./api/cargoQueue";
 import deckMapActions from "./store/deckMap/deckMapActions";
 import cargoQueueActions from "./store/cargoQueue/cargoQueueActions";
-import { CargoQueueItem } from "./types/CargoQueueItem";
 import appActions from "./store/app/appActions";
 import { getSettings } from "./api/endpoints";
-import { Settings } from "./types/settings";
 import { RootState } from "./store";
 import { setAllDefaultHeaders } from "./functions/axios";
+import useSocket from './hooks/useSocket';
 
 const App: React.FC = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading,] = useState(false);
+  const [voyageId, setVoyageId] = useState<string>("");
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
-
-  const voyageId = sessionData && sessionData.voyageId;
-  let socket: SocketIOClient.Socket;
-  if (isLoggedIn) {
-    socket = socketIOClient("http://localhost:4000");
-    console.log("connecting to socket");
-  }
-
-  if (!isLoggedIn && sessionData) {
-    setAllDefaultHeaders(sessionData);
-  }
-  useEffect(() => {
-    parseLoadPlan(loadPlans).then(res => {
-      //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
-      res["Lower Hold"] = {
-        name: "Lower Hold",
-        lanes: [],
-        grids: [],
-        frames: [],
-        sortOrder: 1
-      };
-      res["Main Deck"] = {
-        name: "Main Deck",
-        lanes: [],
-        grids: [],
-        frames: [],
-        sortOrder: 2
-      };
-      res["Upper Deck"] = {
-        name: "Upper Deck",
-        lanes: [],
-        grids: [],
-        frames: [],
-        sortOrder: 3
-      };
-      dispatch(deckMapActions.setDeckMap(res));
-      dispatch(deckMapActions.setCurrentDeckId("Weather Deck"));
-      setLoading(false);
-    });
-  }, [dispatch]);
-
   useEffect(() => {
     if (sessionData) {
+      setVoyageId(sessionData.voyageId);
       setAllDefaultHeaders(sessionData);
     }
   }, [sessionData]);
+  useSocket(isLoggedIn, voyageId);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      parseLoadPlan(loadPlans).then(res => {
+        //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
+        res["Lower Hold"] = {
+          name: "Lower Hold",
+          lanes: res["Weather Deck"].lanes,
+          grids: res["Weather Deck"].grids,
+          frames: res["Weather Deck"].frames,
+          sortOrder: 1
+        };
+        res["Main Deck"] = {
+          name: "Main Deck",
+          lanes: [],
+          grids: [],
+          frames: [],
+          sortOrder: 2
+        };
+        res["Upper Deck"] = {
+          name: "Upper Deck",
+          lanes: [],
+          grids: [],
+          frames: [],
+          sortOrder: 3
+        };
+        dispatch(deckMapActions.setDeckMap(res));
+        dispatch(deckMapActions.setCurrentDeckId("Weather Deck"));
+      });
+    }
+  }, [dispatch, isLoggedIn]);
 
   useEffect(() => {
     const fetchCargoPlacements = async () =>
@@ -86,35 +77,6 @@ const App: React.FC = () => {
       fetchCargoPlacements();
       fetchCargoQueue();
       fetchSettings();
-    }
-  }, [dispatch, isLoggedIn]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      socket.on(`cargoPlacements___${voyageId}`, (payload: any) => {
-        console.log("cargo placements updated, ", payload);
-        dispatch(deckMapActions.setCargoPlacements(payload));
-      });
-    }
-  }, [dispatch, isLoggedIn]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      socket.on(
-        `cargoQueueUpdated___${voyageId}`,
-        (payload: CargoQueueItem[]) => {
-          dispatch(cargoQueueActions.setCargoQueue(payload));
-        }
-      );
-    }
-  }, [dispatch, isLoggedIn]);
-
-  useEffect(() => {
-    const socket = socketIOClient("http://localhost:4000");
-    if (isLoggedIn) {
-      socket.on(`settingsUpdated___${voyageId}`, (payload: Settings) => {
-        dispatch(appActions.setSettings(payload));
-      });
     }
   }, [dispatch, isLoggedIn]);
 

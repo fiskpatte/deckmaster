@@ -1,5 +1,4 @@
-import { Cargo, DeckMapType, CargoPlacement } from "../types/deckMap";
-import { Placement } from "../types/util";
+import { DeckMapType, CargoPlacement } from "../types/deckMap";
 import { Settings } from "../types/settings";
 import { SessionData } from "./../types/sessionData";
 
@@ -9,8 +8,7 @@ export interface AppState {
 }
 
 export interface CargoState {
-  currentCargo: Cargo;
-  currentPlacement: Placement | null;
+  currentCargoPlacement: CargoPlacement;
   deckMap: DeckMapType;
   currentDeckId?: string;
   cargoPlacements: Array<CargoPlacement>;

@@ -72,16 +72,18 @@ const setData = (data: DeckMapType, dataElement: string[]) => {
         let lane = {
           ...newElem,
           partial: false,
-          grids: [],
-          cargo: [],
           adjacentLanes: [],
         } as Lane;
         handlePartialLanes(lastData, lane);
         assignAdjacentLanes(lastData, lane);
         lastData.lanes.push(lane);
       } else {
-        assignLane(lastData.lanes, newElem as Grid);
-        lastData.grids.push(newElem);
+        let grid = {
+          ...newElem,
+          laneId: ""
+        } as Grid;
+        assignLane(lastData.lanes, grid);
+        lastData.grids.push(grid);
       }
       count++; //TODO: Change when we get id data.
       break;
@@ -117,13 +119,17 @@ const assignLane = (lanes: Array<Lane>, grid: Grid) => {
     (l) => l.name === laneName && grid.LCG > l.LCG - l.length / 2
   );
   if (possibleLanes.length === 1) {
-    possibleLanes[0].grids.push(grid);
+    grid.laneId = possibleLanes[0].id;
     return;
   }
   let lane = possibleLanes.reduce((r: Lane | null, l) => {
     return r?.LCG && r.LCG > l.LCG - l.length / 2 ? r : l;
   }, null);
-  lane?.grids.push(grid);
+  if (!lane) {
+    console.log(`FATAL ERROR: Impossible to assign lane to grid ${grid.id}.`);
+    return;
+  }
+  grid.laneId = lane.id;
 };
 
 const assignAdjacentLanes = (deck: Deck, newLane: Lane) => {

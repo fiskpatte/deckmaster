@@ -1,15 +1,8 @@
-import { Cargo, DeckMapType } from "../../types/deckMap";
-import { Placement } from "../../types/util";
+import { DeckMapType } from "../../types/deckMap";
 import { DECK_MAP_ACTION_TYPES } from "./deckMapActionTypes";
+import { CargoPlacement } from './../../types/deckMap';
 
-export const setCurrentCargo = (cargo: Cargo) => {
-  return {
-    type: DECK_MAP_ACTION_TYPES.SET_CURRENT_CARGO,
-    payload: cargo,
-  };
-};
-
-export const setCurrentPlacement = (placement: Placement | null) => {
+export const setCurrentPlacement = (placement: CargoPlacement) => {
   return {
     type: DECK_MAP_ACTION_TYPES.SET_CURRENT_PLACEMENT,
     payload: placement,
@@ -56,7 +49,6 @@ export const removeCargoPlacement = (
 // export const setCargoInDeckMap =
 
 const deckMapActions = {
-  setCurrentCargo,
   setCurrentPlacement,
   setDeckMap,
   setCurrentDeckId,
