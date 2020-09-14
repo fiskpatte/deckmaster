@@ -23,6 +23,7 @@ export const PlacingCargo: React.FC<Props> = ({
 
   const [placingLane, setPlacingLane] = useState<Lane>();
   const [cargoPlacementsForLane, setCargoPlacementsForLane] = useState<CargoPlacement[]>();
+  const [adjacentCargoPlacementsForLane, setAdjacentCargoPlacementsForLane] = useState<CargoPlacement[]>();
   const [cargoPlacementsOverflowingIntoLane, setCargoPlacementsOverflowingIntoLane] = useState<CargoPlacement[]>();
 
   useEffect(() => {
@@ -32,10 +33,11 @@ export const PlacingCargo: React.FC<Props> = ({
   useEffect(() => {
     if (!placingLane?.id) return;
     setCargoPlacementsForLane(cargoPlacements.filter(cp => cp.laneId === placingLane.id && cp.cargo.id !== currentCargoPlacement.cargo.id) ?? []);
+    setAdjacentCargoPlacementsForLane(cargoPlacements.filter(cp => placingLane.adjacentLanes.some(al => al.id === cp.laneId) && cp.cargo.id !== currentCargoPlacement.cargo.id) ?? []);
     setCargoPlacementsOverflowingIntoLane(cargoPlacements.filter((cp) => cp.overflowingLaneId === placingLane.id && cp.cargo.id !== currentCargoPlacement.cargo.id) ?? []);
   }, [placingLane, cargoPlacements, currentCargoPlacement.cargo.id])
 
-  if (!placingLane?.id || !cargoPlacementsForLane || !cargoPlacementsOverflowingIntoLane) return null;
+  if (!placingLane?.id || !cargoPlacementsForLane || !cargoPlacementsOverflowingIntoLane || !adjacentCargoPlacementsForLane) return null;
 
   const onCargoDrag = (
     event: MouseEvent | TouchEvent | PointerEvent,
@@ -45,6 +47,7 @@ export const PlacingCargo: React.FC<Props> = ({
       svgRef,
       cargoPlacementsForLane,
       cargoPlacementsOverflowingIntoLane,
+      adjacentCargoPlacementsForLane,
       placingLane,
       currentCargoPlacement,
       bumperToBumperDistance

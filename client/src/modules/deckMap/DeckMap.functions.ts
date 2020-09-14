@@ -89,6 +89,7 @@ export const getPlacementFromEvent = (
   svgRef: React.RefObject<SVGSVGElement>,
   cargoPlacementsForLane: Array<CargoPlacement>,
   overflowingCargoPlacementsIntoLane: Array<CargoPlacement>,
+  adjacentCargoPlacementsForLane: Array<CargoPlacement>,
   lane: Lane,
   placement: CargoPlacement,
   bumperToBumperDistance: number
@@ -100,6 +101,7 @@ export const getPlacementFromEvent = (
     svgRef,
     cargoPlacementsForLane,
     overflowingCargoPlacementsIntoLane,
+    adjacentCargoPlacementsForLane,
     lane,
     placement,
     bumperToBumperDistance
@@ -111,6 +113,7 @@ export const getPlacementFromScreenCoords = (
   svgRef: React.RefObject<SVGSVGElement>,
   cargoPlacementsForLane: Array<CargoPlacement>,
   overflowingCargoPlacementsIntoLane: Array<CargoPlacement>,
+  adjacentCargoPlacementsForLane: Array<CargoPlacement>,
   lane: Lane,
   placement: CargoPlacement,
   bumperToBumperDistance: number
@@ -130,11 +133,25 @@ export const getPlacementFromScreenCoords = (
       x: centerPoint.x / DECK_MAP.X_SCALE,
       y: centerPoint.y / DECK_MAP.Y_SCALE,
     };
+    const cargoPlacementAsDeckMapElement = { ...placement.cargo, ...placement };
     const { cargo } = placement;
     if (cargo.width > lane.width) {
       //Set a limit in the y displacement
-      const max = lane.TCG + (cargo.width - lane.width) / 2;
-      const min = lane.TCG - (cargo.width - lane.width) / 2;
+      const leftAdjacentLane = lane.adjacentLanes.filter(
+        (al) => al.adjacentSide === AdjacentSide.Left && isAdjacent(al, cargoPlacementAsDeckMapElement, true)
+      );
+      const rightAdjacentLane = lane.adjacentLanes.filter(
+        (al) => al.adjacentSide === AdjacentSide.Right && isAdjacent(al, cargoPlacementAsDeckMapElement, true)
+      );
+      const someLeftAdjacentLane = leftAdjacentLane.length > 0;
+      const someRightAdjacentLane = rightAdjacentLane.length > 0;
+      if (!someRightAdjacentLane && !someLeftAdjacentLane) return cargoPlacementFactory();
+      const someAdjacentCargoInLeftAdjacentLane = adjacentCargoPlacementsForLane.some(acp => someLeftAdjacentLane && acp.laneId === leftAdjacentLane[0].id && isAdjacent({ ...acp.cargo, ...acp }, cargoPlacementAsDeckMapElement))
+      const someAdjacentCargoInRightAdjacentLane = adjacentCargoPlacementsForLane.some(acp => someRightAdjacentLane && acp.laneId === rightAdjacentLane[0].id && isAdjacent({ ...acp.cargo, ...acp }, cargoPlacementAsDeckMapElement))
+      const cargoInLeftEdge = lane.TCG + (cargo.width - lane.width) / 2;
+      const cargoInRightEdge = lane.TCG - (cargo.width - lane.width) / 2;
+      const max = someRightAdjacentLane && !someAdjacentCargoInRightAdjacentLane ? cargoInLeftEdge : cargoInRightEdge;
+      const min = someLeftAdjacentLane && !someAdjacentCargoInLeftAdjacentLane ? cargoInRightEdge : cargoInLeftEdge;
       scaledCenter.y = Math.min(Math.max(scaledCenter.y, min), max);
     } else {
       //Ignore y displacement
@@ -220,6 +237,18 @@ export const isAdjacent = (
 
   return matchingSides && noSpaceInBetween;
 };
+
+export const isOverlapping = (elem: DeckMapElement, newElem: DeckMapElement) => {
+  const elemEndpoints = getEndpoints(elem);
+  const newElemEndpoints = getEndpoints(newElem);
+
+  const matchingSides = newElemEndpoints.after <= elemEndpoints.forward &&
+    newElemEndpoints.forward >= elemEndpoints.after
+
+  const overlapping = newElemEndpoints.left <= elemEndpoints.right && newElemEndpoints.right >= elemEndpoints.left
+
+  return matchingSides && overlapping;
+}
 
 //Return if newElem is right or left of elem. if contained is true, the newElem has to be completely adjacent
 export const getAdjacentSide = (
@@ -382,7 +411,7 @@ const getOverflowingPlacementForSide = (
   );
   if (
     adjacentLane.length === 1 &&
-    !adjacentCargoPlacementsForLane.some(ocp => ocp.laneId === adjacentLane[0].id && isAdjacent({ ...ocp, ...ocp.cargo }, cargo))
+    !adjacentCargoPlacementsForLane.some(ocp => ocp.laneId === adjacentLane[0].id && isAdjacent({ ...ocp.cargo, ...ocp }, cargo))
   ) {
     resultPlacement.TCG =
       placingLane.TCG +
