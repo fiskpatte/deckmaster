@@ -36,7 +36,7 @@ export const Grids: React.FC<Props> = ({
             isOverflow={isOverflow}
             currentCargo={currentCargo}
             lane={lane}
-            overflowingCargoPlacementsIntoLane={isOverflow ? cargoPlacements.filter(cp => cp.overflowingLaneId === lane.id && cp.cargo.id !== currentCargo.id) : null}
+            adjacentCargoPlacementsForLane={isOverflow ? cargoPlacements.filter(cp => lane.adjacentLanes.some(al => al.id === cp.laneId)) : []}
             mostForwardValidPlacementForLane={mostForwardValidPlacementForLanes[lane.id]}
           />
         );

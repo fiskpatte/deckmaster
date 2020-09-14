@@ -12,7 +12,7 @@ interface Props {
   onClick: (placement: CargoPlacement) => void;
   isOverflow: boolean;
   currentCargo: Cargo;
-  overflowingCargoPlacementsIntoLane: CargoPlacement[] | null;
+  adjacentCargoPlacementsForLane: CargoPlacement[];
   lane: Lane;
   mostForwardValidPlacementForLane: CargoPlacement;
 }
@@ -27,7 +27,7 @@ const GridComponent: React.FC<Props> = ({
   onClick,
   isOverflow,
   currentCargo,
-  overflowingCargoPlacementsIntoLane,
+  adjacentCargoPlacementsForLane,
   lane,
   mostForwardValidPlacementForLane
 }) => {
@@ -38,12 +38,12 @@ const GridComponent: React.FC<Props> = ({
   } as CargoPlacement;
   let isVisible = grid.LCG + grid.length / 2 <= mostForwardValidPlacementForLane.LCG;
 
-  if (isOverflow && overflowingCargoPlacementsIntoLane) {
+  if (isOverflow) {
     const overflowingPlacement = getOverflowingPlacement(
       lane,
       currentCargo,
       gridPlacement,
-      overflowingCargoPlacementsIntoLane,
+      adjacentCargoPlacementsForLane,
       false
     );
     if (overflowingPlacement.laneId === "") return null;

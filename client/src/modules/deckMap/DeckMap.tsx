@@ -72,7 +72,7 @@ const DeckMap: React.FC<Props> = ({
       setMostForwardValidPlacementForLanes(getMostForwardValidPlacementForLanes(deck.lanes, cargoPlacements, currentCargoPlacement.cargo, bumperToBumperDistance, defaultVCG))
     }
   }, [deck.lanes, cargoPlacements, currentCargoPlacement, bumperToBumperDistance, defaultVCG])
-  console.log("pl", mostForwardValidPlacementForLanes)
+
   const onCargoPlacementClick = (cargoPlacement: CargoPlacement) => {
     if (!isOverview) return;
     if (currentCargoPlacement.cargo.id !== cargoPlacement.cargo.id) {

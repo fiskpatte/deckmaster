@@ -135,7 +135,10 @@ export const getPlacementFromScreenCoords = (
     };
     const cargoPlacementAsDeckMapElement = { ...placement.cargo, ...placement };
     const { cargo } = placement;
-    if (cargo.width > lane.width) {
+    const isOverflow = cargo.width > lane.width;
+    let overflowingIntoLaneXPlacement = 1000;
+    let overflowingXPlacement = 1000;
+    if (isOverflow) {
       //Set a limit in the y displacement
       const leftAdjacentLane = lane.adjacentLanes.filter(
         (al) => al.adjacentSide === AdjacentSide.Left && isAdjacent(al, cargoPlacementAsDeckMapElement, true)
@@ -146,13 +149,20 @@ export const getPlacementFromScreenCoords = (
       const someLeftAdjacentLane = leftAdjacentLane.length > 0;
       const someRightAdjacentLane = rightAdjacentLane.length > 0;
       if (!someRightAdjacentLane && !someLeftAdjacentLane) return cargoPlacementFactory();
-      const someAdjacentCargoInLeftAdjacentLane = adjacentCargoPlacementsForLane.some(acp => someLeftAdjacentLane && acp.laneId === leftAdjacentLane[0].id && isAdjacent({ ...acp.cargo, ...acp }, cargoPlacementAsDeckMapElement))
-      const someAdjacentCargoInRightAdjacentLane = adjacentCargoPlacementsForLane.some(acp => someRightAdjacentLane && acp.laneId === rightAdjacentLane[0].id && isAdjacent({ ...acp.cargo, ...acp }, cargoPlacementAsDeckMapElement))
+      const adjacentCargoInLeftAdjacentLane = adjacentCargoPlacementsForLane.filter(acp => someLeftAdjacentLane && acp.laneId === leftAdjacentLane[0].id && isAdjacent({ ...acp.cargo, ...acp }, cargoPlacementAsDeckMapElement));
+      const adjacentCargoInRightAdjacentLane = adjacentCargoPlacementsForLane.filter(acp => someRightAdjacentLane && acp.laneId === rightAdjacentLane[0].id && isAdjacent({ ...acp.cargo, ...acp }, cargoPlacementAsDeckMapElement));
+      const someAdjacentCargoInLeftAdjacentLane = adjacentCargoInLeftAdjacentLane.length > 0;
+      const someAdjacentCargoInRightAdjacentLane = adjacentCargoInRightAdjacentLane.length > 0;
       const cargoInLeftEdge = lane.TCG + (cargo.width - lane.width) / 2;
       const cargoInRightEdge = lane.TCG - (cargo.width - lane.width) / 2;
-      const max = someRightAdjacentLane && !someAdjacentCargoInRightAdjacentLane ? cargoInLeftEdge : cargoInRightEdge;
-      const min = someLeftAdjacentLane && !someAdjacentCargoInLeftAdjacentLane ? cargoInRightEdge : cargoInLeftEdge;
+      let max = someRightAdjacentLane && !someAdjacentCargoInRightAdjacentLane ? cargoInLeftEdge : cargoInRightEdge;
+      let min = someLeftAdjacentLane && !someAdjacentCargoInLeftAdjacentLane ? cargoInRightEdge : cargoInLeftEdge;
       scaledCenter.y = Math.min(Math.max(scaledCenter.y, min), max);
+      // Get limit in x displacement for overflowing cargo
+      if (!((someRightAdjacentLane && !someAdjacentCargoInRightAdjacentLane) || (someLeftAdjacentLane && !someAdjacentCargoInLeftAdjacentLane))) {
+        overflowingXPlacement = placement.LCG;
+        scaledCenter.y = placement.TCG;
+      }
     } else {
       //Ignore y displacement
       scaledCenter.y = placement.TCG;
@@ -160,12 +170,13 @@ export const getPlacementFromScreenCoords = (
     //Set a limit in the x displacement
     let max = arrayMin(cargoPlacementsForLane.filter(c => c.cargo.id !== cargo.id).map(c => c.LCG - c.cargo.length / 2), getEndpoints(lane).forward)
     if (overflowingCargoPlacementsIntoLane.length > 0) {
-      const overflowMinLCG = arrayMin(
+      overflowingIntoLaneXPlacement = arrayMin(
         overflowingCargoPlacementsIntoLane.map((c) => c.LCG - c.cargo.length / 2)
       );
-      max = Math.min(max, overflowMinLCG);
+      max = Math.min(max, overflowingIntoLaneXPlacement);
     }
     max -= cargo.length / 2 + bumperToBumperDistance;
+    max = Math.min(max, overflowingXPlacement);
     const min = lane.LCG - (lane.length - cargo.length) / 2;
     scaledCenter.x = Math.min(Math.max(scaledCenter.x, min), max);
 
