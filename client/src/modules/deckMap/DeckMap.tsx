@@ -6,10 +6,11 @@ import {
   getViewBoxOriginY,
   getViewBoxSizeX,
   getViewBoxSizeY,
-  getRulerOrigin,
+  getDeckMapBottom,
   cargoIsEmpty,
   cargoPlacementIsEmpty,
   getMostForwardValidPlacementForLanes,
+  getReplacementBoxOrigin
 } from "./DeckMap.functions";
 import { useDispatch } from "react-redux";
 import {
@@ -18,10 +19,11 @@ import {
 import { Deck, CargoPlacement, MostForwardValidPlacementForLanes } from "../../types/deckMap";
 import "./DeckMap.scss";
 import { FrameRuler } from "./frameRuler";
-import { Loader } from "./../../components/loader/Loader";
+import { Loader } from "./../../components/loader";
 import { PlacedCargo } from "./placedCargo";
 import { Grids } from "./grids";
 import { PlacingCargo } from "./placingCargo";
+import { ReplacementBox } from "./replacementBox";
 
 interface Props {
   deck: Deck;
@@ -58,6 +60,8 @@ const DeckMap: React.FC<Props> = ({
     ViewBoxDimensions
   >();
   const [mostForwardValidPlacementForLanes, setMostForwardValidPlacementForLanes] = useState<MostForwardValidPlacementForLanes>();
+  const [notReplacingCargoPlacements, setNotReplacingCargoPlacements] = useState<CargoPlacement[]>([]);
+  const [replacingCargoPlacements, setReplacingCargoPlacements] = useState<CargoPlacement[]>([]);
   useEffect(() => {
     setViewBoxDimensions({
       sizeX: getViewBoxSizeX(deck),
@@ -68,10 +72,15 @@ const DeckMap: React.FC<Props> = ({
   }, [deck]);
 
   useEffect(() => {
-    if (!cargoIsEmpty(currentCargoPlacement.cargo)) {
-      setMostForwardValidPlacementForLanes(getMostForwardValidPlacementForLanes(deck.lanes, cargoPlacements, currentCargoPlacement.cargo, bumperToBumperDistance, defaultVCG))
-    }
-  }, [deck.lanes, cargoPlacements, currentCargoPlacement, bumperToBumperDistance, defaultVCG])
+    const notReplacingCargoPlacements = cargoPlacements.filter(cp => !cp.replacing) ?? [];
+    const replacingCargoPlacements = cargoPlacements.filter(cp => cp.replacing) ?? []
+    setNotReplacingCargoPlacements(notReplacingCargoPlacements)
+    setReplacingCargoPlacements(replacingCargoPlacements)
+  }, [cargoPlacements])
+
+  useEffect(() => {
+    setMostForwardValidPlacementForLanes(getMostForwardValidPlacementForLanes(deck.lanes, notReplacingCargoPlacements, currentCargoPlacement.cargo, bumperToBumperDistance, defaultVCG))
+  }, [deck.lanes, notReplacingCargoPlacements, currentCargoPlacement, bumperToBumperDistance, defaultVCG])
 
   const onCargoPlacementClick = (cargoPlacement: CargoPlacement) => {
     if (!isOverview) return;
@@ -115,13 +124,23 @@ const DeckMap: React.FC<Props> = ({
           grids={deck.grids}
           onClick={setCargoPlacementFromFrontPlacement}
           currentCargo={currentCargoPlacement.cargo}
-          cargoPlacements={cargoPlacements}
+          cargoPlacements={notReplacingCargoPlacements}
           lanes={deck.lanes}
           mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
         />
-        <FrameRuler frames={deck.frames} originY={getRulerOrigin(deck)} />
+        <FrameRuler frames={deck.frames} originY={getDeckMapBottom(deck)} />
+        {isOverview && <ReplacementBox
+          cargoPlacements={replacingCargoPlacements}
+          currentCargoPlacement={currentCargoPlacement}
+          originY={getReplacementBoxOrigin(deck)}
+          originX={originX}
+          sizeX={sizeX}
+          onCargoPlacementClick={(cp: CargoPlacement) =>
+            onCargoPlacementClick(cp)
+          }
+        />}
         <PlacedCargo
-          cargo={cargoPlacements.filter(
+          cargo={notReplacingCargoPlacements.filter(
             cp => cp.cargo.id !== currentCargoPlacement.cargo.id
           )}
           onCargoPlacementClick={(cp: CargoPlacement) =>

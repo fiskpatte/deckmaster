@@ -34,7 +34,8 @@ const GridComponent: React.FC<Props> = ({
   let gridPlacement = {
     LCG: grid.LCG + grid.length / 2,
     TCG: grid.TCG,
-    laneId: lane.id
+    laneId: lane.id,
+    replacing: false
   } as CargoPlacement;
   let isVisible = grid.LCG + grid.length / 2 <= mostForwardValidPlacementForLane.LCG;
 

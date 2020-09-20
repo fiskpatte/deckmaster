@@ -45,11 +45,15 @@ export const getViewBoxSizeY = (currentDeck: Deck): number => {
   return yMax - yMin + DECK_MAP.Y_MARGIN;
 };
 
-export const getRulerOrigin = (currentDeck: Deck): number => {
+export const getDeckMapBottom = (currentDeck: Deck): number => {
   return (
-    arrayMax(currentDeck.lanes.map((lane) => getEndpoints(lane).right)) + 0.5
+    arrayMax(currentDeck.lanes.map((lane) => getEndpoints(lane).right)) + DECK_MAP.BASE_MARGIN
   );
 };
+
+export const getReplacementBoxOrigin = (currentDeck: Deck): number => {
+  return getDeckMapBottom(currentDeck) + 3 * DECK_MAP.FRAME_HEIGHT + DECK_MAP.BASE_MARGIN;
+}
 
 // translate page coordinate to SVG coordinate
 export const svgPoint = (
@@ -298,7 +302,8 @@ export const getMostForwardValidPlacementForLanes = (lanes: Array<Lane>, cargoPl
       LCG: lane.LCG + lane.length / 2,
       TCG: lane.TCG,
       VCG: lane.VCG + currentCargo.height * defaultVCG,
-      laneId: lane.id
+      laneId: lane.id,
+      replacing: false,
     } as CargoPlacement;
     const cargoPlacementsForLane = cargoPlacements.filter(cp => cp.laneId === lane.id && cp.cargo.id !== currentCargo.id);
     const overflowingCargoPlacementsIntoLane = cargoPlacements.filter(cp => cp.overflowingLaneId === lane.id && cp.cargo.id !== currentCargo.id);

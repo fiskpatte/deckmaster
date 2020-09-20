@@ -10,12 +10,12 @@ interface Props {
   label: string;
   onClick: () => void;
   type?:
-    | "positive"
-    | "danger"
-    | "navigation"
-    | "neutral"
-    | "warning"
-    | "search";
+  | "positive"
+  | "danger"
+  | "navigation"
+  | "neutral"
+  | "warning"
+  | "search";
   size?: "small" | "standard" | "medium" | "big";
   disabled?: boolean;
   loading?: boolean;
@@ -34,25 +34,25 @@ export const Button: React.FC<Props> = ({
   isDischarge = false,
   isSearch = false
 }) => (
-  <button
-    className={`Button type-${type} size-${size} ${className}`}
-    onClick={onClick}
-    disabled={disabled}
-  >
-    <FlexContainer
-      flexDirection="row"
-      justifyContent="space-around"
-      alignItems="center"
+    <button
+      className={`Button type-${type} size-${size} ${className}`}
+      onClick={loading ? () => null : onClick}
+      disabled={disabled}
     >
-      {loading ? (
-        <ClipLoader size={30} color={"#ffffff"} loading={true} />
-      ) : (
-        label
-      )}
-      {isSearch && <BsSearch />}
-      {isDischarge && !loading && <ImArrowRight />}
-    </FlexContainer>
-  </button>
-);
+      <FlexContainer
+        flexDirection="row"
+        justifyContent="space-around"
+        alignItems="center"
+      >
+        {loading ? (
+          <ClipLoader size={30} color={"#ffffff"} loading={true} />
+        ) : (
+            label
+          )}
+        {isSearch && <BsSearch />}
+        {isDischarge && !loading && <ImArrowRight />}
+      </FlexContainer>
+    </button>
+  );
 
 export default Button;
