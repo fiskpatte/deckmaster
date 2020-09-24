@@ -2,7 +2,7 @@ import React from "react";
 
 interface Props {
   children?: React.ReactNode;
-  flexDirection: "row" | "column";
+  flexDirection?: "row" | "column";
   justifyContent?:
     | "space-between"
     | "space-around"
@@ -15,7 +15,7 @@ interface Props {
 
 export const FlexContainer: React.FC<Props> = ({
   children,
-  flexDirection,
+  flexDirection = "row",
   justifyContent,
   alignItems,
 }) => (

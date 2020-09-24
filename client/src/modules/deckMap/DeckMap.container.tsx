@@ -7,10 +7,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 // import { ConfirmButton } from "./confirmButton";
 import {
+  setCurrentDeckId,
   setCurrentPlacement,
 } from "../../store/deckMap/deckMapActions";
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
-import { getCurrentDeck, getCargoPlacementsForDeck } from "../../store/deckMap/deckMapSelectors";
+import {
+  getCurrentDeck,
+  getCargoPlacementsForDeck,
+} from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
 import {
   getDeckNames,
@@ -22,17 +26,16 @@ import { routes } from "./../../routes";
 import { cargoPlacementFactory } from "../../types/deckMap";
 import Button from "../../components/button";
 // import { Loader } from "../../components/loader";
-import usePrevious from './../../hooks/usePrevious';
+import usePrevious from "./../../hooks/usePrevious";
 
 interface Props {
   isOverview: boolean;
 }
 
 export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
-  const {
-    deckMap,
-    currentCargoPlacement,
-  } = useSelector((state: RootState) => state.deckMapReducer);
+  const { deckMap, currentCargoPlacement } = useSelector(
+    (state: RootState) => state.deckMapReducer
+  );
   const { bumperToBumperDistance, defaultVCG } = useSelector(
     (state: RootState) => state.appReducer.settings
   );
@@ -47,21 +50,36 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const [loading, setLoading] = useState(false);
   const [discharging, setDischarging] = useState(false);
   const previousDeckId = usePrevious(currentDeck?.name);
+  const [isSearchingCargo, setIsSearchingCargo] = useState(false);
+  const [showCargoNotFound, setShowCargoNotFound] = useState(false);
+
+  const cargoPlacements = useSelector(
+    (state: RootState) => state.deckMapReducer.cargoPlacements
+  );
 
   useEffect(() => {
     let resetPlacement = cargoPlacementFactory();
     resetPlacement.cargo = currentCargoPlacement.cargo;
     if (previousDeckId && previousDeckId !== currentDeck?.name) {
-      dispatch(setCurrentPlacement(isOverview ? cargoPlacementFactory() : resetPlacement));
+      dispatch(
+        setCurrentPlacement(
+          isOverview ? cargoPlacementFactory() : resetPlacement
+        )
+      );
     }
-  }, [dispatch, isOverview, currentDeck, previousDeckId, currentCargoPlacement.cargo]);
+  }, [
+    dispatch,
+    isOverview,
+    currentDeck,
+    previousDeckId,
+    currentCargoPlacement.cargo,
+  ]);
 
   useEffect(() => {
     if (isOverview) {
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     }
   }, [dispatch, isOverview]);
-
   useEffect(() => {
     if (!isOverview && cargoIsEmpty(currentCargoPlacement.cargo)) {
       history.push(routes.PlaceCargo.path);
@@ -69,14 +87,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   }, [history, currentCargoPlacement.cargo, isOverview]);
 
   const onConfirm = async () => {
-    // set loader
     setLoading(true);
     if (updateExistingPlacement()) {
       try {
         await updateCargoPlacement({
           ...currentCargoPlacement,
           deckId: currentDeck.name,
-          cargo: currentCargoPlacement.cargo.id
+          cargo: currentCargoPlacement.cargo.id,
         });
       } catch (error) {
         console.error(error);
@@ -91,9 +108,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       await placeCargo({
         ...currentCargoPlacement,
         deckId: currentDeck.name,
-        cargo: currentCargoPlacement.cargo.id
+        cargo: currentCargoPlacement.cargo.id,
       });
-
+      dispatch(setCurrentPlacement(cargoPlacementFactory()));
       history.push(routes.PlaceCargo.path);
     } catch (error) {
       console.error(error);
@@ -117,7 +134,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         ...currentCargoPlacement,
         deckId: currentDeck.name,
         cargo: currentCargoPlacement.cargo.id,
-        discharged: true
+        discharged: true,
       });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
@@ -152,7 +169,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const showDischargeButton = () => {
-    if (cargoPlacementIsEmpty(currentCargoPlacement) || !isOverview) return false;
+    if (cargoPlacementIsEmpty(currentCargoPlacement) || !isOverview)
+      return false;
 
     return !placementsHaveDifferentPositions(
       currentCargoPlacement,
@@ -160,11 +178,47 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     );
   };
 
+  const searchIconClicked = () => {
+    // den ska bara synas när man kan klicka på den.
+    setIsSearchingCargo(true);
+  };
+
+  const doSearch = (input: string) => {
+    const result = cargoPlacements.find(
+      (cp) =>
+        cp.cargo.registrationNumber.toUpperCase().replace(/\s/g, "") ===
+        input.toUpperCase().replace(/\s/g, "")
+    );
+
+    if (!result) {
+      // Inform user that cargo was not found
+      setShowCargoNotFound(true);
+      return;
+    }
+
+    dispatch(setCurrentDeckId(result.deckId));
+    dispatch(setCurrentPlacement(result));
+    setIsSearchingCargo(false);
+    // Hitta rätt cargo och rätt deck.
+    // sätt dem
+    // Om det inte finns informerar vi användaren
+  };
+
+  const resetShowCargoNotFound = () => setShowCargoNotFound(false);
+
   if (!currentDeck) return null;
   return (
     <div className="DeckMap">
       <div className="DeckMapHeader">
-        <CargoDetails cargo={currentCargoPlacement.cargo} />
+        <CargoDetails
+          cargo={currentCargoPlacement.cargo}
+          searchIconClicked={searchIconClicked}
+          isSearchingCargo={isSearchingCargo}
+          searchIconEnabled={isOverview && !isSearchingCargo}
+          doSearch={doSearch}
+          showCargoNotFound={showCargoNotFound}
+          resetShowCargoNotFound={resetShowCargoNotFound}
+        />
 
         <DeckSelector
           deckNames={getDeckNames(deckMap)}
@@ -192,24 +246,24 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           />
         </div>
       ) : (
-          <div className="DeckMapFooter">
-            {showUndoButton() && (
-              <Button
-                onClick={() => undoButtonClick()}
-                type="neutral"
-                label="UNDO"
-              />
-            )}
-            {showConfirmButton() && (
-              <Button
-                type="positive"
-                label="CONFIRM"
-                onClick={() => onConfirm()}
-                loading={loading}
-              />
-            )}
-          </div>
-        )}
+        <div className="DeckMapFooter">
+          {showUndoButton() && (
+            <Button
+              onClick={() => undoButtonClick()}
+              type="neutral"
+              label="UNDO"
+            />
+          )}
+          {showConfirmButton() && (
+            <Button
+              type="positive"
+              label="CONFIRM"
+              onClick={() => onConfirm()}
+              loading={loading}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };

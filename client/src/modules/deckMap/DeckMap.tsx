@@ -12,12 +12,14 @@ import {
   getMostForwardValidPlacementForLanes,
 } from "./DeckMap.functions";
 import { useDispatch } from "react-redux";
+import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import {
-  setCurrentPlacement,
-} from "../../store/deckMap/deckMapActions";
-import { Deck, CargoPlacement, MostForwardValidPlacementForLanes } from "../../types/deckMap";
+  Deck,
+  CargoPlacement,
+  MostForwardValidPlacementForLanes,
+} from "../../types/deckMap";
 import "./DeckMap.scss";
-import { FrameRuler } from "./frameRuler";
+import FrameRuler from "./frameRuler/FrameRuler";
 import { Loader } from "./../../components/loader/Loader";
 import { PlacedCargo } from "./placedCargo";
 import { Grids } from "./grids";
@@ -46,7 +48,7 @@ const DeckMap: React.FC<Props> = ({
   setInitialCargoPlacement,
   cargoPlacements,
   bumperToBumperDistance,
-  defaultVCG
+  defaultVCG,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -57,21 +59,36 @@ const DeckMap: React.FC<Props> = ({
   const [viewBoxDimensions, setViewBoxDimensions] = useState<
     ViewBoxDimensions
   >();
-  const [mostForwardValidPlacementForLanes, setMostForwardValidPlacementForLanes] = useState<MostForwardValidPlacementForLanes>();
+  const [
+    mostForwardValidPlacementForLanes,
+    setMostForwardValidPlacementForLanes,
+  ] = useState<MostForwardValidPlacementForLanes>();
   useEffect(() => {
     setViewBoxDimensions({
       sizeX: getViewBoxSizeX(deck),
       sizeY: getViewBoxSizeY(deck),
       originX: getViewBoxOriginX(deck),
-      originY: getViewBoxOriginY(deck)
+      originY: getViewBoxOriginY(deck),
     });
   }, [deck]);
 
   useEffect(() => {
-    if (!cargoIsEmpty(currentCargoPlacement.cargo)) {
-      setMostForwardValidPlacementForLanes(getMostForwardValidPlacementForLanes(deck.lanes, cargoPlacements, currentCargoPlacement.cargo, bumperToBumperDistance, defaultVCG))
-    }
-  }, [deck.lanes, cargoPlacements, currentCargoPlacement, bumperToBumperDistance, defaultVCG])
+    setMostForwardValidPlacementForLanes(
+      getMostForwardValidPlacementForLanes(
+        deck.lanes,
+        cargoPlacements,
+        currentCargoPlacement.cargo,
+        bumperToBumperDistance,
+        defaultVCG
+      )
+    );
+  }, [
+    deck.lanes,
+    cargoPlacements,
+    currentCargoPlacement,
+    bumperToBumperDistance,
+    defaultVCG,
+  ]);
 
   const onCargoPlacementClick = (cargoPlacement: CargoPlacement) => {
     if (!isOverview) return;
@@ -82,16 +99,29 @@ const DeckMap: React.FC<Props> = ({
   };
 
   const setCargoPlacementFromFrontPlacement = (placement: CargoPlacement) => {
-    if (cargoIsEmpty(currentCargoPlacement.cargo) || cargoPlacementIsEmpty(placement)) return;
+    if (
+      cargoIsEmpty(currentCargoPlacement.cargo) ||
+      cargoPlacementIsEmpty(placement)
+    )
+      return;
     placement.LCG -= currentCargoPlacement.cargo.length / 2;
     setPlacement({ ...currentCargoPlacement, ...placement });
   };
 
-  if (!viewBoxDimensions || !mostForwardValidPlacementForLanes) return <Loader />;
+  if (!viewBoxDimensions || !mostForwardValidPlacementForLanes)
+    return <Loader />;
 
   const { sizeX, sizeY, originX, originY } = viewBoxDimensions;
 
-  if (!(isFinite(sizeX) && isFinite(sizeY) && isFinite(originY) && isFinite(originX))) return null;
+  if (
+    !(
+      isFinite(sizeX) &&
+      isFinite(sizeY) &&
+      isFinite(originY) &&
+      isFinite(originX)
+    )
+  )
+    return null;
 
   return (
     <svg
@@ -122,7 +152,7 @@ const DeckMap: React.FC<Props> = ({
         <FrameRuler frames={deck.frames} originY={getRulerOrigin(deck)} />
         <PlacedCargo
           cargo={cargoPlacements.filter(
-            cp => cp.cargo.id !== currentCargoPlacement.cargo.id
+            (cp) => cp.cargo.id !== currentCargoPlacement.cargo.id
           )}
           onCargoPlacementClick={(cp: CargoPlacement) =>
             onCargoPlacementClick(cp)

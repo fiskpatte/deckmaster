@@ -5,7 +5,7 @@ interface Props {
   value: string;
   weight?: "light" | "standard" | "medium" | "bold";
   size?: "small" | "standard" | "medium" | "big";
-  color?: "white" | "standard";
+  color?: "white" | "standard" | "red";
   className?: string;
 }
 

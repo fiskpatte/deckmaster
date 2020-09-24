@@ -1,4 +1,5 @@
 import { createSelector } from "reselect";
+import { CargoPlacement } from "../../types/deckMap";
 import { CargoState } from "../types";
 
 const getCurrentDeckId = (state: { deckMapReducer: CargoState }) =>
@@ -17,7 +18,8 @@ export const getCurrentDeck = createSelector(
 
 export const getCargoPlacementsForDeck = createSelector(
   [getCurrentDeckId, getCargoPlacements],
-  (currentDeckId, cargoPlacements) => cargoPlacements.filter(cp => cp.deckId === currentDeckId)
+  (currentDeckId, cargoPlacements) =>
+    cargoPlacements.filter((cp) => cp.deckId === currentDeckId)
 );
 
 export const getCargoPlacementsForLane = (laneId: string) =>
@@ -28,4 +30,13 @@ export const getCargoPlacementsForLane = (laneId: string) =>
 export const getOverflowingCargoPlacementsIntoLane = (laneId: string) =>
   createSelector(getCargoPlacements, (cargoPlacements) =>
     cargoPlacements.filter((cp) => cp.overflowingLaneId === laneId)
+  );
+
+export const getCargoPlacementByRegistrationNumber = (input: string) =>
+  createSelector(getCargoPlacements, (cargoPlacements) =>
+    cargoPlacements.find(
+      (cp: CargoPlacement) =>
+        cp.cargo.registrationNumber.replace(/\s/g, "") ===
+        input.replace(/\s/g, "")
+    )
   );

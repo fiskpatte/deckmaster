@@ -1,18 +1,18 @@
 @import "../../../styles/main.scss";
 
 .CargoDetails {
-  @include flexColumn();
+  @include flexRow();
   justify-content: space-around;
-  align-items: flex-start;
+  align-items: center;
   margin: 2vh 2vw;
   padding: 1vh;
   font-size: $standardFont;
   height: min-content;
-  width: min-content;
+  // width: min-content;
   z-index: $cargoDetailsOverlayZIndex + 1;
   background-color: white;
-  width: 250px;
-  height: 100px;
+  // width: 250px;
+  // height: 50px;
   .CargoDetailItem {
     @include flexStart();
     width: 100%;

@@ -7,6 +7,9 @@ interface Props {
   placeholder?: string;
   type?: string;
   size?: "small" | "standard" | "big";
+  id?: string;
+  autoFocus?: boolean;
+  onSubmit?: () => void;
 }
 
 export const TextInput: React.FC<Props> = ({
@@ -15,14 +18,24 @@ export const TextInput: React.FC<Props> = ({
   placeholder,
   type,
   size = "standard",
-}) => (
-  <input
-    type={type || "text"}
-    className={`TextInput textinput-size-${size}`}
-    value={value}
-    onChange={onChange}
-    placeholder={placeholder}
-  />
-);
+  id,
+  autoFocus = false,
+  onSubmit = () => null,
+}) => {
+  return (
+    <form onSubmit={onSubmit}>
+      <input
+        type={type || "text"}
+        className={`TextInput textinput-size-${size}`}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        id={id}
+        autoFocus={autoFocus}
+        onSubmit={onSubmit}
+      />
+    </form>
+  );
+};
 
 export default TextInput;

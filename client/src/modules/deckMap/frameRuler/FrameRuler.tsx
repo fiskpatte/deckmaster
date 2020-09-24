@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Frame } from "../../../types/deckMap";
 import { arrayMin, arrayMax } from "../../../functions/math";
 import FrameComponent from "./Frame";
@@ -10,8 +10,8 @@ interface Props {
 }
 
 interface Distances {
-  minDistance: number,
-  maxDistance: number
+  minDistance: number;
+  maxDistance: number;
 }
 
 export const FrameRuler: React.FC<Props> = ({ frames, originY }) => {
@@ -21,9 +21,9 @@ export const FrameRuler: React.FC<Props> = ({ frames, originY }) => {
     let frameDistances = frames.map((f) => f.distance);
     setDistances({
       minDistance: arrayMin(frameDistances),
-      maxDistance: arrayMax(frameDistances)
-    })
-  }, [frames])
+      maxDistance: arrayMax(frameDistances),
+    });
+  }, [frames]);
 
   if (!distances) return null;
 
@@ -43,4 +43,4 @@ export const FrameRuler: React.FC<Props> = ({ frames, originY }) => {
   );
 };
 
-export default FrameRuler;
+export default React.memo(FrameRuler);
