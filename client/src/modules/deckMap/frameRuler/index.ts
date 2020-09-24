@@ -1,1 +1,3 @@
-export * from './FrameRuler';
+import FrameRuler from "./FrameRuler";
+
+export default FrameRuler;

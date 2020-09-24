@@ -4,15 +4,14 @@
   height: 100%-$headerHeight;
   background-color: $backgroundGray;
   .DeckMapHeader {
+    @include flexSpaceBetween();
     border: 0;
     height: 20%;
-    display: flex;
-    justify-content: space-between;
   }
   .svgBody {
     width: 99%;
     height: 55%;
-    overflow: initial;
+    overflow: auto;
     .containerGroup {
       fill: white;
       stroke: black;
@@ -21,8 +20,10 @@
     }
   }
   .DeckMapFooter {
-    @include flexCenter();
+    @include flexSpaceBetween();
     height: 25%;
+    margin: 0 5vw;
+    align-items: center;
   }
 
   .DeckMapFooterDischarge {

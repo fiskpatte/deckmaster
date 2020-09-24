@@ -17,7 +17,6 @@ export const PlacedCargo: React.FC<Props> = ({
       {cargoPlacements.map(cp => (
         <g
           key={`cargoIcon${cp.id}`}
-          id={`cargoIcon${cp.id}`}
           onClick={() => onCargoPlacementClick(cp)}
         >
           <CargoIcon

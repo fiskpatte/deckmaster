@@ -144,6 +144,23 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return;
   };
 
+  const replaceButtonClick = async () => {
+    try {
+      setDischarging(true);
+      await updateCargoPlacement({
+        ...currentCargoPlacement,
+        deckId: currentDeck.name,
+        cargo: currentCargoPlacement.cargo.id,
+        replacing: true,
+      });
+      dispatch(setCurrentPlacement(cargoPlacementFactory()));
+    } catch (error) {
+      console.error(error);
+    }
+    setDischarging(false);
+    return;
+  };
+
   const updateExistingPlacement = () => {
     return isOverview;
   };
@@ -169,7 +186,25 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const showDischargeButton = () => {
-    if (cargoPlacementIsEmpty(currentCargoPlacement) || !isOverview)
+    if (
+      cargoPlacementIsEmpty(currentCargoPlacement) ||
+      !isOverview ||
+      currentCargoPlacement.replacing
+    )
+      return false;
+
+    return !placementsHaveDifferentPositions(
+      currentCargoPlacement,
+      initialCargoPlacement
+    );
+  };
+
+  const showReplaceButton = () => {
+    if (
+      cargoPlacementIsEmpty(currentCargoPlacement) ||
+      !isOverview ||
+      currentCargoPlacement.replacing
+    )
       return false;
 
     return !placementsHaveDifferentPositions(
@@ -234,9 +269,16 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         bumperToBumperDistance={bumperToBumperDistance}
         defaultVCG={defaultVCG}
       />
-      {showDischargeButton() ? (
-        <div className="DeckMapFooterDischarge">
-          <div></div>
+      <div className="DeckMapFooter">
+        {showReplaceButton() && (
+          <Button
+            onClick={replaceButtonClick}
+            type="neutral"
+            label="REPLACE"
+            loading={discharging}
+          />
+        )}
+        {showDischargeButton() && (
           <Button
             onClick={dischargeButtonClick}
             type="warning"
@@ -244,26 +286,19 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             loading={discharging}
             isDischarge={true}
           />
-        </div>
-      ) : (
-        <div className="DeckMapFooter">
-          {showUndoButton() && (
-            <Button
-              onClick={() => undoButtonClick()}
-              type="neutral"
-              label="UNDO"
-            />
-          )}
-          {showConfirmButton() && (
-            <Button
-              type="positive"
-              label="CONFIRM"
-              onClick={() => onConfirm()}
-              loading={loading}
-            />
-          )}
-        </div>
-      )}
+        )}
+        {showUndoButton() && (
+          <Button onClick={undoButtonClick} type="neutral" label="UNDO" />
+        )}
+        {showConfirmButton() && (
+          <Button
+            type="positive"
+            label="CONFIRM"
+            onClick={onConfirm}
+            loading={loading}
+          />
+        )}
+      </div>
     </div>
   );
 };

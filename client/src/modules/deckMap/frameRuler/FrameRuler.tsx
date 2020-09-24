@@ -3,6 +3,7 @@ import { Frame } from "../../../types/deckMap";
 import { arrayMin, arrayMax } from "../../../functions/math";
 import FrameComponent from "./Frame";
 import "./Frame.scss";
+import { DECK_MAP } from "../../../constants";
 
 interface Props {
   frames: Array<Frame>;
@@ -34,7 +35,7 @@ export const FrameRuler: React.FC<Props> = ({ frames, originY }) => {
         x={distances.minDistance}
         y={originY}
         width={distances.maxDistance - distances.minDistance}
-        height={1}
+        height={DECK_MAP.FRAME_HEIGHT}
       />
       {frames.map((f) => (
         <FrameComponent key={f.id} frame={f} originY={originY} />

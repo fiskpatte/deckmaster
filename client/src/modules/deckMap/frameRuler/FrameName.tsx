@@ -21,7 +21,7 @@ export const FrameName: React.FC<Props> = ({ frame, originY }) => {
       transform={`scale(${1 / DECK_MAP.X_SCALE} ${1 / DECK_MAP.Y_SCALE})`}
       fontSize={`${fontSize}em`}
       x={frame.distance * DECK_MAP.X_SCALE}
-      y={(originY + 2) * DECK_MAP.Y_SCALE}
+      y={(originY + 2 * DECK_MAP.FRAME_HEIGHT) * DECK_MAP.Y_SCALE}
       ref={textRef}
     >
       {frame.id}
