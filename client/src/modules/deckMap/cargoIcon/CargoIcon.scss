@@ -5,12 +5,14 @@
   stroke-width: 1;
   stroke: $gray20;
   pointer-events: auto;
+  .BoundingBox {
+    fill: $gray20;
+    opacity: 0.6;
+    stroke: none;
+    pointer-events: visible;
+  }
 }
-.BoundingBox {
-  fill: none;
-  stroke: none;
-  pointer-events: visible;
-}
+
 .CargoIcon.Placing {
   pointer-events: auto;
   animation: blinker 1.5s linear infinite;
@@ -20,4 +22,12 @@
     fill: $gray80;
     stroke: $gray80;
   }
+}
+.CargoRegistrationNumber{
+  fill: white;
+  stroke: none;
+  font-family: FoundrySterlingLight;
+  dominant-baseline: central;
+  text-anchor: middle;
+  pointer-events: none;
 }

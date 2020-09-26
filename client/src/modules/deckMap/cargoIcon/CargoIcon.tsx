@@ -4,6 +4,7 @@ import { ReactComponent as Icon } from "../../../assets/icons/cargoIcon.svg";
 import "./CargoIcon.scss";
 import { motion } from "framer-motion";
 import usePrevious from './../../../hooks/usePrevious';
+import { DECK_MAP } from "../../../constants";
 
 interface Props {
   x: number;
@@ -14,6 +15,7 @@ interface Props {
   dragCallback?: (info: MouseEvent | TouchEvent | PointerEvent) => void;
   dragEndCallback?: () => void;
   cargoId: string;
+  registrationNumber: string;
 }
 
 //This component uses {x,y} as LCG and TCG coordinates
@@ -26,12 +28,17 @@ export const CargoIcon: React.FC<Props> = ({
   dragCallback,
   dragEndCallback,
   cargoId,
+  registrationNumber
 }) => {
   const groupRef = useRef<SVGPathElement>(null);
   const previousCargoId = usePrevious(cargoId);
   const newCargo = previousCargoId !== cargoId;
   const { scale } = useReferenceScale(groupRef, { width, height });
-
+  // let fontSize = Math.min(scale.width, scale.height);
+  // if (scale.height !== 1 && scale.width !== 1) {
+  //   //Avoid changing the font size before the initial render so that the scale applies correctly
+  //   fontSize *= DECK_MAP.GRID_NAME_FONT_SIZE;
+  // }
   // const handleDragStart = (event: any, info: any) => {
   //   console.log("START", event, info); //TODO: save dragOffset
   // };
@@ -65,8 +72,19 @@ export const CargoIcon: React.FC<Props> = ({
           y={0}
           height={height}
           width={width}
+          rx={DECK_MAP.LANE_BORDER_RADIUS}
+          ry={DECK_MAP.LANE_BORDER_RADIUS}
           className="BoundingBox"
         />
+        <text
+          className="CargoRegistrationNumber"
+          x={DECK_MAP.X_SCALE * width / 2}
+          y={DECK_MAP.Y_SCALE * height / 2}
+          fontSize={`${DECK_MAP.CARGO_ICON_REGISTRATION_NUMBER_SIZE}em`}
+          transform={`scale(${1 / DECK_MAP.X_SCALE} ${1 / DECK_MAP.Y_SCALE})`}
+        >
+          {registrationNumber}
+        </text>
       </g>
     </motion.svg>
   );

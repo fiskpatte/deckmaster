@@ -79,6 +79,7 @@ export const PlacingCargo: React.FC<Props> = ({
       dragCallback={onCargoDrag}
       dragEndCallback={pinCargoAfterDrag}
       cargoId={currentCargoPlacement.cargo.id}
+      registrationNumber={currentCargoPlacement.cargo.registrationNumber}
     />
   );
 };

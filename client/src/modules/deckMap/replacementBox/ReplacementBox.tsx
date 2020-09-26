@@ -39,6 +39,7 @@ export const ReplacementBox: React.FC<Props> = ({
             height={cargoPlacement.cargo.width}
             cargoId={cargoPlacement.cargo.id}
             placing={currentCargoPlacement.cargo.id === cargoPlacement.cargo.id}
+            registrationNumber={cargoPlacement.cargo.registrationNumber}
           />
         </g>
       )

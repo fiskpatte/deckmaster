@@ -51,6 +51,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const [discharging, setDischarging] = useState(false);
   const previousDeckId = usePrevious(currentDeck?.name);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
+  const previousIsSearchingCargo = usePrevious(isSearchingCargo);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
 
   const cargoPlacements = useSelector(
@@ -60,10 +61,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   useEffect(() => {
     let resetPlacement = cargoPlacementFactory();
     resetPlacement.cargo = currentCargoPlacement.cargo;
-    if (previousDeckId && previousDeckId !== currentDeck?.name) {
+    if (previousDeckId && previousDeckId !== currentDeck?.name && !previousIsSearchingCargo) {
       dispatch(
         setCurrentPlacement(
-          isOverview ? cargoPlacementFactory() : resetPlacement
+          resetPlacement
         )
       );
     }
@@ -73,6 +74,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     currentDeck,
     previousDeckId,
     currentCargoPlacement.cargo,
+    previousIsSearchingCargo
   ]);
 
   useEffect(() => {
@@ -226,17 +228,14 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     );
 
     if (!result) {
-      // Inform user that cargo was not found
       setShowCargoNotFound(true);
       return;
     }
 
     dispatch(setCurrentDeckId(result.deckId));
     dispatch(setCurrentPlacement(result));
+    setInitialCargoPlacement(result);
     setIsSearchingCargo(false);
-    // Hitta rätt cargo och rätt deck.
-    // sätt dem
-    // Om det inte finns informerar vi användaren
   };
 
   const resetShowCargoNotFound = () => setShowCargoNotFound(false);

@@ -25,6 +25,7 @@ export const PlacedCargo: React.FC<Props> = ({
             width={cp.cargo.length}
             height={cp.cargo.width}
             cargoId={cp.cargo.id}
+            registrationNumber={cp.cargo.registrationNumber}
           />
         </g>
       ))}

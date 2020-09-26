@@ -32,7 +32,8 @@ const useSocket = (isLoggedIn: boolean, voyageId: string) => {
         });
       };
 
-      const socket = socketIOClient("http://192.168.1.228:4000");
+      // const socket = socketIOClient("http://192.168.1.228:4000");
+      const socket = socketIOClient("http://localhost:4000/");
       console.log("connecting to socket");
       updateCargoPlacements(socket);
       updateCargoQueue(socket);
