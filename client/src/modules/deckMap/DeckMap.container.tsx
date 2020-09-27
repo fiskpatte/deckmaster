@@ -8,19 +8,19 @@ import { RootState } from "../../store/store";
 // import { ConfirmButton } from "./confirmButton";
 import {
   setCurrentDeckId,
-  setCurrentPlacement,
+  setCurrentPlacement
 } from "../../store/deckMap/deckMapActions";
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
 import {
   getCurrentDeck,
-  getCargoPlacementsForDeck,
+  getCargoPlacementsForDeck
 } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
 import {
   getDeckNames,
   placementsHaveDifferentPositions,
   cargoPlacementIsEmpty,
-  cargoIsEmpty,
+  cargoIsEmpty
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { cargoPlacementFactory } from "../../types/deckMap";
@@ -54,6 +54,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const previousIsSearchingCargo = usePrevious(isSearchingCargo);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
+  const [placeCargoComplete, setPlaceCargoComplete] = useState(false);
 
   const cargoPlacements = useSelector(
     (state: RootState) => state.deckMapReducer.cargoPlacements
@@ -75,7 +76,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     currentDeck,
     previousDeckId,
     currentCargoPlacement.cargo,
-    previousIsSearchingCargo,
+    previousIsSearchingCargo
   ]);
 
   useEffect(() => {
@@ -84,7 +85,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   }, [dispatch, isOverview]);
   useEffect(() => {
-    if (!isOverview && cargoIsEmpty(currentCargoPlacement.cargo)) {
+    if (
+      !isOverview &&
+      cargoIsEmpty(currentCargoPlacement.cargo) &&
+      placeCargoComplete
+    ) {
       history.push(routes.PlaceCargo.path);
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
@@ -96,7 +101,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         await updateCargoPlacement({
           ...currentCargoPlacement,
           deckId: currentDeck.name,
-          cargo: currentCargoPlacement.cargo.id,
+          cargo: currentCargoPlacement.cargo.id
         });
       } catch (error) {
         console.error(error);
@@ -111,9 +116,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       await placeCargo({
         ...currentCargoPlacement,
         deckId: currentDeck.name,
-        cargo: currentCargoPlacement.cargo.id,
+        cargo: currentCargoPlacement.cargo.id
       });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
+      setPlaceCargoComplete(true);
       history.push(routes.PlaceCargo.path);
     } catch (error) {
       console.error(error);
@@ -121,11 +127,19 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     setLoading(false);
   };
 
-  const undoButtonClick = () => {
-    if (isOverview) {
-      dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
+  const startOverButtonClick = () => {
+    if (!isOverview) {
+      dispatch(
+        setCurrentPlacement({
+          ...currentCargoPlacement,
+          LCG: 0,
+          TCG: 0,
+          VCG: 0,
+          laneId: ""
+        })
+      );
     } else {
-      dispatch(setCurrentPlacement(cargoPlacementFactory()));
+      dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
     }
   };
 
@@ -137,7 +151,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         ...currentCargoPlacement,
         deckId: currentDeck.name,
         cargo: currentCargoPlacement.cargo.id,
-        discharged: true,
+        discharged: true
       });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
@@ -147,21 +161,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return;
   };
 
-  const replaceButtonClick = async () => {
-    try {
-      setDischarging(true);
-      await updateCargoPlacement({
-        ...currentCargoPlacement,
-        deckId: currentDeck.name,
-        cargo: currentCargoPlacement.cargo.id,
-        replacing: true,
-      });
-      dispatch(setCurrentPlacement(cargoPlacementFactory()));
-    } catch (error) {
-      console.error(error);
-    }
-    setDischarging(false);
-    return;
+  const cancelButtonClick = () => {
+    dispatch(setCurrentPlacement(cargoPlacementFactory()));
+    history.push(routes.PlaceCargo.path);
   };
 
   const updateExistingPlacement = () => {
@@ -179,7 +181,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return true;
   };
 
-  const showUndoButton = () => {
+  const showCancelButton = () => !isOverview;
+
+  const showStartOverButton = () => {
     if (currentCargoPlacement.laneId === "") return false;
 
     return placementsHaveDifferentPositions(
@@ -202,20 +206,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     );
   };
 
-  const showReplaceButton = () => {
-    if (
-      cargoPlacementIsEmpty(currentCargoPlacement) ||
-      !isOverview ||
-      currentCargoPlacement.replacing
-    )
-      return false;
-
-    return !placementsHaveDifferentPositions(
-      currentCargoPlacement,
-      initialCargoPlacement
-    );
-  };
-
   const searchIconClicked = () => {
     // den ska bara synas när man kan klicka på den.
     setIsSearchingCargo(true);
@@ -223,7 +213,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   const doSearch = (input: string) => {
     const result = cargoPlacements.find(
-      (cp) =>
+      cp =>
         cp.cargo.registrationNumber.toUpperCase().replace(/\s/g, "") ===
         input.toUpperCase().replace(/\s/g, "")
     );
@@ -262,11 +252,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         />
         {!isOverview && (
           <div className="placecargolabel">
-            <Text
-              value="Place the cargo on the deck"
-              weight="medium"
-              // size="medium"
-            />
+            <Text value="Place the cargo" weight="bold" />
           </div>
         )}
       </div>
@@ -281,12 +267,16 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         defaultVCG={defaultVCG}
       />
       <div className="DeckMapFooter">
-        {showReplaceButton() && (
+        {isOverview && showStartOverButton() && showConfirmButton() && (
+          <div></div>
+        )}
+        {showCancelButton() && (
           <Button
-            onClick={replaceButtonClick}
-            type="neutral"
-            label="REPLACE"
+            onClick={cancelButtonClick}
+            type="warning"
+            label="CANCEL"
             loading={discharging}
+            isCancelPlacement={true}
           />
         )}
         {showDischargeButton() && (
@@ -298,8 +288,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             isDischarge={true}
           />
         )}
-        {showUndoButton() && (
-          <Button onClick={undoButtonClick} type="neutral" label="UNDO" />
+        {showStartOverButton() && (
+          <Button
+            onClick={startOverButtonClick}
+            type="neutral"
+            label="START OVER"
+            isStartOver={true}
+          />
         )}
         {showConfirmButton() && (
           <Button
