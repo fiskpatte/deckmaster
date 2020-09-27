@@ -27,6 +27,7 @@ import { cargoPlacementFactory } from "../../types/deckMap";
 import Button from "../../components/button";
 // import { Loader } from "../../components/loader";
 import usePrevious from "./../../hooks/usePrevious";
+import Text from "../../components/text";
 
 interface Props {
   isOverview: boolean;
@@ -259,7 +260,17 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           deckNames={getDeckNames(deckMap)}
           currentDeckName={currentDeck.name}
         />
+        {!isOverview && (
+          <div className="placecargolabel">
+            <Text
+              value="Place the cargo on the deck"
+              weight="medium"
+              // size="medium"
+            />
+          </div>
+        )}
       </div>
+
       <DeckMap
         currentCargoPlacement={currentCargoPlacement}
         deck={currentDeck}
