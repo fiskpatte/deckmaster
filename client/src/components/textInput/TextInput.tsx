@@ -9,7 +9,8 @@ interface Props {
   size?: "small" | "standard" | "big";
   id?: string;
   autoFocus?: boolean;
-  onSubmit?: () => void;
+  onSubmit?: (e: any) => void;
+  hasSubmit?: boolean;
 }
 
 export const TextInput: React.FC<Props> = ({
@@ -21,20 +22,38 @@ export const TextInput: React.FC<Props> = ({
   id,
   autoFocus = false,
   onSubmit = () => null,
+  hasSubmit = false,
 }) => {
+  if (hasSubmit) {
+    return (
+      <form onSubmit={(e) => onSubmit(e)}>
+        <input
+          type="submit"
+          style={{ visibility: "hidden", position: "absolute" }}
+        />
+        <input
+          type={type || "text"}
+          className={`TextInput textinput-size-${size}`}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          id={id}
+          autoFocus={autoFocus}
+        />
+      </form>
+    );
+  }
+
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        type={type || "text"}
-        className={`TextInput textinput-size-${size}`}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        id={id}
-        autoFocus={autoFocus}
-        onSubmit={onSubmit}
-      />
-    </form>
+    <input
+      type={type || "text"}
+      className={`TextInput textinput-size-${size}`}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      id={id}
+      autoFocus={autoFocus}
+    />
   );
 };
 

@@ -53,6 +53,11 @@ export const CargoDetails: React.FC<Props> = ({
     }
   };
 
+  const onSearchSubmit = (e: any) => {
+    e.preventDefault();
+    doSearch(input);
+  };
+
   return (
     <>
       <div className="CargoDetails">
@@ -64,10 +69,10 @@ export const CargoDetails: React.FC<Props> = ({
                 onChange={(e) => onInputChange(e.target.value)}
                 id="search-input"
                 size="small"
+                hasSubmit={true}
                 autoFocus={true}
-                onSubmit={() => doSearch(input)}
+                onSubmit={onSearchSubmit}
               />
-              <button onClick={() => doSearch(input)}>Search</button>
             </FlexContainer>
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}
           </FlexContainer>

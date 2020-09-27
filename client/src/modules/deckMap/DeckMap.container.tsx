@@ -61,12 +61,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   useEffect(() => {
     let resetPlacement = cargoPlacementFactory();
     resetPlacement.cargo = currentCargoPlacement.cargo;
-    if (previousDeckId && previousDeckId !== currentDeck?.name && !previousIsSearchingCargo) {
-      dispatch(
-        setCurrentPlacement(
-          resetPlacement
-        )
-      );
+    if (
+      previousDeckId &&
+      previousDeckId !== currentDeck?.name &&
+      !previousIsSearchingCargo
+    ) {
+      dispatch(setCurrentPlacement(resetPlacement));
     }
   }, [
     dispatch,
@@ -74,7 +74,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     currentDeck,
     previousDeckId,
     currentCargoPlacement.cargo,
-    previousIsSearchingCargo
+    previousIsSearchingCargo,
   ]);
 
   useEffect(() => {
@@ -236,6 +236,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     dispatch(setCurrentPlacement(result));
     setInitialCargoPlacement(result);
     setIsSearchingCargo(false);
+    return false;
   };
 
   const resetShowCargoNotFound = () => setShowCargoNotFound(false);
