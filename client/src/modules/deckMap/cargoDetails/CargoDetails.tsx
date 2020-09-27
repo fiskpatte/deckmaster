@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import CargoDetailItem from "./CargoDetailsItem";
+import CargoDetailsItem from "./CargoDetailsItem";
 import "./CargoDetails.scss";
 import { Cargo } from "../../../types/deckMap";
 import { BsSearch } from "react-icons/bs";
@@ -16,6 +16,7 @@ interface Props {
   doSearch: (input: string) => void;
   resetShowCargoNotFound: () => void;
   showCargoNotFound: boolean;
+  showWideCargoIcon?: boolean;
 }
 
 export const CargoDetails: React.FC<Props> = ({
@@ -26,6 +27,7 @@ export const CargoDetails: React.FC<Props> = ({
   doSearch,
   showCargoNotFound,
   resetShowCargoNotFound,
+  showWideCargoIcon = false
 }) => {
   const [input, setInput] = useState("");
   const { registrationNumber } = cargo;
@@ -57,7 +59,6 @@ export const CargoDetails: React.FC<Props> = ({
     e.preventDefault();
     doSearch(input);
   };
-
   return (
     <>
       <div className="CargoDetails">
@@ -66,7 +67,7 @@ export const CargoDetails: React.FC<Props> = ({
             <FlexContainer>
               <TextInput
                 value={input}
-                onChange={(e) => onInputChange(e.target.value)}
+                onChange={e => onInputChange(e.target.value)}
                 id="search-input"
                 size="small"
                 hasSubmit={true}
@@ -77,9 +78,10 @@ export const CargoDetails: React.FC<Props> = ({
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}
           </FlexContainer>
         ) : (
-          <CargoDetailItem
+          <CargoDetailsItem
             label={!registrationNumber ? "No cargo selected" : "Cargo"}
             value={registrationNumber}
+            showWideCargoIcon={showWideCargoIcon}
           />
         )}
 

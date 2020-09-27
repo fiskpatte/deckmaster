@@ -28,6 +28,8 @@ import Button from "../../components/button";
 // import { Loader } from "../../components/loader";
 import usePrevious from "./../../hooks/usePrevious";
 import Text from "../../components/text";
+import { arrayMin } from "./../../functions/math";
+import { Lane } from "./../../types/deckMap";
 
 interface Props {
   isOverview: boolean;
@@ -55,6 +57,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const previousIsSearchingCargo = usePrevious(isSearchingCargo);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
   const [placeCargoComplete, setPlaceCargoComplete] = useState(false);
+  const [showWideCargoIcon, setShowWideCargoIcon] = useState(false);
 
   const cargoPlacements = useSelector(
     (state: RootState) => state.deckMapReducer.cargoPlacements
@@ -92,7 +95,14 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     ) {
       history.push(routes.PlaceCargo.path);
     }
-  }, [history, currentCargoPlacement.cargo, isOverview]);
+  }, [history, currentCargoPlacement.cargo, isOverview, placeCargoComplete]);
+
+  useEffect(() => {
+    const thinestLane = arrayMin(
+      currentDeck.lanes.map((lane: Lane) => lane.width)
+    );
+    setShowWideCargoIcon(thinestLane < currentCargoPlacement.cargo.width);
+  }, [currentDeck, currentCargoPlacement]);
 
   const onConfirm = async () => {
     setLoading(true);
@@ -244,8 +254,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           doSearch={doSearch}
           showCargoNotFound={showCargoNotFound}
           resetShowCargoNotFound={resetShowCargoNotFound}
+          showWideCargoIcon={showWideCargoIcon}
         />
-
         <DeckSelector
           deckNames={getDeckNames(deckMap)}
           currentDeckName={currentDeck.name}
