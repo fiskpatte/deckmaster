@@ -6,6 +6,7 @@ import { CargoQueueItem } from "../types/CargoQueueItem";
 import cargoQueueActions from "../store/cargoQueue/cargoQueueActions";
 import { Settings } from "../types/settings";
 import appActions from "../store/app/appActions";
+import { SERVER_PREFIX } from './../constants';
 
 const useSocket = (isLoggedIn: boolean, voyageId: string) => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const useSocket = (isLoggedIn: boolean, voyageId: string) => {
       };
 
       // const socket = socketIOClient("http://192.168.1.228:4000");
-      const socket = socketIOClient("http://localhost:4000/");
+      const socket = socketIOClient(SERVER_PREFIX);
       console.log("connecting to socket");
       updateCargoPlacements(socket);
       updateCargoQueue(socket);

@@ -1,12 +1,12 @@
 import axios from "axios";
+import { SERVER_PREFIX } from "./../constants";
 
 axios.defaults.headers.get["Content-Type"] = "application/json";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const serverPrefix = "http://localhost:4000/";
-// const serverPrefix = "http://192.168.1.228:4000/";
+const serverPrefix = SERVER_PREFIX;
 
-export const get = async (endpoint) => {
+export const get = async endpoint => {
   try {
     endpoint = removeSlashPrefix(endpoint);
     const result = await axios.get(`${serverPrefix + endpoint}`);
@@ -67,5 +67,5 @@ export const axiosDelete = async (endpoint, body) => {
   }
 };
 
-const removeSlashPrefix = (endpoint) =>
+const removeSlashPrefix = endpoint =>
   endpoint[0] === "/" ? endpoint.substr(1) : endpoint;
