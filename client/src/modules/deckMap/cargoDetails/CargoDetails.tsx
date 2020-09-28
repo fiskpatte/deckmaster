@@ -15,6 +15,7 @@ interface Props {
   searchIconEnabled: boolean;
   doSearch: (input: string) => void;
   resetShowCargoNotFound: () => void;
+  onOutsideClick: () => void;
   showCargoNotFound: boolean;
   showWideCargoIcon?: boolean;
 }
@@ -27,7 +28,8 @@ export const CargoDetails: React.FC<Props> = ({
   doSearch,
   showCargoNotFound,
   resetShowCargoNotFound,
-  showWideCargoIcon = false
+  showWideCargoIcon = false,
+  onOutsideClick
 }) => {
   const [input, setInput] = useState("");
   const { registrationNumber } = cargo;
@@ -73,6 +75,7 @@ export const CargoDetails: React.FC<Props> = ({
                 hasSubmit={true}
                 autoFocus={true}
                 onSubmit={onSearchSubmit}
+                onOutsideClick={onOutsideClick}
               />
             </FlexContainer>
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}

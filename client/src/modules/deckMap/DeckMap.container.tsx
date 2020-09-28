@@ -52,7 +52,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  const previousDeckId = usePrevious(currentDeck ?.name);
+  const previousDeckId = usePrevious(currentDeck?.name);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const previousIsSearchingCargo = usePrevious(isSearchingCargo);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
@@ -68,8 +68,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     resetPlacement.cargo = currentCargoPlacement.cargo;
     if (
       previousDeckId &&
-        previousDeckId !== currentDeck ?.name &&
-        !previousIsSearchingCargo
+      previousDeckId !== currentDeck?.name &&
+      !previousIsSearchingCargo
     ) {
       dispatch(setCurrentPlacement(resetPlacement));
     }
@@ -98,10 +98,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   }, [history, currentCargoPlacement.cargo, isOverview, placeCargoComplete]);
 
   useEffect(() => {
-    const thinestLane = arrayMin(
-      currentDeck.lanes.map((lane: Lane) => lane.width)
-    );
-    setShowWideCargoIcon(thinestLane < currentCargoPlacement.cargo.width);
+    if (currentDeck && currentDeck.lanes) {
+      const thinestLane = arrayMin(
+        currentDeck.lanes.map((lane: Lane) => lane.width)
+      );
+      setShowWideCargoIcon(thinestLane < currentCargoPlacement.cargo.width);
+    }
   }, [currentDeck, currentCargoPlacement]);
 
   const onConfirm = async () => {
@@ -247,7 +249,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         ...currentCargoPlacement,
         deckId: currentDeck.name,
         cargo: currentCargoPlacement.cargo.id,
-        replacing: true,
+        replacing: true
       });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
@@ -255,7 +257,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
     setDischarging(false);
     return;
-  }
+  };
 
   const showReplaceButton = () => {
     if (
@@ -273,6 +275,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   const resetShowCargoNotFound = () => setShowCargoNotFound(false);
 
+  const onOutsideSearchInputClick = () => {
+    setIsSearchingCargo(false);
+  };
+
   if (!currentDeck) return null;
   return (
     <div className="DeckMap">
@@ -286,6 +292,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           showCargoNotFound={showCargoNotFound}
           resetShowCargoNotFound={resetShowCargoNotFound}
           showWideCargoIcon={showWideCargoIcon}
+          onOutsideClick={onOutsideSearchInputClick}
         />
         <DeckSelector
           deckNames={getDeckNames(deckMap)}
@@ -330,10 +337,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           />
         )}
         {showReplaceButton() && (
-          <Button
-            onClick={replaceButtonClick}
-            type="neutral"
-            label="REPLACE" />)}
+          <Button onClick={replaceButtonClick} type="neutral" label="REPLACE" />
+        )}
         {showStartOverButton() && (
           <Button
             onClick={startOverButtonClick}

@@ -1,5 +1,6 @@
 import React from "react";
 import "./TextInput.scss";
+import OutsideAlerter from "../outsideAlerter/OutsideAlerter";
 
 interface Props {
   value: string;
@@ -11,6 +12,7 @@ interface Props {
   autoFocus?: boolean;
   onSubmit?: (e: any) => void;
   hasSubmit?: boolean;
+  onOutsideClick?: () => void;
 }
 
 export const TextInput: React.FC<Props> = ({
@@ -23,24 +25,28 @@ export const TextInput: React.FC<Props> = ({
   autoFocus = false,
   onSubmit = () => null,
   hasSubmit = false,
+  onOutsideClick = () => null
 }) => {
   if (hasSubmit) {
     return (
-      <form onSubmit={(e) => onSubmit(e)}>
-        <input
-          type="submit"
-          style={{ visibility: "hidden", position: "absolute" }}
-        />
-        <input
-          type={type || "text"}
-          className={`TextInput textinput-size-${size}`}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          id={id}
-          autoFocus={autoFocus}
-        />
-      </form>
+      <OutsideAlerter outsideClickCallback={onOutsideClick}>
+        <form onSubmit={e => onSubmit(e)}>
+          <input
+            type="submit"
+            style={{ visibility: "hidden", position: "absolute" }}
+          />
+          <input
+            type={type || "text"}
+            className={`TextInput textinput-size-${size}`}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            id={id}
+            autoFocus={autoFocus}
+            onBlur={onOutsideClick}
+          />
+        </form>
+      </OutsideAlerter>
     );
   }
 
