@@ -52,7 +52,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  const previousDeckId = usePrevious(currentDeck?.name);
+  const previousDeckId = usePrevious(currentDeck ?.name);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const previousIsSearchingCargo = usePrevious(isSearchingCargo);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
@@ -68,8 +68,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     resetPlacement.cargo = currentCargoPlacement.cargo;
     if (
       previousDeckId &&
-      previousDeckId !== currentDeck?.name &&
-      !previousIsSearchingCargo
+        previousDeckId !== currentDeck ?.name &&
+        !previousIsSearchingCargo
     ) {
       dispatch(setCurrentPlacement(resetPlacement));
     }
@@ -240,6 +240,37 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return false;
   };
 
+  const replaceButtonClick = async () => {
+    try {
+      setDischarging(true);
+      await updateCargoPlacement({
+        ...currentCargoPlacement,
+        deckId: currentDeck.name,
+        cargo: currentCargoPlacement.cargo.id,
+        replacing: true,
+      });
+      dispatch(setCurrentPlacement(cargoPlacementFactory()));
+    } catch (error) {
+      console.error(error);
+    }
+    setDischarging(false);
+    return;
+  }
+
+  const showReplaceButton = () => {
+    if (
+      cargoPlacementIsEmpty(currentCargoPlacement) ||
+      !isOverview ||
+      currentCargoPlacement.replacing
+    )
+      return false;
+
+    return !placementsHaveDifferentPositions(
+      currentCargoPlacement,
+      initialCargoPlacement
+    );
+  };
+
   const resetShowCargoNotFound = () => setShowCargoNotFound(false);
 
   if (!currentDeck) return null;
@@ -298,6 +329,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             isDischarge={true}
           />
         )}
+        {showReplaceButton() && (
+          <Button
+            onClick={replaceButtonClick}
+            type="neutral"
+            label="REPLACE" />)}
         {showStartOverButton() && (
           <Button
             onClick={startOverButtonClick}
