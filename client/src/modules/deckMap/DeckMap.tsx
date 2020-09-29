@@ -35,6 +35,7 @@ interface Props {
   cargoPlacements: CargoPlacement[];
   bumperToBumperDistance: number;
   defaultVCG: number;
+  setShowPageLoader: (val: boolean) => void;
 }
 interface ViewBoxDimensions {
   sizeX: number;
@@ -51,6 +52,7 @@ const DeckMap: React.FC<Props> = ({
   cargoPlacements,
   bumperToBumperDistance,
   defaultVCG,
+  setShowPageLoader,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -80,6 +82,14 @@ const DeckMap: React.FC<Props> = ({
       originY: getViewBoxOriginY(deck),
     });
   }, [deck]);
+
+  useEffect(() => {
+    if (!viewBoxDimensions || !mostForwardValidPlacementForLanes) {
+      setShowPageLoader(true);
+    } else {
+      setShowPageLoader(false);
+    }
+  }, [viewBoxDimensions, mostForwardValidPlacementForLanes]);
 
   useEffect(() => {
     const notReplacingCargoPlacements =
