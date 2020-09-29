@@ -20,17 +20,15 @@ import useSocket from './hooks/useSocket';
 
 const App: React.FC = () => {
   const [loading,] = useState(false);
-  const [voyageId, setVoyageId] = useState<string>("");
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
   useEffect(() => {
     if (sessionData) {
-      setVoyageId(sessionData.voyageId);
       setAllDefaultHeaders(sessionData);
     }
   }, [sessionData]);
-  useSocket(isLoggedIn, voyageId);
+  useSocket(isLoggedIn, sessionData?.voyageId ?? "", sessionData?.vesselId ?? "");
 
   useEffect(() => {
     if (isLoggedIn) {

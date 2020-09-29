@@ -61,8 +61,8 @@ export class AppGateway
     );
   }
 
-  pushSettingsToClients(settings: Settings, voyageId: string = '') {
+  pushSettingsToClients(settings: Settings) {
     // TODO: This needs to be rebuilt so that it only sends the settings to a user on the specific vessel
-    this.webSocketServer.emit(`settingsUpdated___${voyageId}`, settings);
+    this.webSocketServer.emit(`settingsUpdated___${settings.vesselId}`, settings);
   }
 }

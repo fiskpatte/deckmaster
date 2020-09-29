@@ -42,7 +42,6 @@ export const getSettings = async () => {
 };
 
 export const updateSettings = async (settings: Settings) => {
-  console.log("settings: ", settings);
   await put("settings", settings);
 };
 

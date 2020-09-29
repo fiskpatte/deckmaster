@@ -8,7 +8,7 @@ import { Settings } from "../types/settings";
 import appActions from "../store/app/appActions";
 import { SERVER_PREFIX } from './../constants';
 
-const useSocket = (isLoggedIn: boolean, voyageId: string) => {
+const useSocket = (isLoggedIn: boolean, voyageId: string, vesselId: string) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,7 +28,8 @@ const useSocket = (isLoggedIn: boolean, voyageId: string) => {
         );
       };
       const updateSettings = (socket: SocketIOClient.Socket) => {
-        socket.on(`settingsUpdated___${voyageId}`, (payload: Settings) => {
+        socket.on(`settingsUpdated___${vesselId}`, (payload: Settings) => {
+          console.log("settings updated, ", payload);
           dispatch(appActions.setSettings(payload));
         });
       };
@@ -40,10 +41,11 @@ const useSocket = (isLoggedIn: boolean, voyageId: string) => {
       updateCargoQueue(socket);
       updateSettings(socket);
       return () => {
+        console.log("Disconnecting socket")
         socket.disconnect();
       };
     }
-  }, [dispatch, isLoggedIn, voyageId]);
+  }, [dispatch, isLoggedIn, voyageId, vesselId]);
 };
 
 export default useSocket;
