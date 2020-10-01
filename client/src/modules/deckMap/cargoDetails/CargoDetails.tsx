@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CargoDetailsItem from "./CargoDetailsItem";
 import "./CargoDetails.scss";
-import { Cargo } from "../../../types/deckMap";
+import { CargoPlacement, Deck, Lane } from "../../../types/deckMap";
 import { BsSearch } from "react-icons/bs";
 import TextInput from "../../../components/textInput";
 import { FlexContainer } from "../../../components/flexContainer";
 import usePrevious from "../../../hooks/usePrevious";
 import Text from "../../../components/text";
+import { arrayMin } from "../../../functions/math";
 
 interface Props {
-  cargo: Cargo;
+  cargoPlacement: CargoPlacement;
+  deck: Deck
   searchIconClicked: () => void;
   isSearchingCargo: boolean;
   searchIconEnabled: boolean;
@@ -17,38 +19,42 @@ interface Props {
   resetShowCargoNotFound: () => void;
   onOutsideClick: () => void;
   showCargoNotFound: boolean;
-  showWideCargoIcon?: boolean;
 }
 
 export const CargoDetails: React.FC<Props> = ({
-  cargo,
+  cargoPlacement,
+  deck,
   searchIconClicked,
   isSearchingCargo,
   searchIconEnabled,
   doSearch,
   showCargoNotFound,
   resetShowCargoNotFound,
-  showWideCargoIcon = false,
   onOutsideClick
 }) => {
-  const [input, setInput] = useState("");
-  const { registrationNumber } = cargo;
+  const { registrationNumber } = cargoPlacement.cargo;
+  const [input, setInput] = useState(registrationNumber);
   const previousIsSearchingCargo = usePrevious(isSearchingCargo);
+  const [showWideCargoIcon, setShowWideCargoIcon] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (deck && deck.lanes.length > 0) {
+      const thinestLane = arrayMin(
+        deck.lanes.map((lane: Lane) => lane.width)
+      );
+      setShowWideCargoIcon(thinestLane < cargoPlacement.cargo.width);
+    }
+  }, [deck, cargoPlacement.cargo]);
 
   useEffect(() => {
     if (isSearchingCargo && !previousIsSearchingCargo) {
       setInput(registrationNumber);
-      const searchInput = document.getElementById(
-        "search-input"
-      ) as HTMLInputElement;
-      if (searchInput) {
-        searchInput.focus();
-        setTimeout(function () {
-          searchInput.setSelectionRange(0, 9999);
-        }, 1);
-      }
+      setTimeout(() => {
+        inputRef.current?.select();
+      }, 1)
     }
-  }, [isSearchingCargo, input, previousIsSearchingCargo, registrationNumber]);
+  }, [isSearchingCargo, previousIsSearchingCargo, registrationNumber]);
 
   const onInputChange = (value: string) => {
     setInput(value);
@@ -63,40 +69,30 @@ export const CargoDetails: React.FC<Props> = ({
   };
   return (
     <>
-      <div className="CargoDetails">
+      <div className="CargoDetails" onClick={searchIconEnabled ? searchIconClicked : () => null}>
         {isSearchingCargo ? (
           <FlexContainer flexDirection="column">
             <FlexContainer>
               <TextInput
                 value={input}
+                placeholder={registrationNumber}
                 onChange={e => onInputChange(e.target.value)}
-                id="search-input"
                 size="small"
-                hasSubmit={true}
-                autoFocus={true}
                 onSubmit={onSearchSubmit}
                 onOutsideClick={onOutsideClick}
+                ref={inputRef}
               />
             </FlexContainer>
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}
           </FlexContainer>
         ) : (
-          <CargoDetailsItem
-            label={!registrationNumber ? "No cargo selected" : "Cargo"}
-            value={registrationNumber}
-            showWideCargoIcon={showWideCargoIcon}
-          />
-        )}
-
-        {searchIconEnabled && <BsSearch onClick={searchIconClicked} />}
-
-        {/* <Button
-          label={""}
-          type="neutral"
-          isSearch={true}
-          onClick={() => console.log("search cargo")}
-          size="small"
-        /> */}
+            <CargoDetailsItem
+              label={!registrationNumber ? "No cargo selected" : "Cargo"}
+              value={registrationNumber}
+              showWideCargoIcon={showWideCargoIcon}
+            />
+          )}
+        {searchIconEnabled && <BsSearch />}
       </div>
     </>
   );

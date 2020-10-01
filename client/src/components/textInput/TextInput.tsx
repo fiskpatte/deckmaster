@@ -15,7 +15,7 @@ interface Props {
   onOutsideClick?: () => void;
 }
 
-export const TextInput: React.FC<Props> = ({
+export const TextInput: React.FC<Props & React.RefAttributes<HTMLInputElement>> = React.forwardRef<HTMLInputElement, Props>(({
   value,
   onChange,
   placeholder,
@@ -24,8 +24,10 @@ export const TextInput: React.FC<Props> = ({
   id,
   autoFocus = false,
   onSubmit = () => null,
-  onOutsideClick = () => null
-}) => {
+  onOutsideClick = () => null,
+  ...rest
+}, ref) => {
+
   return (
     <OutsideAlerter outsideClickCallback={onOutsideClick}>
       <form onSubmit={e => onSubmit(e)}>
@@ -38,10 +40,13 @@ export const TextInput: React.FC<Props> = ({
           id={id}
           autoFocus={autoFocus}
           onBlur={onOutsideClick}
+          autoComplete="off"
+          ref={ref}
+          {...rest}
         />
       </form>
     </OutsideAlerter>
   );
-};
+});
 
 export default TextInput;

@@ -27,8 +27,6 @@ import Button from "../../components/button";
 // import { Loader } from "../../components/loader";
 import usePrevious from "./../../hooks/usePrevious";
 import Text from "../../components/text";
-import { arrayMin } from "./../../functions/math";
-import { Lane } from "./../../types/deckMap";
 import CancelButton from "../../components/button/CancelButton";
 import DischargeButton from "../../components/button/DischargeButton";
 import RedoButton from "../../components/button/RedoButton";
@@ -59,8 +57,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const previousIsSearchingCargo = usePrevious(isSearchingCargo);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
-  const [placeCargoComplete, setPlaceCargoComplete] = useState(false);
-  const [showWideCargoIcon, setShowWideCargoIcon] = useState(false);
   const [showPageLoader, setShowPageLoader] = useState(false);
 
   const cargoPlacements = useSelector(
@@ -95,24 +91,15 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     }
   }, [dispatch, isOverview]);
+
   useEffect(() => {
     if (
       !isOverview &&
-      cargoIsEmpty(currentCargoPlacement.cargo) &&
-      placeCargoComplete
+      cargoIsEmpty(currentCargoPlacement.cargo)
     ) {
       history.push(routes.PlaceCargo.path);
     }
-  }, [history, currentCargoPlacement.cargo, isOverview, placeCargoComplete]);
-
-  useEffect(() => {
-    if (currentDeck && currentDeck.lanes) {
-      const thinestLane = arrayMin(
-        currentDeck.lanes.map((lane: Lane) => lane.width)
-      );
-      setShowWideCargoIcon(thinestLane < currentCargoPlacement.cargo.width);
-    }
-  }, [currentDeck, currentCargoPlacement]);
+  }, [history, currentCargoPlacement.cargo, isOverview]);
 
   const onConfirm = async () => {
     setLoading(true);
@@ -139,7 +126,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         cargo: currentCargoPlacement.cargo.id,
       });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
-      setPlaceCargoComplete(true);
       history.push(routes.PlaceCargo.path);
     } catch (error) {
       console.error(error);
@@ -226,11 +212,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     );
   };
 
-  const searchIconClicked = () => {
-    // den ska bara synas när man kan klicka på den.
-    setIsSearchingCargo(true);
-  };
-
   const doSearch = (input: string) => {
     const result = cargoPlacements.find(
       (cp) =>
@@ -281,27 +262,21 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     );
   };
 
-  const resetShowCargoNotFound = () => setShowCargoNotFound(false);
-
-  const onOutsideSearchInputClick = () => {
-    setIsSearchingCargo(false);
-  };
-
   if (!currentDeck) return null;
 
   return (
     <div className="DeckMap">
       <div className="DeckMapHeader">
         <CargoDetails
-          cargo={currentCargoPlacement.cargo}
-          searchIconClicked={searchIconClicked}
+          cargoPlacement={currentCargoPlacement}
+          deck={currentDeck}
+          doSearch={doSearch}
+          searchIconClicked={() => setIsSearchingCargo(true)}
           isSearchingCargo={isSearchingCargo}
           searchIconEnabled={isOverview && !isSearchingCargo}
-          doSearch={doSearch}
           showCargoNotFound={showCargoNotFound}
-          resetShowCargoNotFound={resetShowCargoNotFound}
-          showWideCargoIcon={showWideCargoIcon}
-          onOutsideClick={onOutsideSearchInputClick}
+          resetShowCargoNotFound={() => setShowCargoNotFound(false)}
+          onOutsideClick={() => setIsSearchingCargo(false)}
         />
         <DeckSelector
           deckNames={getDeckNames(deckMap)}
