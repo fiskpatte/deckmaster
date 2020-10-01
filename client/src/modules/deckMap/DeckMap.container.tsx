@@ -6,6 +6,7 @@ import DeckMap from "./DeckMap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
 import {
+  addCargoPlacement,
   setCurrentDeckId,
   setCurrentPlacement,
 } from "../../store/deckMap/deckMapActions";
@@ -17,9 +18,9 @@ import {
 import { useHistory } from "react-router-dom";
 import {
   getDeckNames,
-  placementsHaveDifferentPositions,
   cargoPlacementIsEmpty,
   cargoIsEmpty,
+  placementsAreDifferent
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { cargoPlacementFactory } from "../../types/deckMap";
@@ -51,8 +52,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const visibleCargoPlacements = useSelector(getVisibleCargoPlacements);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [loading, setLoading] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [discharging, setDischarging] = useState(false);
+  const [replacing, setReplacing] = useState(false);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
   useResetCargoPlacement(isOverview, isSearchingCargo, currentCargoPlacement, currentDeck?.name);
@@ -73,38 +75,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
 
-  const onConfirm = async () => {
-    setLoading(true);
-    if (updateExistingPlacement()) {
-      try {
-        await updateCargoPlacement({
-          ...currentCargoPlacement,
-          deckId: currentDeck.name,
-          cargo: currentCargoPlacement.cargo.id,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-
-      dispatch(setCurrentPlacement(cargoPlacementFactory()));
-      setLoading(false);
-      return;
-    }
-
-    try {
-      await placeCargo({
-        ...currentCargoPlacement,
-        deckId: currentDeck.name,
-        cargo: currentCargoPlacement.cargo.id,
-      });
-      dispatch(setCurrentPlacement(cargoPlacementFactory()));
-      history.push(routes.PlaceCargo.path);
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false);
-  };
-
   const startOverButtonClick = () => {
     if (!isOverview) {
       let resetPlacement = cargoPlacementFactory();
@@ -117,37 +87,66 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   };
 
+  const cancelButtonClick = () => {
+    history.push(routes.PlaceCargo.path);
+  };
+
   const dischargeButtonClick = async () => {
-    // anropa server, sätt den till discharged.
+    setDischarging(true);
+    await updateExistingPlacement({ discharged: true })
+    setDischarging(false);
+  };
+
+  const replaceButtonClick = async () => {
+    setReplacing(true);
+    await updateExistingPlacement({ replacing: true });
+    setReplacing(false);
+  };
+
+  const onConfirm = async () => {
+    setConfirming(true);
+    if (shouldUpdateExistingPlacement()) {
+      await updateExistingPlacement({});
+    } else {
+      try {
+        await placeCargo({
+          ...currentCargoPlacement,
+          deckId: currentDeck.name,
+          cargo: currentCargoPlacement.cargo.id,
+        });
+        history.push(routes.PlaceCargo.path);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setConfirming(false);
+  };
+
+  const shouldUpdateExistingPlacement = () => {
+    return isOverview;
+  };
+
+  const updateExistingPlacement = async ({ replacing = false, discharged = false }) => {
     try {
-      setDischarging(true);
+      //This dispatch removes blinking in the client
+      dispatch(addCargoPlacement(currentCargoPlacement))
       await updateCargoPlacement({
         ...currentCargoPlacement,
         deckId: currentDeck.name,
         cargo: currentCargoPlacement.cargo.id,
-        discharged: true,
+        replacing: replacing,
+        discharged: discharged,
       });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
       console.error(error);
     }
-    setDischarging(false);
-    return;
-  };
-
-  const cancelButtonClick = () => {
-    dispatch(setCurrentPlacement(cargoPlacementFactory()));
-    history.push(routes.PlaceCargo.path);
-  };
-
-  const updateExistingPlacement = () => {
-    return isOverview;
-  };
+  }
 
   const showConfirmButton = () => {
     if (currentCargoPlacement.laneId === "") return false;
     if (isOverview) {
-      return placementsHaveDifferentPositions(
+      return placementsAreDifferent(
         currentCargoPlacement,
         initialCargoPlacement
       );
@@ -160,7 +159,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const showStartOverButton = () => {
     if (currentCargoPlacement.laneId === "") return false;
 
-    return placementsHaveDifferentPositions(
+    return placementsAreDifferent(
       currentCargoPlacement,
       initialCargoPlacement
     );
@@ -174,7 +173,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     )
       return false;
 
-    return !placementsHaveDifferentPositions(
+    return !placementsAreDifferent(
       currentCargoPlacement,
       initialCargoPlacement
     );
@@ -199,23 +198,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return false;
   };
 
-  const replaceButtonClick = async () => {
-    try {
-      setDischarging(true);
-      await updateCargoPlacement({
-        ...currentCargoPlacement,
-        deckId: currentDeck.name,
-        cargo: currentCargoPlacement.cargo.id,
-        replacing: true,
-      });
-      dispatch(setCurrentPlacement(cargoPlacementFactory()));
-    } catch (error) {
-      console.error(error);
-    }
-    setDischarging(false);
-    return;
-  };
-
   const showReplaceButton = () => {
     if (
       cargoPlacementIsEmpty(currentCargoPlacement) ||
@@ -224,7 +206,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     )
       return false;
 
-    return !placementsHaveDifferentPositions(
+    return !placementsAreDifferent(
       currentCargoPlacement,
       initialCargoPlacement
     );
@@ -278,7 +260,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         {showCancelButton() && (
           <CancelButton
             onClick={cancelButtonClick}
-            loading={discharging}
           />
         )}
         {showDischargeButton() && (
@@ -288,7 +269,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           />
         )}
         {showReplaceButton() && (
-          <Button onClick={replaceButtonClick} color="gray" label="REPLACE" />
+          <Button
+            onClick={replaceButtonClick}
+            size="medium"
+            color="gray"
+            label="REPLACE"
+            loading={replacing}
+          />
         )}
         {showStartOverButton() && (
           <RedoButton
@@ -298,7 +285,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         {showConfirmButton() && (
           <ConfirmButton
             onClick={onConfirm}
-            loading={loading}
+            loading={confirming}
           />
         )}
       </div>

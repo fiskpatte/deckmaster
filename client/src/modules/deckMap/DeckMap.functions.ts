@@ -450,3 +450,7 @@ export const cargoPlacementIsEmptyWithoutCargo = (cargoPlacement: CargoPlacement
 
 export const placementsHaveDifferentPositions = (a: CargoPlacement, b: CargoPlacement) =>
   a.LCG !== b.LCG || a.TCG !== b.TCG;
+
+export const placementsAreDifferent = (a: CargoPlacement, b: CargoPlacement) => {
+  return a.LCG !== b.LCG || a.TCG !== b.TCG || a.id !== b.id || a.cargo.id !== b.cargo.id || a.replacing !== b.replacing || a.discharged !== b.discharged
+}

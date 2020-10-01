@@ -97,6 +97,7 @@ export interface CargoPlacement {
   voyageId: string;
   cargo: Cargo;
   replacing: boolean;
+  discharged: boolean;
 }
 
 export const cargoPlacementFactory = (): CargoPlacement => ({
@@ -112,7 +113,8 @@ export const cargoPlacementFactory = (): CargoPlacement => ({
   updatedAt: new Date(),
   voyageId: "",
   cargo: cargoFactory(),
-  replacing: false
+  replacing: false,
+  discharged: false
 });
 
 export const cargoFactory = (): Cargo => ({
