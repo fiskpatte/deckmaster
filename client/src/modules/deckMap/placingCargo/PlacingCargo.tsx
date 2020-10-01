@@ -37,7 +37,7 @@ export const PlacingCargo: React.FC<Props> = ({
     setCargoPlacementsOverflowingIntoLane(cargoPlacements.filter((cp) => cp.overflowingLaneId === placingLane.id && cp.cargo.id !== currentCargoPlacement.cargo.id) ?? []);
   }, [placingLane, cargoPlacements, currentCargoPlacement.cargo.id])
 
-  if (!placingLane?.id || !cargoPlacementsForLane || !cargoPlacementsOverflowingIntoLane || !adjacentCargoPlacementsForLane || currentCargoPlacement.replacing) return null;
+  if (!currentCargoPlacement.laneId || !placingLane?.id || !cargoPlacementsForLane || !cargoPlacementsOverflowingIntoLane || !adjacentCargoPlacementsForLane || currentCargoPlacement.replacing) return null;
 
   const onCargoDrag = (
     event: MouseEvent | TouchEvent | PointerEvent,

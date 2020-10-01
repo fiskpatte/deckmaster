@@ -133,3 +133,10 @@ export interface Frame {
 
 export interface MostForwardValidPlacementForLanes { [id: string]: CargoPlacement }
 
+export interface ViewBoxDimensions {
+  sizeX: number;
+  sizeY: number;
+  originX: number;
+  originY: number;
+}
+

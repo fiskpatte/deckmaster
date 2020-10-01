@@ -24,20 +24,20 @@ import {
 import { routes } from "./../../routes";
 import { cargoPlacementFactory } from "../../types/deckMap";
 import Button from "../../components/button";
-// import { Loader } from "../../components/loader";
-import usePrevious from "./../../hooks/usePrevious";
+import { Loader } from "../../components/loader";
 import Text from "../../components/text";
 import CancelButton from "../../components/button/CancelButton";
 import DischargeButton from "../../components/button/DischargeButton";
 import RedoButton from "../../components/button/RedoButton";
 import ConfirmButton from "../../components/button/ConfirmButton";
+import { useCalculateData, useResetCargoPlacement } from "./DeckMap.hooks";
 
 interface Props {
   isOverview: boolean;
 }
 
 export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
-  const { deckMap, currentCargoPlacement } = useSelector(
+  const { deckMap, currentCargoPlacement, cargoPlacements } = useSelector(
     (state: RootState) => state.deckMapReducer
   );
   const { bumperToBumperDistance, defaultVCG } = useSelector(
@@ -53,44 +53,16 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  const previousDeckId = usePrevious(currentDeck?.name);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
-  const previousIsSearchingCargo = usePrevious(isSearchingCargo);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
-  const [showPageLoader, setShowPageLoader] = useState(false);
-
-  const cargoPlacements = useSelector(
-    (state: RootState) => state.deckMapReducer.cargoPlacements
-  );
-
-  useEffect(() => {
-    let resetPlacement = cargoPlacementFactory();
-    resetPlacement.cargo = currentCargoPlacement.cargo;
-    if (
-      previousDeckId &&
-      previousDeckId !== currentDeck?.name &&
-      !previousIsSearchingCargo
-    ) {
-      dispatch(
-        setCurrentPlacement(
-          isOverview ? cargoPlacementFactory() : resetPlacement
-        )
-      );
-    }
-  }, [
-    dispatch,
-    isOverview,
-    currentDeck,
-    previousDeckId,
-    currentCargoPlacement.cargo,
-    previousIsSearchingCargo,
-  ]);
-
-  useEffect(() => {
-    if (isOverview) {
-      dispatch(setCurrentPlacement(cargoPlacementFactory()));
-    }
-  }, [dispatch, isOverview]);
+  useResetCargoPlacement(isOverview, isSearchingCargo, currentCargoPlacement, currentDeck?.name);
+  const {
+    updatingData,
+    viewBoxDimensions,
+    mostForwardValidPlacementForLanes,
+    replacingCargoPlacements,
+    notReplacingCargoPlacements
+  } = useCalculateData(currentDeck, visibleCargoPlacements, currentCargoPlacement, bumperToBumperDistance, defaultVCG)
 
   useEffect(() => {
     if (
@@ -135,14 +107,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   const startOverButtonClick = () => {
     if (!isOverview) {
+      let resetPlacement = cargoPlacementFactory();
+      resetPlacement.cargo = currentCargoPlacement.cargo;
       dispatch(
-        setCurrentPlacement({
-          ...currentCargoPlacement,
-          LCG: 0,
-          TCG: 0,
-          VCG: 0,
-          laneId: "",
-        })
+        setCurrentPlacement(resetPlacement)
       );
     } else {
       dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
@@ -187,7 +155,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return true;
   };
 
-  const showCancelButton = () => !isOverview && !showPageLoader;
+  const showCancelButton = () => !isOverview;
 
   const showStartOverButton = () => {
     if (currentCargoPlacement.laneId === "") return false;
@@ -264,6 +232,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   if (!currentDeck) return null;
 
+  if (updatingData) return <Loader />;
+
   return (
     <div className="DeckMap">
       <div className="DeckMapHeader">
@@ -294,10 +264,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           deck={currentDeck}
           isOverview={isOverview}
           setInitialCargoPlacement={setInitialCargoPlacement}
-          cargoPlacements={visibleCargoPlacements}
           bumperToBumperDistance={bumperToBumperDistance}
-          defaultVCG={defaultVCG}
-          setShowPageLoader={setShowPageLoader}
+          viewBoxDimensions={viewBoxDimensions}
+          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
+          replacingCargoPlacements={replacingCargoPlacements}
+          notReplacingCargoPlacements={notReplacingCargoPlacements}
         />
       </div>
       <div className="DeckMapFooter">
