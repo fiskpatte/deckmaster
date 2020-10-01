@@ -9,10 +9,13 @@
     height: 20%;
     position: relative;
   }
-  .svgBody {
+  .DeckMapBody{
     width: 99%;
     height: 55%;
-    overflow: auto;
+  }
+  .svgBody {
+    height: 100%;
+    width: 100%;
     .containerGroup {
       fill: white;
       stroke: black;

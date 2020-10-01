@@ -5,7 +5,6 @@ import { DeckSelector } from "./deckSelector";
 import DeckMap from "./DeckMap";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
-// import { ConfirmButton } from "./confirmButton";
 import {
   setCurrentDeckId,
   setCurrentPlacement,
@@ -310,17 +309,18 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           </div>
         )}
       </div>
-
-      <DeckMap
-        currentCargoPlacement={currentCargoPlacement}
-        deck={currentDeck}
-        isOverview={isOverview}
-        setInitialCargoPlacement={setInitialCargoPlacement}
-        cargoPlacements={visibleCargoPlacements}
-        bumperToBumperDistance={bumperToBumperDistance}
-        defaultVCG={defaultVCG}
-        setShowPageLoader={setShowPageLoader}
-      />
+      <div className="DeckMapBody">
+        <DeckMap
+          currentCargoPlacement={currentCargoPlacement}
+          deck={currentDeck}
+          isOverview={isOverview}
+          setInitialCargoPlacement={setInitialCargoPlacement}
+          cargoPlacements={visibleCargoPlacements}
+          bumperToBumperDistance={bumperToBumperDistance}
+          defaultVCG={defaultVCG}
+          setShowPageLoader={setShowPageLoader}
+        />
+      </div>
       <div className="DeckMapFooter">
         {isOverview && showStartOverButton() && showConfirmButton() && (
           <div></div>

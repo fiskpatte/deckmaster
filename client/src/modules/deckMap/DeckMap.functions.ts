@@ -38,11 +38,8 @@ export const getViewBoxSizeX = (currentDeck: Deck): number => {
 };
 
 export const getViewBoxSizeY = (currentDeck: Deck): number => {
-  let yMax = arrayMax(
-    currentDeck.lanes.map((lane) => getEndpoints(lane).right)
-  );
   let yMin = arrayMin(currentDeck.lanes.map((lane) => getEndpoints(lane).left));
-  return yMax - yMin + DECK_MAP.Y_MARGIN;
+  return (getReplacementBoxOrigin(currentDeck) - yMin + DECK_MAP.REPLACEMENT_BOX_HEIGHT) * DECK_MAP.Y_SCALE + DECK_MAP.Y_MARGIN;
 };
 
 export const getDeckMapBottom = (currentDeck: Deck): number => {
