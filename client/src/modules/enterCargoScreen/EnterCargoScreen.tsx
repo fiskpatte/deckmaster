@@ -7,13 +7,13 @@ import { ErrorMessage } from "../../components/errorMessage";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TextInput from "../../components/textInput";
-import Button from "../../components/button";
 import Text from "../../components/text";
 import Separator from "../../components/separator";
 import { FlexRowEndContainer } from "../../components/flexContainer";
-import ContentContainer from "../../components/contentContainer";
 import { cargoPlacementFactory } from "../../types/deckMap";
 import { routes } from './../../routes';
+import ConfirmButton from "../../components/button/ConfirmButton";
+import { BlueBackground } from "../../components/blueBackground";
 
 export const EnterCargoScreen = () => {
   const [value, setValue] = useState("");
@@ -41,26 +41,26 @@ export const EnterCargoScreen = () => {
   };
 
   return (
-    <ContentContainer>
+    <BlueBackground>
       <Paper>
         <Text size="medium" value="Enter cargo ID" />
         <TextInput
           value={value}
           onChange={e => setValue(e.target.value)}
+          autoFocus={true}
           size="big"
         />
         <Separator />
         <FlexRowEndContainer>
-          <Button
-            type="positive"
-            label="Next"
+          <ConfirmButton
+            size="standard"
             onClick={onNextButtonClick}
             loading={loading}
           />
         </FlexRowEndContainer>
         {error && <ErrorMessage message={error} />}
       </Paper>
-    </ContentContainer>
+    </BlueBackground>
   );
 };
 

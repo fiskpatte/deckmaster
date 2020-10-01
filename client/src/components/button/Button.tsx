@@ -1,64 +1,57 @@
 import React from "react";
-import { BsSearch, BsArrowCounterclockwise } from "react-icons/bs";
-import { ImArrowRight, ImArrowLeft } from "react-icons/im";
 import "./Button.scss";
 import { FlexContainer } from "../flexContainer";
 import ClipLoader from "react-spinners/ClipLoader";
 
-interface Props {
+export interface ButtonProps {
   className?: string;
-  label: string;
+  label?: string;
   onClick: () => void;
-  type?:
-    | "positive"
-    | "danger"
-    | "navigation"
-    | "neutral"
-    | "warning"
-    | "search";
+  color?:
+  | "green"
+  | "red"
+  | "blue"
+  | "gray"
+  | "orange";
   size?: "small" | "standard" | "medium" | "big";
   disabled?: boolean;
   loading?: boolean;
-  isDischarge?: boolean;
-  isSearch?: boolean;
-  isStartOver?: boolean;
-  isCancelPlacement?: boolean;
+  rightIcon?: React.ReactNode;
+  leftIcon?: React.ReactNode;
 }
 
-export const Button: React.FC<Props> = ({
-  label,
+export const Button: React.FC<ButtonProps> = ({
+  label = "",
   onClick,
-  type = "",
+  color = "",
   className = "",
   disabled,
   size = "standard",
   loading = false,
-  isDischarge = false,
-  isSearch = false,
-  isStartOver = false,
-  isCancelPlacement = false
+  leftIcon,
+  rightIcon
 }) => (
-  <button
-    className={`Button type-${type} size-${size} ${className}`}
-    onClick={loading ? () => null : onClick}
-    disabled={disabled}
-  >
-    <FlexContainer
-      flexDirection="row"
-      justifyContent="space-around"
-      alignItems="center"
+    <button
+      className={`Button color-${color} size-${size} ${className}`}
+      onClick={loading ? () => null : onClick}
+      disabled={disabled}
     >
-      {isCancelPlacement && <ImArrowLeft />}
-      {loading ? (
-        <ClipLoader size={30} color={"#ffffff"} loading={true} />
-      ) : (
-        label
-      )}
-      {isSearch && !loading && <BsSearch />}
-      {isDischarge && !loading && <ImArrowRight />}
-      {isStartOver && !loading && <BsArrowCounterclockwise />}
-    </FlexContainer>
-  </button>
-);
+      <FlexContainer
+        flexDirection="row"
+        justifyContent="space-around"
+        alignItems="center"
+      >
+        {loading ? (
+          <ClipLoader size={30} color={"#ffffff"} loading={true} />
+        ) : (
+            <>
+              {leftIcon ?? <div></div>}
+              <div className="Label">{label}</div>
+              {rightIcon ?? <div></div>}
+            </>
+          )}
+      </FlexContainer>
+    </button>
+  );
 
 export default Button;

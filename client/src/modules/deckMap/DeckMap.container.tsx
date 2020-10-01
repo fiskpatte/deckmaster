@@ -29,6 +29,10 @@ import usePrevious from "./../../hooks/usePrevious";
 import Text from "../../components/text";
 import { arrayMin } from "./../../functions/math";
 import { Lane } from "./../../types/deckMap";
+import CancelButton from "../../components/button/CancelButton";
+import DischargeButton from "../../components/button/DischargeButton";
+import RedoButton from "../../components/button/RedoButton";
+import ConfirmButton from "../../components/button/ConfirmButton";
 
 interface Props {
   isOverview: boolean;
@@ -326,38 +330,27 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           <div></div>
         )}
         {showCancelButton() && (
-          <Button
+          <CancelButton
             onClick={cancelButtonClick}
-            type="warning"
-            label="CANCEL"
             loading={discharging}
-            isCancelPlacement={true}
           />
         )}
         {showDischargeButton() && (
-          <Button
+          <DischargeButton
             onClick={dischargeButtonClick}
-            type="warning"
-            label="DISCHARGE"
             loading={discharging}
-            isDischarge={true}
           />
         )}
         {showReplaceButton() && (
-          <Button onClick={replaceButtonClick} type="neutral" label="REPLACE" />
+          <Button onClick={replaceButtonClick} color="gray" label="REPLACE" />
         )}
         {showStartOverButton() && (
-          <Button
+          <RedoButton
             onClick={startOverButtonClick}
-            type="neutral"
-            label="START OVER"
-            isStartOver={true}
           />
         )}
         {showConfirmButton() && (
-          <Button
-            type="positive"
-            label="CONFIRM"
+          <ConfirmButton
             onClick={onConfirm}
             loading={loading}
           />

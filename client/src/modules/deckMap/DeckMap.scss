@@ -1,7 +1,7 @@
 @import "../../styles/main.scss";
 
 .DeckMap {
-  height: 100%-$headerHeight;
+  height: 100%;
   background-color: $backgroundGray;
   .DeckMapHeader {
     @include flexSpaceBetween();
@@ -11,7 +11,7 @@
   }
   .DeckMapBody{
     width: 99%;
-    height: 55%;
+    height: 60%;
   }
   .svgBody {
     height: 100%;
@@ -25,7 +25,7 @@
   }
   .DeckMapFooter {
     @include flexSpaceBetween();
-    height: 25%;
+    height: 20%;
     margin: 0 5vw;
     align-items: center;
   }

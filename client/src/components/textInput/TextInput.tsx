@@ -24,42 +24,23 @@ export const TextInput: React.FC<Props> = ({
   id,
   autoFocus = false,
   onSubmit = () => null,
-  hasSubmit = false,
   onOutsideClick = () => null
 }) => {
-  if (hasSubmit) {
-    return (
-      <OutsideAlerter outsideClickCallback={onOutsideClick}>
-        <form onSubmit={e => onSubmit(e)}>
-          <input
-            type="submit"
-            style={{ visibility: "hidden", position: "absolute" }}
-          />
-          <input
-            type={type || "text"}
-            className={`TextInput textinput-size-${size}`}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            id={id}
-            autoFocus={autoFocus}
-            onBlur={onOutsideClick}
-          />
-        </form>
-      </OutsideAlerter>
-    );
-  }
-
   return (
-    <input
-      type={type || "text"}
-      className={`TextInput textinput-size-${size}`}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      id={id}
-      autoFocus={autoFocus}
-    />
+    <OutsideAlerter outsideClickCallback={onOutsideClick}>
+      <form onSubmit={e => onSubmit(e)}>
+        <input
+          type={type || "text"}
+          className={`TextInput size-${size}`}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          id={id}
+          autoFocus={autoFocus}
+          onBlur={onOutsideClick}
+        />
+      </form>
+    </OutsideAlerter>
   );
 };
 

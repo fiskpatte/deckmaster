@@ -10,8 +10,9 @@ import Button from "../../components/button";
 import Text from "../../components/text";
 import TextInput from "../../components/textInput";
 import { FlexRowEndContainer } from "../../components/flexContainer";
-import ContentContainer from "../../components/contentContainer";
 import { toStringSafe } from "../../functions/string";
+import { BlueBackground } from "../../components/blueBackground";
+import './SettingsScreen.scss';
 
 export const SettingsScreen = () => {
   const { settings } = useSelector((state: RootState) => state.appReducer);
@@ -41,24 +42,24 @@ export const SettingsScreen = () => {
   };
 
   const fieldsAreValid = (settings: Settings) =>
-    !isNaN(settings.bumperToBumperDistance) && !isNaN(settings.defaultVCG);
+    isFinite(settings.bumperToBumperDistance) && isFinite(settings.defaultVCG);
 
   if (!settings || isSaving) {
     return <Loader />;
   }
 
   return (
-    <ContentContainer>
-      <Paper>
+    <BlueBackground>
+      <Paper className="Settings">
         <Text size="medium" value="Settings" />
         <Separator />
         <table>
           <tbody>
             <tr>
-              <td style={{ width: "200px" }}>
+              <td className="Label">
                 <Text size="standard" value="B2B distance" />
               </td>
-              <td>
+              <td className="Input">
                 <TextInput
                   size="standard"
                   value={toStringSafe(tempSettings.bumperToBumperDistance)}
@@ -72,10 +73,10 @@ export const SettingsScreen = () => {
               </td>
             </tr>
             <tr>
-              <td style={{ width: "200px" }}>
+              <td className="Label">
                 <Text size="standard" value="Default VCG" />
               </td>
-              <td>
+              <td className="Input">
                 <TextInput
                   size="standard"
                   value={toStringSafe(tempSettings.defaultVCG)}
@@ -94,14 +95,14 @@ export const SettingsScreen = () => {
         <Separator />
         <FlexRowEndContainer>
           <Button
-            label="Save"
-            type="positive"
+            label="SAVE"
+            color="green"
             onClick={saveButtonClick}
             size="standard"
           />
         </FlexRowEndContainer>
       </Paper>
-    </ContentContainer>
+    </BlueBackground>
   );
 };
 

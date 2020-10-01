@@ -8,10 +8,10 @@
   font-family: FoundrySterlingMedium;
   font-size: $standardFont;
   padding: 1vh 1vw;
+  width: 100%;
 }
 
-.textinput-size-big {
-  width: 100%;
+.TextInput.size-big {
   padding: 2vh 2vw;
 }
 

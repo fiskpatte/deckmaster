@@ -9,91 +9,49 @@
   font-family: FoundrySterlingMedium;
   font-size: $standardFont;
   border: none;
-  width: 20vh;
   outline: none;
+  .Label{
+    padding: 0 5px;
+  }
 }
 
-.type-positive {
+.Button.color-green {
   background-color: $successGreen;
 }
 
-.type-danger {
+.Button.color-red {
   background-color: $primaryRed;
 }
 
-.type-navigation {
+.Button.color-blue {
   background-color: $primaryBlue;
 }
 
-.type-search {
-  background-color: $primaryBlue;
-}
-
-.type-neutral {
+.Button.color-gray {
   background-color: $gray80;
   color: transparentize($gray20, 0.2);
 }
-.type-warning {
+.Button.color-orange {
   background-color: $primaryOrange;
 }
-.size-small {
+.Button.size-small {
   font-size: $smallFont;
 }
 
-.size-standard {
+.Button.size-standard {
   font-size: $standardFont;
-  // Todo: calculate based on screen width
-  height: 60px;
+  min-width: 10vw;
+  min-height: 5vmin;
 }
 
-.size-medium {
+.Button.size-medium {
+  font-size: $standardFont;
+  min-width: 15vw;
+  min-height: 7.5vmin;
+}
+
+.Button.size-big {
   font-size: $mediumFont;
-  width: 20vh;
-}
-
-.size-big {
-  font-size: $bigFont;
-}
-
-@keyframes ripples {
-  0% {
-    top: 86px;
-    left: 86px;
-    width: 0;
-    height: 0;
-    opacity: 1;
-  }
-  100% {
-    top: 33px;
-    left: 33px;
-    width: 106px;
-    height: 106px;
-    opacity: 0;
-  }
-}
-
-.Rings {
-  position: "relative";
-  width: "22px";
-  height: "22px";
-  transform: "translate(-15px,-15px) scale(0.15) translate(15px, 15px)";
-}
-
-.Rings:nth-child(1) {
-  border-color: "white";
-}
-
-.Rings:nth-child(2) {
-  border-color: white;
-  animation-delay: "-.5s";
-}
-
-.InnerRing {
-  box-sizing: "content-box";
-  position: "absolute";
-  border-width: "14px";
-  border-style: "solid";
-  opacity: 1;
-  border-radius: "50%";
-  animation: ripples 0.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  min-width: 20vw;
+  min-height: 10vmin;
 }

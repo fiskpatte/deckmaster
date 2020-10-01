@@ -3,6 +3,7 @@ import { RouteKey } from "./constants";
 import { routes } from "./routes";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
+import './routes.scss';
 
 export const renderRoutes = () =>
   Object.keys(routes).map((key) =>
@@ -19,7 +20,9 @@ export const renderRoute = (key: string) => {
       path={route.path}
       routeProps={route.routeProps}
     >
-      {route.component}
+      <div className="RouteContainer">
+        {route.component}
+      </div>
     </Route>
   );
 };

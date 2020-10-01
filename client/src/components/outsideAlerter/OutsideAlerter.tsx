@@ -8,10 +8,10 @@ function OutsideAlerter(props: any) {
   return (
     <div
       ref={wrapperRef}
-      style={{
-        display: "inline-block",
-        position: props.position || "static"
-      }}
+    // style={{
+    //   display: "inline-block",
+    //   position: props.position || "static"
+    // }}
     >
       {props.children}
     </div>

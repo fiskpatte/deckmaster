@@ -4,12 +4,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useHistory } from "react-router-dom";
 import Text from "../../components/text";
-import Button from "../../components/button";
 import "./ConfirmCargoScreen.scss";
 import Separator from "../../components/separator";
-import ContentContainer from "../../components/contentContainer";
 import { cargoIsEmpty } from "../deckMap/DeckMap.functions";
 import { routes } from './../../routes';
+import ConfirmButton from "../../components/button/ConfirmButton";
+import CancelButton from "../../components/button/CancelButton";
+import { BlueBackground } from "../../components/blueBackground";
 
 export const ConfirmCargoScreen = () => {
   const { currentCargoPlacement } = useSelector(
@@ -21,7 +22,7 @@ export const ConfirmCargoScreen = () => {
     history.push(routes.PlaceCargo.path);
   }
   return (
-    <ContentContainer>
+    <BlueBackground>
       <Paper>
         <Text size="medium" value="Cargo details" />
         <table>
@@ -61,24 +62,20 @@ export const ConfirmCargoScreen = () => {
             justifyContent: "space-evenly"
           }}
         >
-          <div style={{ flex: 1 }}></div>
+          <div style={{ flex: 2 }}></div>
           <div style={{ flex: 1 }}>
-            <Button
+            <CancelButton
+              size="standard"
               onClick={() => history.push(routes.PlaceCargo.path)}
-              label="Cancel"
-              type="neutral"
             />
           </div>
-          <div style={{ flex: 1, margin: "0 0 0 10px" }}>
-            <Button
-              onClick={() => history.push(routes.PlaceCargoDeckMap.path)}
-              label="Next"
-              type="positive"
-            />
-          </div>
+          <ConfirmButton
+            size="standard"
+            onClick={() => history.push(routes.PlaceCargoDeckMap.path)}
+          />
         </div>
       </Paper>
-    </ContentContainer>
+    </BlueBackground>
   );
 };
 

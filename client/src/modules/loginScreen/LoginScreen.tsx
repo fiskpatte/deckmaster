@@ -50,7 +50,7 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <BlueBackground>
+    <BlueBackground style={{ height: "100vh" }}>
       <Paper>
         <TopBar />
         <Separator />
@@ -71,10 +71,9 @@ export const LoginScreen: React.FC = () => {
         <Separator />
         <FlexRowEndContainer>
           <Button
-            label="Log in"
+            label="Login"
             onClick={onLoginButtonClick}
-            type="positive"
-            size="standard"
+            color="green"
             loading={loading}
           />
         </FlexRowEndContainer>
