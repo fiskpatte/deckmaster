@@ -20,18 +20,16 @@ import {
   getDeckNames,
   cargoPlacementIsEmpty,
   cargoIsEmpty,
-  placementsAreDifferent
+  placementsAreDifferent,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { cargoPlacementFactory } from "../../types/deckMap";
-import Button from "../../components/button";
 import { Loader } from "../../components/loader";
 import Text from "../../components/text";
-import CancelButton from "../../components/button/CancelButton";
-import DischargeButton from "../../components/button/DischargeButton";
-import RedoButton from "../../components/button/RedoButton";
-import ConfirmButton from "../../components/button/ConfirmButton";
+
 import { useCalculateData, useResetCargoPlacement } from "./DeckMap.hooks";
+import ButtonContainer from "./buttonContainer";
+import { FlexContainer } from "../../components/flexContainer";
 
 interface Props {
   isOverview: boolean;
@@ -54,23 +52,31 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [confirming, setConfirming] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  const [replacing, setReplacing] = useState(false);
+  // const [replacing, setReplacing] = useState(false);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
-  useResetCargoPlacement(isOverview, isSearchingCargo, currentCargoPlacement, currentDeck?.name);
+  useResetCargoPlacement(
+    isOverview,
+    isSearchingCargo,
+    currentCargoPlacement,
+    currentDeck?.name
+  );
   const {
     updatingData,
     viewBoxDimensions,
     mostForwardValidPlacementForLanes,
     replacingCargoPlacements,
-    notReplacingCargoPlacements
-  } = useCalculateData(currentDeck, visibleCargoPlacements, currentCargoPlacement, bumperToBumperDistance, defaultVCG)
+    notReplacingCargoPlacements,
+  } = useCalculateData(
+    currentDeck,
+    visibleCargoPlacements,
+    currentCargoPlacement,
+    bumperToBumperDistance,
+    defaultVCG
+  );
 
   useEffect(() => {
-    if (
-      !isOverview &&
-      cargoIsEmpty(currentCargoPlacement.cargo)
-    ) {
+    if (!isOverview && cargoIsEmpty(currentCargoPlacement.cargo)) {
       history.push(routes.PlaceCargo.path);
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
@@ -79,9 +85,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     if (!isOverview) {
       let resetPlacement = cargoPlacementFactory();
       resetPlacement.cargo = currentCargoPlacement.cargo;
-      dispatch(
-        setCurrentPlacement(resetPlacement)
-      );
+      dispatch(setCurrentPlacement(resetPlacement));
     } else {
       dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
     }
@@ -93,15 +97,15 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   const dischargeButtonClick = async () => {
     setDischarging(true);
-    await updateExistingPlacement({ discharged: true })
+    await updateExistingPlacement({ discharged: true });
     setDischarging(false);
   };
 
-  const replaceButtonClick = async () => {
-    setReplacing(true);
-    await updateExistingPlacement({ replacing: true });
-    setReplacing(false);
-  };
+  // const replaceButtonClick = async () => {
+  //   setReplacing(true);
+  //   await updateExistingPlacement({ replacing: true });
+  //   setReplacing(false);
+  // };
 
   const onConfirm = async () => {
     setConfirming(true);
@@ -126,10 +130,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return isOverview;
   };
 
-  const updateExistingPlacement = async ({ replacing = false, discharged = false }) => {
+  const updateExistingPlacement = async ({
+    replacing = false,
+    discharged = false,
+  }) => {
     try {
       //This dispatch removes blinking in the client
-      dispatch(addCargoPlacement(currentCargoPlacement))
+      dispatch(addCargoPlacement(currentCargoPlacement));
       await updateCargoPlacement({
         ...currentCargoPlacement,
         deckId: currentDeck.name,
@@ -141,7 +148,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const showConfirmButton = () => {
     if (currentCargoPlacement.laneId === "") return false;
@@ -154,15 +161,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return true;
   };
 
-  const showCancelButton = () => !isOverview;
-
   const showStartOverButton = () => {
     if (currentCargoPlacement.laneId === "") return false;
 
-    return placementsAreDifferent(
-      currentCargoPlacement,
-      initialCargoPlacement
-    );
+    return placementsAreDifferent(currentCargoPlacement, initialCargoPlacement);
   };
 
   const showDischargeButton = () => {
@@ -198,19 +200,19 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return false;
   };
 
-  const showReplaceButton = () => {
-    if (
-      cargoPlacementIsEmpty(currentCargoPlacement) ||
-      !isOverview ||
-      currentCargoPlacement.replacing
-    )
-      return false;
+  // const showReplaceButton = () => {
+  //   if (
+  //     cargoPlacementIsEmpty(currentCargoPlacement) ||
+  //     !isOverview ||
+  //     currentCargoPlacement.replacing
+  //   )
+  //     return false;
 
-    return !placementsAreDifferent(
-      currentCargoPlacement,
-      initialCargoPlacement
-    );
-  };
+  //   return !placementsAreDifferent(
+  //     currentCargoPlacement,
+  //     initialCargoPlacement
+  //   );
+  // };
 
   if (!currentDeck) return null;
 
@@ -236,7 +238,17 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         />
         {!isOverview && (
           <div className="placecargolabel">
-            <Text value="Place the cargo" weight="bold" />
+            {showStartOverButton() ? (
+              <FlexContainer>
+                <Text
+                  value={`Placing the cargo in lane ${currentCargoPlacement.laneId}`}
+                  weight="bold"
+                />
+                <button onClick={startOverButtonClick}>Start over</button>
+              </FlexContainer>
+            ) : (
+              <Text value="Place the cargo" weight="bold" />
+            )}
           </div>
         )}
       </div>
@@ -253,42 +265,16 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           notReplacingCargoPlacements={notReplacingCargoPlacements}
         />
       </div>
-      <div className="DeckMapFooter">
-        {isOverview && showStartOverButton() && showConfirmButton() && (
-          <div></div>
-        )}
-        {showCancelButton() && (
-          <CancelButton
-            onClick={cancelButtonClick}
-          />
-        )}
-        {showDischargeButton() && (
-          <DischargeButton
-            onClick={dischargeButtonClick}
-            loading={discharging}
-          />
-        )}
-        {showReplaceButton() && (
-          <Button
-            onClick={replaceButtonClick}
-            size="medium"
-            color="gray"
-            label="REPLACE"
-            loading={replacing}
-          />
-        )}
-        {showStartOverButton() && (
-          <RedoButton
-            onClick={startOverButtonClick}
-          />
-        )}
-        {showConfirmButton() && (
-          <ConfirmButton
-            onClick={onConfirm}
-            loading={confirming}
-          />
-        )}
-      </div>
+      <ButtonContainer
+        isOverview={isOverview}
+        showConfirmButton={showConfirmButton()}
+        showDischargeButton={showDischargeButton()}
+        onConfirm={onConfirm}
+        confirming={confirming}
+        dischargeButtonClick={dischargeButtonClick}
+        discharging={discharging}
+        cancelButtonClick={cancelButtonClick}
+      />
     </div>
   );
 };

@@ -9,7 +9,7 @@
     height: 20%;
     position: relative;
   }
-  .DeckMapBody{
+  .DeckMapBody {
     width: 99%;
     height: 60%;
   }
@@ -23,7 +23,7 @@
       pointer-events: visible;
     }
   }
-  .DeckMapFooter {
+  .ButtonContainer {
     @include flexSpaceBetween();
     height: 20%;
     margin: 0 5vw;

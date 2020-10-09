@@ -8,9 +8,15 @@ interface Props {
   lane: Lane;
   onClick: (event: React.MouseEvent<SVGElement>) => void;
   visible: boolean;
+  color?: "green" | "violet";
 }
 
-export const LaneButton: React.FC<Props> = ({ lane, onClick, visible }) => {
+export const LaneButton: React.FC<Props> = ({
+  lane,
+  onClick,
+  visible,
+  color = "green",
+}) => {
   if (!visible) return null;
   const buttonHeight = lane.width * DECK_MAP.LANE_BUTTON_HEIGHT_RATIO;
   const originX = lane.LCG - lane.length / 2 - DECK_MAP.LANE_BUTTON_WIDTH / 2;
@@ -24,7 +30,7 @@ export const LaneButton: React.FC<Props> = ({ lane, onClick, visible }) => {
         height={buttonHeight}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
-        className="LaneButton"
+        className={`LaneButton LaneButton-${color}`}
       />
       <ArrowIcon
         x={originX}

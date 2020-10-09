@@ -17,6 +17,7 @@ const DeckSelectorItem: React.FC<Props> = ({ name, isCurrent }) => {
   return (
     <Button
       className={`DeckSelectorItem ${isCurrent ? "Selected" : ""}`}
+      size="small"
       onClick={onClick}
       label={name}
     />
