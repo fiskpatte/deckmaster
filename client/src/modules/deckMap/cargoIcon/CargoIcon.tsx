@@ -5,6 +5,7 @@ import "./CargoIcon.scss";
 import { motion } from "framer-motion";
 import usePrevious from './../../../hooks/usePrevious';
 import { DECK_MAP } from "../../../constants";
+import { WideCargoIconSVG } from "../../../components/wideCargoIcon/WideCargoIcon";
 
 interface Props {
   x: number;
@@ -74,8 +75,10 @@ export const CargoIcon: React.FC<Props> = ({
           width={width}
           rx={DECK_MAP.LANE_BORDER_RADIUS}
           ry={DECK_MAP.LANE_BORDER_RADIUS}
-          className="BoundingBox"
+          className={`BoundingBox ${placing ? "Placing" : ""}`}
         />
+        <WideCargoIconSVG />
+
         <text
           className="CargoRegistrationNumber"
           x={DECK_MAP.X_SCALE * width / 2}

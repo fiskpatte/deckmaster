@@ -8,6 +8,7 @@ import { FlexContainer } from "../../../components/flexContainer";
 import usePrevious from "../../../hooks/usePrevious";
 import Text from "../../../components/text";
 import { arrayMin } from "../../../functions/math";
+import { CargoPosition } from "./CargoPosition";
 
 interface Props {
   cargoPlacement: CargoPlacement;
@@ -86,13 +87,18 @@ export const CargoDetails: React.FC<Props> = ({
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}
           </FlexContainer>
         ) : (
-            <CargoDetailsItem
-              label={!registrationNumber ? "No cargo selected" : "Cargo"}
-              value={registrationNumber}
-              showWideCargoIcon={showWideCargoIcon}
-            />
+            <FlexContainer flexDirection="column" fullWidth>
+              <FlexContainer flexDirection="row" justifyContent="space-between" alignItems="center" >
+                <CargoDetailsItem
+                  label={!registrationNumber ? "No cargo selected" : ""}
+                  value={registrationNumber}
+                  showWideCargoIcon={showWideCargoIcon}
+                />
+                {searchIconEnabled && <BsSearch />}
+              </FlexContainer>
+              <CargoPosition lane={"WD01"} frame={"101"} onClick={() => { }} />
+            </FlexContainer>
           )}
-        {searchIconEnabled && <BsSearch />}
       </div>
     </>
   );

@@ -11,16 +11,18 @@
     stroke: none;
     pointer-events: visible;
   }
+  .BoundingBox.Placing {
+    animation: blinker 1.2s linear infinite;
+  }
 }
-
 .CargoIcon.Placing {
   pointer-events: auto;
-  animation: blinker 1.5s linear infinite;
+  animation: blinker 1.2s linear infinite;
 }
 @keyframes blinker {
   50% {
-    fill: $gray90;
-    stroke: $gray90;
+    fill: $gray80;
+    // stroke: $gray80;
   }
 }
 .CargoRegistrationNumber{

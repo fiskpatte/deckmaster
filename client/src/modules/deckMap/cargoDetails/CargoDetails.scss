@@ -5,7 +5,7 @@
   justify-content: space-around;
   align-items: center;
   margin: 2vh 2vw;
-  padding: 1vh;
+  padding: 1vh 2vw;
   font-size: $standardFont;
   height: min-content;
   // width: min-content;
@@ -19,11 +19,11 @@
     @include flexStart();
     // width: 100%;
     white-space: nowrap;
-    > div {
-      margin: 0vh 0.5vw;
-      box-sizing: border-box;
-      min-width: 6vw;
-    }
+    // > div {
+    //   margin: 0vh 0.5vw;
+    //   box-sizing: border-box;
+    //   min-width: 6vw;
+    // }
   }
 }
 

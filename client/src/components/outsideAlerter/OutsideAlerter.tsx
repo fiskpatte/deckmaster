@@ -1,9 +1,13 @@
 import React, { useRef } from "react";
 import { useOutsideAlerter } from "./../../hooks/useOutsideAlerter";
 
-function OutsideAlerter(props: any) {
+interface Props {
+  outsideClickCallback: () => void;
+  children: React.ReactNode;
+}
+const OutsideAlerter: React.FC<Props> = ({ outsideClickCallback, children }) => {
   const wrapperRef = useRef(null);
-  useOutsideAlerter(wrapperRef, props.outsideClickCallback);
+  useOutsideAlerter(wrapperRef, outsideClickCallback);
 
   return (
     <div
@@ -13,7 +17,7 @@ function OutsideAlerter(props: any) {
     //   position: props.position || "static"
     // }}
     >
-      {props.children}
+      {children}
     </div>
   );
 }

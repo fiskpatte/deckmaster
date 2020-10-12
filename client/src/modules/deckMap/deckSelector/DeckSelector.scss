@@ -4,6 +4,7 @@
   @include flexRow();
   margin: 2vh 2vw;
   height: min-content;
+  z-index: $deckSelectorOverlayZIndex + 1;
   .DeckSelectorItem {
     font-family: FoundrySterling;
     white-space: nowrap;
@@ -11,12 +12,17 @@
     cursor: pointer;
     background-color: white;
     color: $gray20;
-    margin: 0vh 0.5vw;
+    margin: 0.5vh 0vw;
     padding: 1vh 1vw;
+    min-width: 12vw;
   }
   .Selected {
     background-color: $primaryBlue;
     color: white;
-    box-shadow: 0px 0px 0px;
+    // box-shadow: 0px 0px 0px;
   }
+}
+
+:export {
+  deckSelectorOverlayZIndex: $deckSelectorOverlayZIndex;
 }

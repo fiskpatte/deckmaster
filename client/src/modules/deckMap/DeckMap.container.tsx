@@ -197,6 +197,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return false;
   };
 
+  const onDeckSelect = (name: string) => {
+    if (name !== currentDeck.name) {
+      dispatch(setCurrentDeckId(name));
+    }
+  };
+
   if (!currentDeck) return null;
 
   if (updatingData) return <Loader />;
@@ -218,6 +224,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         <DeckSelector
           deckNames={getDeckNames(deckMap)}
           currentDeckName={currentDeck.name}
+          setCurrentDeck={onDeckSelect}
         />
         {!isOverview && (
           <div className="placecargolabel">
