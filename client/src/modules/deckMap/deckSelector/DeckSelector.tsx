@@ -27,6 +27,7 @@ export const DeckSelector: React.FC<Props> = ({
 export default DeckSelector;
 
 // import React, { useState } from "react";
+// import OutsideAlerter from "../../../components/outsideAlerter/OutsideAlerter";
 // import "./DeckSelector.scss";
 
 // interface Props {
@@ -55,19 +56,27 @@ export default DeckSelector;
 //     (deckName) => isOpen || deckName === currentDeckName
 //   );
 
+//   const onOutsideClick = () => {
+//     if (isOpen) {
+//       setIsOpen(false);
+//     }
+//   };
+
 //   return (
-//     <div className="DeckSelector">
-//       {filteredDeckNames.map((deckName) => (
-//         <div
-//           onClick={() => onDeckClick(deckName)}
-//           className={`DeckSelectorItem ${
-//             deckName === currentDeckName ? "Selected" : ""
-//           }`}
-//         >
-//           {deckName}
-//         </div>
-//       ))}
-//     </div>
+//     <OutsideAlerter onOutsideClick={onOutsideClick}>
+//       <div className="DeckSelector">
+//         {filteredDeckNames.map((deckName) => (
+//           <div
+//             onClick={() => onDeckClick(deckName)}
+//             className={`DeckSelectorItem ${
+//               deckName === currentDeckName ? "Selected" : ""
+//             }`}
+//           >
+//             {deckName}
+//           </div>
+//         ))}
+//       </div>
+//     </OutsideAlerter>
 //   );
 // };
 
