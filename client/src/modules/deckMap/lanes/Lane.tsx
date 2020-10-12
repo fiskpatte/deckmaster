@@ -1,5 +1,5 @@
 import React from "react";
-import { LaneButton } from "./laneButton";
+import { ArrowButton } from "../arrowButton";
 import { DECK_MAP } from "../../../constants";
 import { LaneName } from "./laneName";
 import { Lane, Cargo, CargoPlacement } from "../../../types/deckMap";
@@ -35,20 +35,23 @@ const LaneComponent: React.FC<Props> = ({
         className={`Lane`}
         x={originX}
         y={originY}
-        width={lane.length + 2 * DECK_MAP.LANE_BORDER_RADIUS}
+        width={lane.length}//+ 2 * DECK_MAP.LANE_BORDER_RADIUS
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
       // onClick={onClick}
       />
       <LaneName lane={lane} rightOrigin={rightOrigin} />
-      <LaneButton
+      <ArrowButton
         onClick={ev => {
           ev.stopPropagation();
           onLanePlacementButtonClick(mostForwardValidPlacementForLane);
         }}
-        lane={lane}
         visible={lanePlacementButtonVisible && !!currentCargo.id}
+        x={lane.LCG - lane.length / 2}
+        y={lane.TCG}
+        height={lane.width * DECK_MAP.ARROW_BUTTON_HEIGHT_RATIO}
+        width={DECK_MAP.LANE_BUTTON_WIDTH}
       />
     </>
   );

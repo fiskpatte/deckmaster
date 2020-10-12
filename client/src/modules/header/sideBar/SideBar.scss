@@ -8,7 +8,7 @@
   z-index: $sideBarOverlayZIndex + 1;
   background-color: $secondaryBlue;
   color: white;
-  .Header {
+  .SideBarHeader {
     display: flex;
     height: $headerHeight;
     justify-content: space-between;

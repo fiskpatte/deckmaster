@@ -52,7 +52,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [confirming, setConfirming] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  // const [replacing, setReplacing] = useState(false);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
   useResetCargoPlacement(
@@ -101,11 +100,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     setDischarging(false);
   };
 
-  // const replaceButtonClick = async () => {
-  //   setReplacing(true);
-  //   await updateExistingPlacement({ replacing: true });
-  //   setReplacing(false);
-  // };
+  const replaceButtonClick = async () => {
+    await updateExistingPlacement({ replacing: true });
+  };
 
   const onConfirm = async () => {
     setConfirming(true);
@@ -200,20 +197,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return false;
   };
 
-  // const showReplaceButton = () => {
-  //   if (
-  //     cargoPlacementIsEmpty(currentCargoPlacement) ||
-  //     !isOverview ||
-  //     currentCargoPlacement.replacing
-  //   )
-  //     return false;
-
-  //   return !placementsAreDifferent(
-  //     currentCargoPlacement,
-  //     initialCargoPlacement
-  //   );
-  // };
-
   if (!currentDeck) return null;
 
   if (updatingData) return <Loader />;
@@ -247,14 +230,15 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
                 <button onClick={startOverButtonClick}>Start over</button>
               </FlexContainer>
             ) : (
-              <Text value="Place the cargo" weight="bold" />
-            )}
+                <Text value="Place the cargo" weight="bold" />
+              )}
           </div>
         )}
       </div>
       <div className="DeckMapBody">
         <DeckMap
           currentCargoPlacement={currentCargoPlacement}
+          initialCargoPlacement={initialCargoPlacement}
           deck={currentDeck}
           isOverview={isOverview}
           setInitialCargoPlacement={setInitialCargoPlacement}
@@ -263,6 +247,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
           replacingCargoPlacements={replacingCargoPlacements}
           notReplacingCargoPlacements={notReplacingCargoPlacements}
+          replaceButtonClick={replaceButtonClick}
         />
       </div>
       <ButtonContainer

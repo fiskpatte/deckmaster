@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { DECK_MAP } from '../../../constants';
+import { ArrowButton } from '../arrowButton';
 import { CargoIcon } from '../cargoIcon';
+import { cargoPlacementIsEmpty, placementsAreDifferent } from '../DeckMap.functions';
 import { CargoPlacement } from './../../../types/deckMap';
+import './ReplacementBox.scss';
 
 interface Props {
   cargoPlacements: CargoPlacement[];
   currentCargoPlacement: CargoPlacement;
+  initialCargoPlacement: CargoPlacement;
   originY: number;
   originX: number;
   sizeX: number;
   onCargoPlacementClick: (cp: CargoPlacement) => void;
+  replaceButtonClick: () => Promise<void>;
 }
 
 export const ReplacementBox: React.FC<Props> = ({
@@ -18,9 +23,11 @@ export const ReplacementBox: React.FC<Props> = ({
   originY,
   cargoPlacements,
   currentCargoPlacement,
-  onCargoPlacementClick
+  initialCargoPlacement,
+  onCargoPlacementClick,
+  replaceButtonClick
 }) => {
-  const originXWithMargin = originX + DECK_MAP.X_MARGIN;
+  const originXWithMargin = originX + 2 * DECK_MAP.X_MARGIN;
   const renderCargoPlacements = () => {
     let result = [];
     const originYWithMargin = originY + DECK_MAP.BASE_MARGIN;
@@ -47,16 +54,48 @@ export const ReplacementBox: React.FC<Props> = ({
     }
     return result;
   }
+
+  const showReplaceButton = () => {
+    if (
+      cargoPlacementIsEmpty(currentCargoPlacement) ||
+      currentCargoPlacement.replacing
+    )
+      return false;
+
+    return !placementsAreDifferent(
+      currentCargoPlacement,
+      initialCargoPlacement
+    );
+  };
+  let areaWidth = sizeX - 4 * DECK_MAP.X_MARGIN;
   return (
     <g>
       <rect
         className="ReplacementBox"
         x={originXWithMargin}
         y={originY}
-        width={sizeX - 2 * DECK_MAP.X_MARGIN}
+        width={areaWidth}
         height={DECK_MAP.REPLACEMENT_BOX_HEIGHT}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
+      />
+      <text
+        className="ReplacementBoxName"
+        transform={`scale(${1 / DECK_MAP.X_SCALE} ${1 / DECK_MAP.Y_SCALE})`}
+        fontSize={`${DECK_MAP.REPLACEMENT_BOX_NAME_FONT_SIZE}em`}
+        x={(originXWithMargin + areaWidth / 2) * DECK_MAP.X_SCALE}
+        y={(originY + DECK_MAP.REPLACEMENT_BOX_HEIGHT / 2) * DECK_MAP.Y_SCALE}
+      >
+        {"REPLACEMENT AREA"}
+      </text>
+      <ArrowButton
+        x={originXWithMargin - DECK_MAP.REPLACEMENT_BOX_BUTTON_WIDTH / 2 + DECK_MAP.BASE_MARGIN}
+        y={originY + DECK_MAP.REPLACEMENT_BOX_HEIGHT / 2}
+        width={DECK_MAP.REPLACEMENT_BOX_BUTTON_WIDTH}
+        height={DECK_MAP.REPLACEMENT_BOX_BUTTON_HEIGHT}
+        visible={showReplaceButton()}
+        onClick={replaceButtonClick}
+        color="violet"
       />
       {renderCargoPlacements()}
     </g>

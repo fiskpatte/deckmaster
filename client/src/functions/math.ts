@@ -32,6 +32,12 @@ export const arrayMax = (arr: Array<number>, defaultValue?: number) => {
   return max;
 };
 
+/**
+ * Checks if a number is between two values (both included). 
+ * @param target 
+ * @param lowerValue
+ * @param higherValue
+ */
 export const isBetween = (
   target: number,
   lowerValue: number,
@@ -51,3 +57,11 @@ export const Round = (value: number, decimalPoint: number) => {
   const multiplier = Math.pow(10, decimalPoint);
   return Math.round(value * multiplier + EPSILON) / multiplier;
 };
+
+/**
+ * Compares two numbers equality
+ */
+export const isEqual = (value1: number, value2: number) => {
+  if (!isFinite(value1) || !isFinite(value2)) return false;
+  return Math.abs(value1 - value2) <= Math.max(Math.abs(value1), Math.abs(value2)) * EPSILON;
+}

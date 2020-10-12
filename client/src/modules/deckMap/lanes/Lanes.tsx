@@ -16,7 +16,7 @@ export const Lanes: React.FC<Props> = ({
   rightOrigin,
   onLanePlacementButtonClick,
   currentCargo,
-  mostForwardValidPlacementForLanes
+  mostForwardValidPlacementForLanes,
 }) => {
   return (
     <>

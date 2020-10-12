@@ -26,7 +26,7 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
       animate={sideBarOpen ? "visible" : "hidden"}
       variants={variants}
     >
-      <div className="Header">
+      <div className="SideBarHeader">
         <HeaderItem>
           <Text size="big" weight="light" value="MENU" color="white" />
         </HeaderItem>

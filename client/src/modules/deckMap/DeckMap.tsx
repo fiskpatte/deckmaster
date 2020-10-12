@@ -23,6 +23,7 @@ import { ReplacementBox } from "./replacementBox";
 interface Props {
   deck: Deck;
   currentCargoPlacement: CargoPlacement;
+  initialCargoPlacement: CargoPlacement;
   isOverview: boolean;
   setInitialCargoPlacement: (d: CargoPlacement) => void;
   bumperToBumperDistance: number;
@@ -30,18 +31,21 @@ interface Props {
   mostForwardValidPlacementForLanes: MostForwardValidPlacementForLanes;
   replacingCargoPlacements: CargoPlacement[];
   notReplacingCargoPlacements: CargoPlacement[];
+  replaceButtonClick: () => Promise<void>;
 }
 
 const DeckMap: React.FC<Props> = ({
   deck,
   currentCargoPlacement,
+  initialCargoPlacement,
   isOverview = false,
   setInitialCargoPlacement,
   bumperToBumperDistance,
   viewBoxDimensions,
   mostForwardValidPlacementForLanes,
   replacingCargoPlacements,
-  notReplacingCargoPlacements
+  notReplacingCargoPlacements,
+  replaceButtonClick
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -113,12 +117,14 @@ const DeckMap: React.FC<Props> = ({
           <ReplacementBox
             cargoPlacements={replacingCargoPlacements}
             currentCargoPlacement={currentCargoPlacement}
+            initialCargoPlacement={initialCargoPlacement}
             originY={getReplacementBoxOrigin(deck)}
             originX={originX}
             sizeX={sizeX}
             onCargoPlacementClick={(cp: CargoPlacement) =>
               onCargoPlacementClick(cp)
             }
+            replaceButtonClick={replaceButtonClick}
           />
         )}
         <PlacedCargo

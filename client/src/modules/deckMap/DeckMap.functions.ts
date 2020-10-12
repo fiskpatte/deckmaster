@@ -1,4 +1,4 @@
-import { arrayMax, arrayMin } from "../../functions/math";
+import { arrayMax, arrayMin, isEqual } from "../../functions/math";
 import { DECK_MAP, AdjacentSide } from "../../constants";
 import {
   Deck,
@@ -449,8 +449,10 @@ export const cargoPlacementIsEmptyWithCargo = (cargoPlacement: CargoPlacement) =
 export const cargoPlacementIsEmptyWithoutCargo = (cargoPlacement: CargoPlacement) => cargoPlacementIsEmpty(cargoPlacement) && cargoIsEmpty(cargoPlacement.cargo);
 
 export const placementsHaveDifferentPositions = (a: CargoPlacement, b: CargoPlacement) =>
-  a.LCG !== b.LCG || a.TCG !== b.TCG;
+  !isEqual(a.LCG, b.LCG) || !isEqual(a.TCG, b.TCG);
 
 export const placementsAreDifferent = (a: CargoPlacement, b: CargoPlacement) => {
-  return a.LCG !== b.LCG || a.TCG !== b.TCG || a.id !== b.id || a.cargo.id !== b.cargo.id || a.replacing !== b.replacing || a.discharged !== b.discharged
+  return !isEqual(a.LCG, b.LCG) || !isEqual(a.TCG, b.TCG) || a.id !== b.id || a.cargo.id !== b.cargo.id || a.replacing !== b.replacing || a.discharged !== b.discharged
 }
+
+
