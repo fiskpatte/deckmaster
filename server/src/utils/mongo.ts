@@ -1,6 +1,9 @@
 import { MongooseDocument } from "mongoose";
 
 export const transformDbModel = (dbModel: MongooseDocument) => {
+
+  if (!dbModel) return dbModel;
+
   let result = {
     id: dbModel.id,
     ...dbModel.toObject(),

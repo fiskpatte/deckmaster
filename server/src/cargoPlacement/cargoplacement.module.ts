@@ -19,5 +19,6 @@ import { LogModule } from 'src/log/log.module';
   ],
   controllers: [CargoPlacementController],
   providers: [CargoPlacementService, AppGateway],
+  exports: [CargoPlacementService],
 })
-export class CargoPlacementModule {}
+export class CargoPlacementModule { }

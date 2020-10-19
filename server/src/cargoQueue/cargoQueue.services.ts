@@ -13,7 +13,7 @@ export class CargoQueueService {
     private readonly cargoQueueModel: Model<CargoQueueItem>,
     private readonly appGateway: AppGateway,
     private readonly cargoService: CargoService,
-  ) {}
+  ) { }
 
   async getAllByVoyageId(voyageId: string) {
     try {
@@ -67,6 +67,7 @@ export class CargoQueueService {
 
   async removeItemFromQueue(cargoId: string, voyageId: string) {
     try {
+      console.log("removeitemfromque", cargoId, voyageId)
       const cargo = await this.cargoService.getCargo(cargoId);
       await this.cargoQueueModel.deleteMany({ cargo: cargo.id }).exec();
       this.pushQueueToClients(voyageId);
@@ -81,6 +82,6 @@ export class CargoQueueService {
     try {
       const cargoQueueItems = await this.getAllByVoyageId(voyageId);
       this.appGateway.pushCargoQueueToClients(cargoQueueItems, voyageId);
-    } catch (error) {}
+    } catch (error) { }
   }
 }

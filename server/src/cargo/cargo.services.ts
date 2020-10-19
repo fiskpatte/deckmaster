@@ -10,7 +10,7 @@ import { LogService } from 'src/log/log.service.';
 export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
-  ) {}
+  ) { }
 
   async addCargo(newCargo: Cargo) {
     const newCargoModel = new this.cargoModel(removeReadOnlyFields(newCargo));
@@ -31,6 +31,7 @@ export class CargoService {
       registrationNumber,
       voyageId,
     });
+
     return transformDbModel(cargo);
   }
 

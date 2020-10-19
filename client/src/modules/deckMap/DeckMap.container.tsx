@@ -124,7 +124,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const shouldUpdateExistingPlacement = () => {
-    return isOverview;
+    return isOverview || cargoPlacements.some(cp => cp.cargo.id === currentCargoPlacement.cargo.id);
   };
 
   const updateExistingPlacement = async ({
@@ -132,6 +132,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     discharged = false,
   }) => {
     try {
+      if (currentCargoPlacement.id === "") {
+        currentCargoPlacement.id = cargoPlacements.find(cp => cp.cargo.id === currentCargoPlacement.cargo.id)?.id ?? "";
+      }
       //This dispatch removes blinking in the client
       dispatch(addCargoPlacement(currentCargoPlacement));
       await updateCargoPlacement({

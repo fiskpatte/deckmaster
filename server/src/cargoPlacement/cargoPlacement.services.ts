@@ -15,7 +15,7 @@ export class CargoPlacementService {
     private readonly appGateway: AppGateway,
     private readonly cargoQueueService: CargoQueueService,
     private readonly logService: LogService,
-  ) {}
+  ) { }
 
   async placeCargo(cp: CargoPlacement, username: string) {
     try {
@@ -52,6 +52,12 @@ export class CargoPlacementService {
       );
 
       this.pushAllWithWebsocket(updatedCargoPlacement.voyageId.toString());
+
+      this.cargoQueueService.removeItemFromQueue(
+        cp.cargo.toString(),
+        updatedCargoPlacement.voyageId.toString(),
+      );
+
     } catch (error) {
       throw new NotFoundException('Cargo not found');
     }

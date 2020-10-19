@@ -86,7 +86,7 @@ export const ReplacementBox: React.FC<Props> = ({
         x={(originXWithMargin + areaWidth / 2) * DECK_MAP.X_SCALE}
         y={(originY + DECK_MAP.REPLACEMENT_BOX_HEIGHT / 2) * DECK_MAP.Y_SCALE}
       >
-        {"REPLACEMENT AREA"}
+        {"CARGO SHIFTING AREA"}
       </text>
       <ArrowButton
         x={originXWithMargin - DECK_MAP.REPLACEMENT_BOX_BUTTON_WIDTH / 2 + DECK_MAP.BASE_MARGIN}

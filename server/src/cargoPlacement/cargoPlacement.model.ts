@@ -21,15 +21,15 @@ export const CargoPlacementSchema = new mongoose.Schema(
 export interface CargoPlacement extends mongoose.Document {
   id: string;
   registrationNumber: string;
-  deckId: String;
-  laneId: String;
-  LCG: Number;
-  TCG: Number;
-  VCG: Number;
-  overflowingLaneId: String;
+  deckId: string;
+  laneId: string;
+  LCG: number;
+  TCG: number;
+  VCG: number;
+  overflowingLaneId: string;
   createdAt: Date;
   updatedAt: Date;
-  voyageId: String;
+  voyageId: string;
   cargo: Cargo;
   discharged: boolean;
   replacing: boolean;

@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { CargoModule } from './cargo/cargo.module';
 import { LogModule } from './log/log.module';
 import { AppGateway } from './app.gateway';
+import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AppGateway } from './app.gateway';
     CargoPlacementModule,
     CargoModule,
     LogModule,
+    DataModule,
     MongooseModule.forRoot(
       'mongodb+srv://dbUser:0cP6knNISFBnrwoC@loadmaster-przxq.mongodb.net/test?retryWrites=true&w=majority',
       { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
