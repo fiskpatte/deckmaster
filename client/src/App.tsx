@@ -16,44 +16,53 @@ import appActions from "./store/app/appActions";
 import { getSettings } from "./api/endpoints";
 import { RootState } from "./store";
 import { setAllDefaultHeaders } from "./functions/axios";
-import useSocket from './hooks/useSocket';
-
+import useSocket from "./hooks/useSocket";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useToast from "./hooks/useToast";
 const App: React.FC = () => {
-  const [loading,] = useState(false);
+  const [loading] = useState(false);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
+  const toast = useToast();
   useEffect(() => {
+    toast.success("Hola Marcos!");
+    toast.error("This is an error toast that doesn't go away by itself.");
     if (sessionData) {
       setAllDefaultHeaders(sessionData);
     }
   }, [sessionData]);
-  useSocket(isLoggedIn, sessionData?.voyageId ?? "", sessionData?.vesselId ?? "");
+  useSocket(
+    isLoggedIn,
+    sessionData?.voyageId ?? "",
+    sessionData?.vesselId ?? ""
+  );
 
   useEffect(() => {
     if (isLoggedIn) {
-      parseLoadPlan(loadPlans).then(res => {
+      parseLoadPlan(loadPlans).then((res) => {
         //TODO: THIS IS ONLY FOR TESTING AND SHOULD BE FIXED LATER
         res["Lower Hold"] = {
           name: "Lower Hold",
           lanes: res["Weather Deck"].lanes,
           grids: res["Weather Deck"].grids,
           frames: res["Weather Deck"].frames,
-          sortOrder: 1
+          sortOrder: 1,
         };
         res["Main Deck"] = {
           name: "Main Deck",
           lanes: [],
           grids: [],
           frames: [],
-          sortOrder: 2
+          sortOrder: 2,
         };
         res["Upper Deck"] = {
           name: "Upper Deck",
           lanes: [],
           grids: [],
           frames: [],
-          sortOrder: 3
+          sortOrder: 3,
         };
         dispatch(deckMapActions.setDeckMap(res));
         dispatch(deckMapActions.setCurrentDeckId("Weather Deck"));
@@ -90,6 +99,18 @@ const App: React.FC = () => {
           <Header />
         </Route>
         <Switch>{renderRoutes()}</Switch>
+        {/* <ToastContainer /> */}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     </Router>
   );
