@@ -33,8 +33,8 @@ export const arrayMax = (arr: Array<number>, defaultValue?: number) => {
 };
 
 /**
- * Checks if a number is between two values (both included). 
- * @param target 
+ * Checks if a number is between two values (both included).
+ * @param target
  * @param lowerValue
  * @param higherValue
  */
@@ -63,5 +63,29 @@ export const Round = (value: number, decimalPoint: number) => {
  */
 export const isEqual = (value1: number, value2: number) => {
   if (!isFinite(value1) || !isFinite(value2)) return false;
-  return Math.abs(value1 - value2) <= Math.max(Math.abs(value1), Math.abs(value2)) * EPSILON;
-}
+  return (
+    Math.abs(value1 - value2) <=
+    Math.max(Math.abs(value1), Math.abs(value2)) * EPSILON
+  );
+};
+
+/**
+ * Returns the closest value in an array. If two values in arr have the same difference, the last one is chosen.
+ * @param arr Array to find closest value.
+ * @param value Value to find.
+ */
+export const getClosestValueInArray = (value: number, arr: number[]) => {
+  if (!isFinite(value)) throw "Not finite value in getClosestValueInArray";
+  let min = Infinity,
+    diff = undefined,
+    closestValue = undefined,
+    len = arr.length;
+  while (len--) {
+    diff = Math.abs(arr[len] - value);
+    if (diff < min) {
+      min = diff;
+      closestValue = arr[len];
+    }
+  }
+  return closestValue;
+};

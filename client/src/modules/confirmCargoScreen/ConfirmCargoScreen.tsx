@@ -7,10 +7,11 @@ import Text from "../../components/text";
 import "./ConfirmCargoScreen.scss";
 import Separator from "../../components/separator";
 import { cargoIsEmpty } from "../deckMap/DeckMap.functions";
-import { routes } from './../../routes';
+import { routes } from "./../../routes";
 import ConfirmButton from "../../components/button/ConfirmButton";
 import CancelButton from "../../components/button/CancelButton";
 import { BlueBackground } from "../../components/blueBackground";
+import { FlexContainer } from "../../components/flexContainer";
 
 export const ConfirmCargoScreen = () => {
   const { currentCargoPlacement } = useSelector(
@@ -55,25 +56,17 @@ export const ConfirmCargoScreen = () => {
         </table>
         <Separator />
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-evenly"
-          }}
-        >
-          <div style={{ flex: 2 }}></div>
-          <div style={{ flex: 1 }}>
-            <CancelButton
-              size="standard"
-              onClick={() => history.push(routes.PlaceCargo.path)}
-            />
-          </div>
+        <FlexContainer justifyContent="space-between">
+          <CancelButton
+            size="medium"
+            onClick={() => history.push(routes.PlaceCargo.path)}
+          />
+
           <ConfirmButton
-            size="standard"
+            size="medium"
             onClick={() => history.push(routes.PlaceCargoDeckMap.path)}
           />
-        </div>
+        </FlexContainer>
       </Paper>
     </BlueBackground>
   );

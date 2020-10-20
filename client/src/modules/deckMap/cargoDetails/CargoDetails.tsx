@@ -8,11 +8,10 @@ import { FlexContainer } from "../../../components/flexContainer";
 import usePrevious from "../../../hooks/usePrevious";
 import Text from "../../../components/text";
 import { arrayMin } from "../../../functions/math";
-import { CargoPosition } from "./CargoPosition";
 
 interface Props {
   cargoPlacement: CargoPlacement;
-  deck: Deck
+  deck: Deck;
   searchIconClicked: () => void;
   isSearchingCargo: boolean;
   searchIconEnabled: boolean;
@@ -20,6 +19,8 @@ interface Props {
   resetShowCargoNotFound: () => void;
   onOutsideClick: () => void;
   showCargoNotFound: boolean;
+  showStartOverButton: boolean;
+  startOverButtonClick: () => void;
 }
 
 export const CargoDetails: React.FC<Props> = ({
@@ -31,7 +32,7 @@ export const CargoDetails: React.FC<Props> = ({
   doSearch,
   showCargoNotFound,
   resetShowCargoNotFound,
-  onOutsideClick
+  onOutsideClick,
 }) => {
   const { registrationNumber } = cargoPlacement.cargo;
   const [input, setInput] = useState(registrationNumber);
@@ -41,9 +42,7 @@ export const CargoDetails: React.FC<Props> = ({
 
   useEffect(() => {
     if (deck && deck.lanes.length > 0) {
-      const thinestLane = arrayMin(
-        deck.lanes.map((lane: Lane) => lane.width)
-      );
+      const thinestLane = arrayMin(deck.lanes.map((lane: Lane) => lane.width));
       setShowWideCargoIcon(thinestLane < cargoPlacement.cargo.width);
     }
   }, [deck, cargoPlacement.cargo]);
@@ -53,7 +52,7 @@ export const CargoDetails: React.FC<Props> = ({
       setInput(registrationNumber);
       setTimeout(() => {
         inputRef.current?.select();
-      }, 1)
+      }, 1);
     }
   }, [isSearchingCargo, previousIsSearchingCargo, registrationNumber]);
 
@@ -68,16 +67,20 @@ export const CargoDetails: React.FC<Props> = ({
     e.preventDefault();
     doSearch(input);
   };
+
   return (
     <>
-      <div className="CargoDetails" onClick={searchIconEnabled ? searchIconClicked : () => null}>
+      <div
+        className="CargoDetails"
+        onClick={searchIconEnabled ? searchIconClicked : () => null}
+      >
         {isSearchingCargo ? (
           <FlexContainer flexDirection="column">
             <FlexContainer>
               <TextInput
                 value={input}
                 placeholder={registrationNumber}
-                onChange={e => onInputChange(e.target.value)}
+                onChange={(e) => onInputChange(e.target.value)}
                 size="small"
                 onSubmit={onSearchSubmit}
                 onOutsideClick={onOutsideClick}
@@ -87,18 +90,21 @@ export const CargoDetails: React.FC<Props> = ({
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}
           </FlexContainer>
         ) : (
-            <FlexContainer flexDirection="column" fullWidth>
-              <FlexContainer flexDirection="row" justifyContent="space-between" alignItems="center" >
-                <CargoDetailsItem
-                  label={!registrationNumber ? "No cargo selected" : ""}
-                  value={registrationNumber}
-                  showWideCargoIcon={showWideCargoIcon}
-                />
-                {searchIconEnabled && <BsSearch />}
-              </FlexContainer>
-              <CargoPosition lane={"WD01"} frame={"101"} onClick={() => { }} />
+          <FlexContainer flexDirection="column" fullWidth>
+            <FlexContainer
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <CargoDetailsItem
+                label={!registrationNumber ? "No cargo selected" : ""}
+                value={registrationNumber}
+                showWideCargoIcon={showWideCargoIcon}
+              />
+              {searchIconEnabled && <BsSearch />}
             </FlexContainer>
-          )}
+          </FlexContainer>
+        )}
       </div>
     </>
   );

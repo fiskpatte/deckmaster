@@ -12,7 +12,7 @@ import { FlexRowEndContainer } from "../../components/flexContainer";
 import { useDispatch } from "react-redux";
 import { setSessionData } from "./../../store/app/appActions";
 import { SessionData } from "./../../types/sessionData";
-import { routes } from './../../routes';
+import { routes } from "./../../routes";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -56,7 +56,7 @@ export const LoginScreen: React.FC = () => {
         <Separator />
         <TextInput
           value={username}
-          onChange={e => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
           placeholder="Email adress"
           size="big"
         />
@@ -64,7 +64,7 @@ export const LoginScreen: React.FC = () => {
         <TextInput
           value={password}
           type={"password"}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           size="big"
         />
@@ -74,6 +74,7 @@ export const LoginScreen: React.FC = () => {
             label="Login"
             onClick={onLoginButtonClick}
             color="green"
+            size="medium"
             loading={loading}
           />
         </FlexRowEndContainer>

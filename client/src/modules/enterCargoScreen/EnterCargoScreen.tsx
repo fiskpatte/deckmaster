@@ -11,7 +11,7 @@ import Text from "../../components/text";
 import Separator from "../../components/separator";
 import { FlexRowEndContainer } from "../../components/flexContainer";
 import { cargoPlacementFactory } from "../../types/deckMap";
-import { routes } from './../../routes';
+import { routes } from "./../../routes";
 import ConfirmButton from "../../components/button/ConfirmButton";
 import { BlueBackground } from "../../components/blueBackground";
 
@@ -46,14 +46,14 @@ export const EnterCargoScreen = () => {
         <Text size="medium" value="Enter cargo ID" />
         <TextInput
           value={value}
-          onChange={e => setValue(e.target.value)}
+          onChange={(e) => setValue(e.target.value)}
           autoFocus={true}
           size="big"
         />
         <Separator />
         <FlexRowEndContainer>
           <ConfirmButton
-            size="standard"
+            size="medium"
             onClick={onNextButtonClick}
             loading={loading}
           />

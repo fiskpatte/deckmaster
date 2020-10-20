@@ -25,11 +25,10 @@ import {
 import { routes } from "./../../routes";
 import { cargoPlacementFactory } from "../../types/deckMap";
 import { Loader } from "../../components/loader";
-import Text from "../../components/text";
 
 import { useCalculateData, useResetCargoPlacement } from "./DeckMap.hooks";
 import ButtonContainer from "./buttonContainer";
-import { FlexContainer } from "../../components/flexContainer";
+import PlaceCargoInfo from "./placeCargoInfo";
 
 interface Props {
   isOverview: boolean;
@@ -80,6 +79,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
 
+  const currentLaneName =
+    useSelector((state: RootState) =>
+      state.deckMapReducer.deckMap[currentDeck?.name]?.lanes.find(
+        (lane) => lane.id === currentCargoPlacement.laneId
+      )
+    )?.name || "";
+
   const startOverButtonClick = () => {
     if (!isOverview) {
       let resetPlacement = cargoPlacementFactory();
@@ -124,7 +130,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const shouldUpdateExistingPlacement = () => {
-    return isOverview || cargoPlacements.some(cp => cp.cargo.id === currentCargoPlacement.cargo.id);
+    return (
+      isOverview ||
+      cargoPlacements.some(
+        (cp) => cp.cargo.id === currentCargoPlacement.cargo.id
+      )
+    );
   };
 
   const updateExistingPlacement = async ({
@@ -133,7 +144,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   }) => {
     try {
       if (currentCargoPlacement.id === "") {
-        currentCargoPlacement.id = cargoPlacements.find(cp => cp.cargo.id === currentCargoPlacement.cargo.id)?.id ?? "";
+        currentCargoPlacement.id =
+          cargoPlacements.find(
+            (cp) => cp.cargo.id === currentCargoPlacement.cargo.id
+          )?.id ?? "";
       }
       //This dispatch removes blinking in the client
       dispatch(addCargoPlacement(currentCargoPlacement));
@@ -223,27 +237,23 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           showCargoNotFound={showCargoNotFound}
           resetShowCargoNotFound={() => setShowCargoNotFound(false)}
           onOutsideClick={() => setIsSearchingCargo(false)}
+          showStartOverButton={showStartOverButton()}
+          startOverButtonClick={startOverButtonClick}
         />
+
+        {!isOverview && (
+          <PlaceCargoInfo
+            lane={currentLaneName}
+            startOverButtonClick={startOverButtonClick}
+            showStartOverButton={showStartOverButton()}
+          />
+        )}
+
         <DeckSelector
           deckNames={getDeckNames(deckMap)}
           currentDeckName={currentDeck.name}
           setCurrentDeck={onDeckSelect}
         />
-        {!isOverview && (
-          <div className="placecargolabel">
-            {showStartOverButton() ? (
-              <FlexContainer>
-                <Text
-                  value={`Placing the cargo in lane ${currentCargoPlacement.laneId}`}
-                  weight="bold"
-                />
-                <button onClick={startOverButtonClick}>Start over</button>
-              </FlexContainer>
-            ) : (
-                <Text value="Place the cargo" weight="bold" />
-              )}
-          </div>
-        )}
       </div>
       <div className="DeckMapBody">
         <DeckMap

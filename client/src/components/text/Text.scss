@@ -2,13 +2,10 @@
 
 .Text {
   margin: $standardMargin;
+  @include flexCenter();
+  width: min-content;
+  white-space: nowrap;
 }
-
-// .header2 {
-//   font-size: 1.3em;
-//   font-family: FoundrySterlingMedium;
-//   margin: 0.3em 0;
-// }
 
 .weight-light {
   font-family: FoundrySterlingLight;

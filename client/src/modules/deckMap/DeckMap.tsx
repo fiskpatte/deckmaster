@@ -11,7 +11,9 @@ import { useDispatch } from "react-redux";
 import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import {
   Deck,
-  CargoPlacement, ViewBoxDimensions, MostForwardValidPlacementForLanes
+  CargoPlacement,
+  ViewBoxDimensions,
+  MostForwardValidPlacementForLanes,
 } from "../../types/deckMap";
 import "./DeckMap.scss";
 import FrameRuler from "./frameRuler";
@@ -45,7 +47,7 @@ const DeckMap: React.FC<Props> = ({
   mostForwardValidPlacementForLanes,
   replacingCargoPlacements,
   notReplacingCargoPlacements,
-  replaceButtonClick
+  replaceButtonClick,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -59,7 +61,7 @@ const DeckMap: React.FC<Props> = ({
     if (currentCargoPlacement.cargo.id !== cargoPlacement.cargo.id) {
       setInitialCargoPlacement({ ...cargoPlacement });
     }
-    dispatch(setCurrentPlacement({ ...cargoPlacement }));
+    dispatch(setCurrentPlacement({ ...cargoPlacement, deckId: deck.name }));
   };
 
   const setCargoPlacementFromFrontPlacement = (placement: CargoPlacement) => {
@@ -69,7 +71,7 @@ const DeckMap: React.FC<Props> = ({
     )
       return;
     placement.LCG -= currentCargoPlacement.cargo.length / 2;
-    setPlacement({ ...currentCargoPlacement, ...placement });
+    setPlacement({ ...currentCargoPlacement, ...placement, deckId: deck.name });
   };
 
   if (!viewBoxDimensions) return null;
