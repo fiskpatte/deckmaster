@@ -6,12 +6,14 @@ import Text from "../../../components/text";
 interface Props {
   startOverButtonClick: () => void;
   lane: string;
+  frameId: number | undefined;
   showStartOverButton: boolean;
 }
 
 export const PlaceCargoInfo: React.FC<Props> = ({
   startOverButtonClick,
   lane,
+  frameId,
   showStartOverButton,
 }) => {
   if (showStartOverButton) {
@@ -26,6 +28,9 @@ export const PlaceCargoInfo: React.FC<Props> = ({
           <div style={{ width: "0.5vw" }}></div>
           <Text size="standard" weight="medium">
             {lane}
+          </Text>
+          <Text size="standard" weight="medium">
+            {frameId}
           </Text>
           {showStartOverButton && (
             <BsArrowCounterclockwise

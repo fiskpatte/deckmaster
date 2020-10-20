@@ -75,7 +75,7 @@ export const isEqual = (value1: number, value2: number) => {
  * @param value Value to find.
  */
 export const getClosestValueInArray = (value: number, arr: number[]) => {
-  if (!isFinite(value)) throw "Not finite value in getClosestValueInArray";
+  if (!isFinite(value)) throw new Error("Not finite value in getClosestValueInArray");
   let min = Infinity,
     diff = undefined,
     closestValue = undefined,

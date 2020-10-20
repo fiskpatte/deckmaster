@@ -13,6 +13,7 @@ import {
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
 import {
   getCurrentDeck,
+  getFrameIdFromPosition,
   getVisibleCargoPlacements,
 } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
@@ -21,6 +22,7 @@ import {
   cargoPlacementIsEmpty,
   cargoIsEmpty,
   placementsAreDifferent,
+  getForwardPosition,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { cargoPlacementFactory } from "../../types/deckMap";
@@ -53,6 +55,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const [discharging, setDischarging] = useState(false);
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
+  const [currentLaneName, setCurrentLaneName] = useState("");
+  const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
+
   useResetCargoPlacement(
     isOverview,
     isSearchingCargo,
@@ -79,12 +84,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
 
-  const currentLaneName =
-    useSelector((state: RootState) =>
-      state.deckMapReducer.deckMap[currentDeck?.name]?.lanes.find(
-        (lane) => lane.id === currentCargoPlacement.laneId
-      )
-    )?.name || "";
+  useEffect(() => {
+    setCurrentLaneName(currentDeck?.lanes.find(
+      (lane) => lane.id === currentCargoPlacement?.laneId
+    )?.name || "");
+  }, [currentDeck, currentCargoPlacement])
 
   const startOverButtonClick = () => {
     if (!isOverview) {
@@ -237,13 +241,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           showCargoNotFound={showCargoNotFound}
           resetShowCargoNotFound={() => setShowCargoNotFound(false)}
           onOutsideClick={() => setIsSearchingCargo(false)}
-          showStartOverButton={showStartOverButton()}
-          startOverButtonClick={startOverButtonClick}
         />
 
         {!isOverview && (
           <PlaceCargoInfo
             lane={currentLaneName}
+            frameId={frameId}
             startOverButtonClick={startOverButtonClick}
             showStartOverButton={showStartOverButton()}
           />

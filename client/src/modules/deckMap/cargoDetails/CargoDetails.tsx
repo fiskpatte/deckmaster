@@ -19,8 +19,6 @@ interface Props {
   resetShowCargoNotFound: () => void;
   onOutsideClick: () => void;
   showCargoNotFound: boolean;
-  showStartOverButton: boolean;
-  startOverButtonClick: () => void;
 }
 
 export const CargoDetails: React.FC<Props> = ({
@@ -76,35 +74,33 @@ export const CargoDetails: React.FC<Props> = ({
       >
         {isSearchingCargo ? (
           <FlexContainer flexDirection="column">
-            <FlexContainer>
-              <TextInput
-                value={input}
-                placeholder={registrationNumber}
-                onChange={(e) => onInputChange(e.target.value)}
-                size="small"
-                onSubmit={onSearchSubmit}
-                onOutsideClick={onOutsideClick}
-                ref={inputRef}
-              />
-            </FlexContainer>
+            <TextInput
+              value={input}
+              placeholder={registrationNumber || "Cargo ID"}
+              onChange={(e) => onInputChange(e.target.value)}
+              size="small"
+              onSubmit={onSearchSubmit}
+              onOutsideClick={onOutsideClick}
+              ref={inputRef}
+            />
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}
           </FlexContainer>
         ) : (
-          <FlexContainer flexDirection="column" fullWidth>
-            <FlexContainer
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <CargoDetailsItem
-                label={!registrationNumber ? "No cargo selected" : ""}
-                value={registrationNumber}
-                showWideCargoIcon={showWideCargoIcon}
-              />
-              {searchIconEnabled && <BsSearch />}
+            <FlexContainer flexDirection="column" fullWidth>
+              <FlexContainer
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <CargoDetailsItem
+                  label={!registrationNumber ? "No cargo selected" : ""}
+                  value={registrationNumber}
+                  showWideCargoIcon={showWideCargoIcon}
+                />
+                {searchIconEnabled && <BsSearch />}
+              </FlexContainer>
             </FlexContainer>
-          </FlexContainer>
-        )}
+          )}
       </div>
     </>
   );

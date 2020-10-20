@@ -1,8 +1,8 @@
 import React from "react";
 import "./InfoBox.scss";
 import { BsInfoCircle } from "react-icons/bs";
-import { Paper } from "../../../components/paper";
-import { FlexContainer } from "../../../components/flexContainer";
+import { Paper } from "../paper";
+import { FlexContainer } from "../flexContainer";
 
 interface Props {
   text: string;

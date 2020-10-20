@@ -42,7 +42,7 @@ export const Button: React.FC<ButtonProps> = ({
         alignItems="center"
       >
         {loading ? (
-          <ClipLoader size={30} color={"#ffffff"} loading={true} />
+          <ClipLoader color={"inherit"} loading={true} />
         ) : (
             <>
               {leftIcon ?? <div></div>}

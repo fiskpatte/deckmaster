@@ -455,4 +455,7 @@ export const placementsAreDifferent = (a: CargoPlacement, b: CargoPlacement) => 
   return !isEqual(a.LCG, b.LCG) || !isEqual(a.TCG, b.TCG) || a.id !== b.id || a.cargo.id !== b.cargo.id || a.replacing !== b.replacing || a.discharged !== b.discharged
 }
 
-
+export const getForwardPosition = (cargoPlacement: CargoPlacement) => {
+  if (!cargoPlacement) return undefined;
+  return cargoPlacement.LCG + cargoPlacement.cargo.length / 2;
+}

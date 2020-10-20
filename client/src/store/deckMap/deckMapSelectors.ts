@@ -40,3 +40,8 @@ export const getCargoPlacementByRegistrationNumber = (input: string) =>
         input.replace(/\s/g, "")
     )
   );
+
+export const getFrameIdFromPosition = (deckId: string, pos: number | undefined) => createSelector(
+  [getDeckMap], (deckMap) =>
+  deckMap[deckId]?.frames.find(frame => frame.distance >= (pos ?? Infinity))?.id
+)
