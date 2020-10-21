@@ -31,6 +31,7 @@ import { Loader } from "../../components/loader";
 import { useCalculateData, useResetCargoPlacement } from "./DeckMap.hooks";
 import ButtonContainer from "./buttonContainer";
 import PlaceCargoInfo from "./placeCargoInfo";
+import useToast from "../../hooks/useToast";
 
 interface Props {
   isOverview: boolean;
@@ -47,6 +48,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     cargoPlacementFactory()
   );
 
+  const toast = useToast();
   const currentDeck = useSelector(getCurrentDeck);
   const visibleCargoPlacements = useSelector(getVisibleCargoPlacements);
   const dispatch = useDispatch();
@@ -56,7 +58,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const [showCargoNotFound, setShowCargoNotFound] = useState(false);
   const [currentLaneName, setCurrentLaneName] = useState("");
-  const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
+  const frameId = useSelector(
+    getFrameIdFromPosition(
+      currentCargoPlacement?.deckId,
+      getForwardPosition(currentCargoPlacement)
+    )
+  );
 
   useResetCargoPlacement(
     isOverview,
@@ -85,10 +92,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   }, [history, currentCargoPlacement.cargo, isOverview]);
 
   useEffect(() => {
-    setCurrentLaneName(currentDeck?.lanes.find(
-      (lane) => lane.id === currentCargoPlacement?.laneId
-    )?.name || "");
-  }, [currentDeck, currentCargoPlacement])
+    setCurrentLaneName(
+      currentDeck?.lanes.find(
+        (lane) => lane.id === currentCargoPlacement?.laneId
+      )?.name || ""
+    );
+  }, [currentDeck, currentCargoPlacement]);
 
   const startOverButtonClick = () => {
     if (!isOverview) {
@@ -106,12 +115,20 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   const dischargeButtonClick = async () => {
     setDischarging(true);
-    await updateExistingPlacement({ discharged: true });
+    try {
+      await updateExistingPlacement({ discharged: true });
+    } catch (error) {
+      toast.error("Failed to discharge cargo");
+    }
     setDischarging(false);
   };
 
   const replaceButtonClick = async () => {
-    await updateExistingPlacement({ replacing: true });
+    try {
+      await updateExistingPlacement({ replacing: true });
+    } catch (error) {
+      toast.error("Failed to move cargo to shifting area");
+    }
   };
 
   const onConfirm = async () => {
@@ -127,7 +144,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         });
         history.push(routes.PlaceCargo.path);
       } catch (error) {
-        console.error(error);
+        toast.error("Failed to place cargo");
       }
     }
     setConfirming(false);
@@ -164,7 +181,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
-      console.error(error);
+      toast.error("Failed to update cargo position");
     }
   };
 
@@ -258,21 +275,20 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           setCurrentDeck={onDeckSelect}
         />
       </div>
-      <div className="DeckMapBody">
-        <DeckMap
-          currentCargoPlacement={currentCargoPlacement}
-          initialCargoPlacement={initialCargoPlacement}
-          deck={currentDeck}
-          isOverview={isOverview}
-          setInitialCargoPlacement={setInitialCargoPlacement}
-          bumperToBumperDistance={bumperToBumperDistance}
-          viewBoxDimensions={viewBoxDimensions}
-          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
-          replacingCargoPlacements={replacingCargoPlacements}
-          notReplacingCargoPlacements={notReplacingCargoPlacements}
-          replaceButtonClick={replaceButtonClick}
-        />
-      </div>
+
+      <DeckMap
+        currentCargoPlacement={currentCargoPlacement}
+        initialCargoPlacement={initialCargoPlacement}
+        deck={currentDeck}
+        isOverview={isOverview}
+        setInitialCargoPlacement={setInitialCargoPlacement}
+        bumperToBumperDistance={bumperToBumperDistance}
+        viewBoxDimensions={viewBoxDimensions}
+        mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
+        replacingCargoPlacements={replacingCargoPlacements}
+        notReplacingCargoPlacements={notReplacingCargoPlacements}
+        replaceButtonClick={replaceButtonClick}
+      />
       <ButtonContainer
         isOverview={isOverview}
         showConfirmButton={showConfirmButton()}

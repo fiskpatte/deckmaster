@@ -89,64 +89,70 @@ const DeckMap: React.FC<Props> = ({
     return null;
 
   return (
-    <svg
-      className="svgBody"
-      viewBox={`${originX} ${originY} ${sizeX} ${sizeY}`}
-      preserveAspectRatio="xMidYMin"
-      ref={svgRef}
-    >
-      <g
-        className="containerGroup"
-        transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
+    <div className="DeckMapBody">
+      <svg
+        className="svgBody"
+        viewBox={`${originX} ${originY} ${sizeX} ${sizeY}`}
+        preserveAspectRatio="xMidYMin"
+        ref={svgRef}
       >
-        <Lanes
-          lanes={deck.lanes}
-          rightOrigin={sizeX + originX}
-          currentCargo={currentCargoPlacement.cargo}
-          onLanePlacementButtonClick={setCargoPlacementFromFrontPlacement}
-          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
-        />
-        <Grids
-          grids={deck.grids}
-          onClick={setCargoPlacementFromFrontPlacement}
-          currentCargo={currentCargoPlacement.cargo}
-          cargoPlacements={notReplacingCargoPlacements}
-          lanes={deck.lanes}
-          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
-        />
-        <FrameRuler frames={deck.frames} originY={getDeckMapBottom(deck)} />
-        {isOverview && (
-          <ReplacementBox
-            cargoPlacements={replacingCargoPlacements}
-            currentCargoPlacement={currentCargoPlacement}
-            initialCargoPlacement={initialCargoPlacement}
-            originY={getReplacementBoxOrigin(deck)}
-            originX={originX}
-            sizeX={sizeX}
+        <g
+          className="containerGroup"
+          transform={`scale(${DECK_MAP.X_SCALE} ${DECK_MAP.Y_SCALE})`}
+        >
+          <Lanes
+            lanes={deck.lanes}
+            rightOrigin={sizeX + originX}
+            currentCargo={currentCargoPlacement.cargo}
+            onLanePlacementButtonClick={setCargoPlacementFromFrontPlacement}
+            mostForwardValidPlacementForLanes={
+              mostForwardValidPlacementForLanes
+            }
+          />
+          <Grids
+            grids={deck.grids}
+            onClick={setCargoPlacementFromFrontPlacement}
+            currentCargo={currentCargoPlacement.cargo}
+            cargoPlacements={notReplacingCargoPlacements}
+            lanes={deck.lanes}
+            mostForwardValidPlacementForLanes={
+              mostForwardValidPlacementForLanes
+            }
+          />
+          <FrameRuler frames={deck.frames} originY={getDeckMapBottom(deck)} />
+          {isOverview && (
+            <ReplacementBox
+              cargoPlacements={replacingCargoPlacements}
+              currentCargoPlacement={currentCargoPlacement}
+              initialCargoPlacement={initialCargoPlacement}
+              originY={getReplacementBoxOrigin(deck)}
+              originX={originX}
+              sizeX={sizeX}
+              onCargoPlacementClick={(cp: CargoPlacement) =>
+                onCargoPlacementClick(cp)
+              }
+              replaceButtonClick={replaceButtonClick}
+            />
+          )}
+          <PlacedCargo
+            cargo={notReplacingCargoPlacements.filter(
+              (cp) => cp.cargo.id !== currentCargoPlacement.cargo.id
+            )}
             onCargoPlacementClick={(cp: CargoPlacement) =>
               onCargoPlacementClick(cp)
             }
-            replaceButtonClick={replaceButtonClick}
           />
-        )}
-        <PlacedCargo
-          cargo={notReplacingCargoPlacements.filter(
-            (cp) => cp.cargo.id !== currentCargoPlacement.cargo.id
-          )}
-          onCargoPlacementClick={(cp: CargoPlacement) =>
-            onCargoPlacementClick(cp)
-          }
-        />
-        <PlacingCargo
-          currentCargoPlacement={currentCargoPlacement}
-          lanes={deck.lanes}
-          cargoPlacements={notReplacingCargoPlacements}
-          svgRef={svgRef}
-          setCurrentCargoPlacement={setPlacement}
-          bumperToBumperDistance={bumperToBumperDistance}
-        />
-      </g>
-    </svg>
+          <PlacingCargo
+            currentCargoPlacement={currentCargoPlacement}
+            lanes={deck.lanes}
+            cargoPlacements={notReplacingCargoPlacements}
+            svgRef={svgRef}
+            setCurrentCargoPlacement={setPlacement}
+            bumperToBumperDistance={bumperToBumperDistance}
+          />
+        </g>
+      </svg>
+    </div>
   );
 };
 

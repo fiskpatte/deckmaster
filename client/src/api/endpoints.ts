@@ -23,7 +23,7 @@ export const login = async (
     setAllDefaultHeaders(sessionData);
     callback(sessionData);
   } else {
-    throw new Error("Login failed");
+    throw new Error("Invalid credentials");
   }
 };
 

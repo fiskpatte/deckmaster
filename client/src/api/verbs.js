@@ -6,7 +6,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const serverPrefix = SERVER_PREFIX;
 
-export const get = async endpoint => {
+export const get = async (endpoint) => {
   try {
     endpoint = removeSlashPrefix(endpoint);
     const result = await axios.get(`${serverPrefix + endpoint}`);
@@ -27,7 +27,7 @@ export const post = async (endpoint, body) => {
     const result = await axios.post(`${serverPrefix + endpoint}`, body);
     return result.data;
   } catch (error) {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && endpoint !== "auth/login") {
       window.location = "/login";
       return;
     }
@@ -67,5 +67,5 @@ export const axiosDelete = async (endpoint, body) => {
   }
 };
 
-const removeSlashPrefix = endpoint =>
+const removeSlashPrefix = (endpoint) =>
   endpoint[0] === "/" ? endpoint.substr(1) : endpoint;

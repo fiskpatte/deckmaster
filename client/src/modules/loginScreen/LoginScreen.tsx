@@ -13,28 +13,27 @@ import { useDispatch } from "react-redux";
 import { setSessionData } from "./../../store/app/appActions";
 import { SessionData } from "./../../types/sessionData";
 import { routes } from "./../../routes";
+import useToast from "../../hooks/useToast";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
+  const toast = useToast();
 
   const [username, setUsername] = useState("Pontus2");
   const [password, setPassword] = useState("testtest");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
 
   useEffect(() => {
-    if (isLoggedIn) history.push(routes.PlaceCargo.path);
+    if (isLoggedIn) {
+      history.push(routes.PlaceCargo.path);
+    }
   }, [history, isLoggedIn]);
 
   const onLoginButtonClick = async () => {
     if (!username || !password) {
       return;
-    }
-
-    if (error) {
-      setError("");
     }
 
     setLoading(true);
@@ -44,8 +43,8 @@ export const LoginScreen: React.FC = () => {
       await login(username, password, loginCallback);
       history.push(routes.PlaceCargo.path);
     } catch (error) {
+      toast.error("Login failed");
       setLoading(false);
-      setError("Login failed");
     }
   };
 

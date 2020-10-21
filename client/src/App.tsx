@@ -19,20 +19,18 @@ import { setAllDefaultHeaders } from "./functions/axios";
 import useSocket from "./hooks/useSocket";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useToast from "./hooks/useToast";
+
 const App: React.FC = () => {
   const [loading] = useState(false);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
-  const toast = useToast();
   useEffect(() => {
-    toast.success("Hola Marcos!");
-    toast.error("This is an error toast that doesn't go away by itself.");
     if (sessionData) {
       setAllDefaultHeaders(sessionData);
     }
   }, [sessionData]);
+
   useSocket(
     isLoggedIn,
     sessionData?.voyageId ?? "",
@@ -91,7 +89,6 @@ const App: React.FC = () => {
     return <Loader />;
   }
 
-  console.log("app");
   return (
     <Router>
       <div className="App">
@@ -99,7 +96,6 @@ const App: React.FC = () => {
           <Header />
         </Route>
         <Switch>{renderRoutes()}</Switch>
-        {/* <ToastContainer /> */}
         <ToastContainer
           position="top-right"
           autoClose={3000}

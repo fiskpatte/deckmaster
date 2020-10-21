@@ -12,11 +12,12 @@ import TextInput from "../../components/textInput";
 import { FlexRowEndContainer } from "../../components/flexContainer";
 import { toStringSafe } from "../../functions/string";
 import { BlueBackground } from "../../components/blueBackground";
-import './SettingsScreen.scss';
+import "./SettingsScreen.scss";
+import useToast from "../../hooks/useToast";
 
 export const SettingsScreen = () => {
   const { settings } = useSelector((state: RootState) => state.appReducer);
-
+  const toast = useToast();
   const [tempSettings, setTempSettings] = useState(settings);
 
   const [isSaving, setIsSaving] = useState(false);
@@ -35,8 +36,10 @@ export const SettingsScreen = () => {
       setIsSaving(true);
 
       await updateSettings(tempSettings);
+      toast.success("Settings saved");
     } catch (error) {
       // show error
+      toast.error("Failed to save settings");
     }
     setIsSaving(false);
   };
@@ -44,7 +47,7 @@ export const SettingsScreen = () => {
   const fieldsAreValid = (settings: Settings) =>
     isFinite(settings.bumperToBumperDistance) && isFinite(settings.defaultVCG);
 
-  if (!settings || isSaving) {
+  if (!settings) {
     return <Loader />;
   }
 
@@ -98,7 +101,8 @@ export const SettingsScreen = () => {
             label="SAVE"
             color="green"
             onClick={saveButtonClick}
-            size="standard"
+            size="medium"
+            loading={isSaving}
           />
         </FlexRowEndContainer>
       </Paper>
