@@ -11,8 +11,8 @@ interface Props {
 }
 export const Overlay: React.FC<Props> = ({ visible, onClick, animate = true, transparent = false, zIndex }) => {
     const variants: Variants = {
-        visible: { opacity: 0.7, pointerEvents: "auto", transition: { ease: "linear" } },
-        hidden: { opacity: 0, pointerEvents: "none", transition: { ease: "linear" } }
+        visible: { opacity: 0.7, pointerEvents: "auto", transition: { ease: "linear", duration: 0.2 } },
+        hidden: { opacity: 0, pointerEvents: "none", transition: { ease: "linear", duration: 0.2 } }
     }
     return (
         <>

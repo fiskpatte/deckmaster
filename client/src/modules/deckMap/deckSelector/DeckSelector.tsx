@@ -52,7 +52,6 @@ export const DeckSelector: React.FC<Props> = ({
         visible={isOpen}
         onClick={onOutsideClick}
         zIndex={variables.deckSelectorOverlayZIndex}
-        animate={false}
       />
       <div className="DeckSelector">
         <OutsideAlerter outsideClickCallback={onOutsideClick}>
