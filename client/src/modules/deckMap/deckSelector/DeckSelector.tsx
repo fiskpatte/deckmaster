@@ -41,9 +41,9 @@ export const DeckSelector: React.FC<Props> = ({
       opacity: 1,
       height: "auto",
       zIndex: 1,
-      transition: { ease: "linear" },
+      transition: { ease: "linear", duration: 0.2 },
     },
-    collapsed: { opacity: 0, height: 0, transition: { ease: "linear" } },
+    collapsed: { opacity: 0, height: 0, transition: { ease: "linear", duration: 0.2 } },
   };
 
   return (

@@ -10,7 +10,7 @@ interface Props {
     zIndex?: number,
     duration?: number,
 }
-export const Overlay: React.FC<Props> = ({ visible, onClick, animate = true, transparent = false, zIndex, duration = 0.2 }) => {
+export const Overlay: React.FC<Props> = ({ visible, onClick, animate = true, transparent = false, zIndex, duration = 0.14 }) => {
     const variants: Variants = {
         visible: { opacity: 0.7, pointerEvents: "auto", transition: { ease: "linear", duration: duration } },
         hidden: { opacity: 0, pointerEvents: "none", transition: { ease: "linear", duration: duration } }
