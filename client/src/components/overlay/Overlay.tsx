@@ -7,12 +7,13 @@ interface Props {
     onClick: () => void,
     animate?: boolean,
     transparent?: boolean,
-    zIndex?: number
+    zIndex?: number,
+    duration?: number,
 }
-export const Overlay: React.FC<Props> = ({ visible, onClick, animate = true, transparent = false, zIndex }) => {
+export const Overlay: React.FC<Props> = ({ visible, onClick, animate = true, transparent = false, zIndex, duration = 0.2 }) => {
     const variants: Variants = {
-        visible: { opacity: 0.7, pointerEvents: "auto", transition: { ease: "linear", duration: 0.2 } },
-        hidden: { opacity: 0, pointerEvents: "none", transition: { ease: "linear", duration: 0.2 } }
+        visible: { opacity: 0.7, pointerEvents: "auto", transition: { ease: "linear", duration: duration } },
+        hidden: { opacity: 0, pointerEvents: "none", transition: { ease: "linear", duration: duration } }
     }
     return (
         <>
