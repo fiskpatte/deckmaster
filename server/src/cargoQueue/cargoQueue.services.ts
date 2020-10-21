@@ -67,7 +67,6 @@ export class CargoQueueService {
 
   async removeItemFromQueue(cargoId: string, voyageId: string) {
     try {
-      console.log("removeitemfromque", cargoId, voyageId)
       const cargo = await this.cargoService.getCargo(cargoId);
       await this.cargoQueueModel.deleteMany({ cargo: cargo.id }).exec();
       this.pushQueueToClients(voyageId);
