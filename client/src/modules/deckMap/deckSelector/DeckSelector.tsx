@@ -28,7 +28,8 @@ export const DeckSelector: React.FC<Props> = ({
       setIsOpen(true);
     }
   };
-  const isVisible = (deckName: string) => isOpen || deckName === currentDeckName;
+  const isVisible = (deckName: string) =>
+    isOpen || deckName === currentDeckName;
 
   const onOutsideClick = () => {
     if (isOpen) {
@@ -36,7 +37,12 @@ export const DeckSelector: React.FC<Props> = ({
     }
   };
   const itemVariants = {
-    extended: { opacity: 1, height: "auto", zIndex: 1, transition: { ease: "linear" } },
+    extended: {
+      opacity: 1,
+      height: "auto",
+      zIndex: 1,
+      transition: { ease: "linear" },
+    },
     collapsed: { opacity: 0, height: 0, transition: { ease: "linear" } },
   };
 
@@ -46,6 +52,7 @@ export const DeckSelector: React.FC<Props> = ({
         visible={isOpen}
         onClick={onOutsideClick}
         zIndex={variables.deckSelectorOverlayZIndex}
+        animate={false}
       />
       <div className="DeckSelector">
         <OutsideAlerter outsideClickCallback={onOutsideClick}>
