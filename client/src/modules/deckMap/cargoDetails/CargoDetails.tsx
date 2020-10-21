@@ -11,30 +11,24 @@ import { arrayMin } from "../../../functions/math";
 
 interface Props {
   cargoPlacement: CargoPlacement;
+  cargoPlacements: CargoPlacement[];
   deck: Deck;
-  searchIconClicked: () => void;
-  isSearchingCargo: boolean;
-  searchIconEnabled: boolean;
-  doSearch: (input: string) => void;
-  resetShowCargoNotFound: () => void;
-  onOutsideClick: () => void;
-  showCargoNotFound: boolean;
+  onSuccessfulCargoSearch: (cp: CargoPlacement) => void;
+  searchEnabled: boolean;
 }
 
 export const CargoDetails: React.FC<Props> = ({
   cargoPlacement,
+  cargoPlacements,
+  onSuccessfulCargoSearch,
   deck,
-  searchIconClicked,
-  isSearchingCargo,
-  searchIconEnabled,
-  doSearch,
-  showCargoNotFound,
-  resetShowCargoNotFound,
-  onOutsideClick,
+  searchEnabled,
 }) => {
   const { registrationNumber } = cargoPlacement.cargo;
   const [input, setInput] = useState(registrationNumber);
+  const [isSearchingCargo, setIsSearchingCargo] = useState(false);
   const previousIsSearchingCargo = usePrevious(isSearchingCargo);
+  const [showCargoNotFound, setShowCargoNotFound] = useState(false);
   const [showWideCargoIcon, setShowWideCargoIcon] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -66,11 +60,41 @@ export const CargoDetails: React.FC<Props> = ({
     doSearch(input);
   };
 
+  const doSearch = (input: string) => {
+    const parsedInput = input.toUpperCase().replace(/\s/g, "");
+    const result = cargoPlacements.find(
+      (cp) =>
+        cp.cargo.registrationNumber.toUpperCase().replace(/\s/g, "") === parsedInput
+    );
+
+    if (!result) {
+      setShowCargoNotFound(true);
+      return;
+    }
+
+    onSuccessfulCargoSearch(result);
+    setIsSearchingCargo(false);
+    return;
+  };
+
+  const startSearch = () => (
+    setIsSearchingCargo(true)
+  )
+
+  const resetShowCargoNotFound = () => (
+    setShowCargoNotFound(false)
+  )
+
+  const onOutsideClick = () => {
+    resetShowCargoNotFound();
+    setIsSearchingCargo(false);
+  }
+
   return (
     <>
       <div
         className="CargoDetails"
-        onClick={searchIconEnabled ? searchIconClicked : () => null}
+        onClick={searchEnabled ? startSearch : () => null}
       >
         {isSearchingCargo ? (
           <FlexContainer flexDirection="column">
@@ -93,11 +117,11 @@ export const CargoDetails: React.FC<Props> = ({
                 alignItems="center"
               >
                 <CargoDetailsItem
-                  label={!registrationNumber ? "No cargo selected" : ""}
+                  label={!registrationNumber ? "No cargo selected" : "CARGO"}
                   value={registrationNumber}
                   showWideCargoIcon={showWideCargoIcon}
                 />
-                {searchIconEnabled && <BsSearch />}
+                {searchEnabled && <BsSearch />}
               </FlexContainer>
             </FlexContainer>
           )}

@@ -25,7 +25,6 @@ import { ReplacementBox } from "./replacementBox";
 interface Props {
   deck: Deck;
   currentCargoPlacement: CargoPlacement;
-  initialCargoPlacement: CargoPlacement;
   isOverview: boolean;
   setInitialCargoPlacement: (d: CargoPlacement) => void;
   bumperToBumperDistance: number;
@@ -39,7 +38,6 @@ interface Props {
 const DeckMap: React.FC<Props> = ({
   deck,
   currentCargoPlacement,
-  initialCargoPlacement,
   isOverview = false,
   setInitialCargoPlacement,
   bumperToBumperDistance,
@@ -124,7 +122,6 @@ const DeckMap: React.FC<Props> = ({
             <ReplacementBox
               cargoPlacements={replacingCargoPlacements}
               currentCargoPlacement={currentCargoPlacement}
-              initialCargoPlacement={initialCargoPlacement}
               originY={getReplacementBoxOrigin(deck)}
               originX={originX}
               sizeX={sizeX}

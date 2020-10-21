@@ -5,19 +5,19 @@ import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import { CargoPlacement, cargoPlacementFactory, Deck, MostForwardValidPlacementForLanes, ViewBoxDimensions } from "../../types/deckMap";
 import { getMostForwardValidPlacementForLanes, getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY } from "./DeckMap.functions";
 
-export const useResetCargoPlacement = (isOverview: boolean, isSearchingCargo: boolean, cargoPlacement: CargoPlacement, deckId: string,) => {
+export const useResetCargoPlacement = (isOverview: boolean, cancelNextReset: boolean, cargoPlacement: CargoPlacement, deckId: string,) => {
   const dispatch = useDispatch();
   const previousDeckId = usePrevious(deckId);
-  const previousIsSearchingCargo = usePrevious(isSearchingCargo);
+  const previousCancelNextReset = usePrevious(cancelNextReset);
 
-  //Reset when changing deck, but not if the change was due to searching cargo.
+  //Reset when changing deck, but not if cancelNextReset is toggled.
   useEffect(() => {
     let resetPlacement = cargoPlacementFactory();
     resetPlacement.cargo = cargoPlacement.cargo;
     if (
       previousDeckId &&
       previousDeckId !== deckId &&
-      !previousIsSearchingCargo
+      previousCancelNextReset === cancelNextReset
     ) {
       dispatch(
         setCurrentPlacement(
@@ -31,7 +31,8 @@ export const useResetCargoPlacement = (isOverview: boolean, isSearchingCargo: bo
     deckId,
     previousDeckId,
     cargoPlacement.cargo,
-    previousIsSearchingCargo,
+    cancelNextReset,
+    previousCancelNextReset,
   ]);
 
   //Reset first time mounting overview

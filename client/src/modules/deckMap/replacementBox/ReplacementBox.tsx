@@ -2,14 +2,13 @@ import * as React from 'react';
 import { DECK_MAP } from '../../../constants';
 import { ArrowButton } from '../arrowButton';
 import { CargoIcon } from '../cargoIcon';
-import { cargoPlacementIsEmpty, placementsAreDifferent } from '../DeckMap.functions';
+import { cargoPlacementIsEmpty } from '../DeckMap.functions';
 import { CargoPlacement } from './../../../types/deckMap';
 import './ReplacementBox.scss';
 
 interface Props {
   cargoPlacements: CargoPlacement[];
   currentCargoPlacement: CargoPlacement;
-  initialCargoPlacement: CargoPlacement;
   originY: number;
   originX: number;
   sizeX: number;
@@ -23,7 +22,6 @@ export const ReplacementBox: React.FC<Props> = ({
   originY,
   cargoPlacements,
   currentCargoPlacement,
-  initialCargoPlacement,
   onCargoPlacementClick,
   replaceButtonClick
 }) => {
@@ -62,10 +60,7 @@ export const ReplacementBox: React.FC<Props> = ({
     )
       return false;
 
-    return !placementsAreDifferent(
-      currentCargoPlacement,
-      initialCargoPlacement
-    );
+    return true;
   };
   let areaWidth = sizeX - 4 * DECK_MAP.X_MARGIN;
   return (
