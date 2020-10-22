@@ -1,8 +1,7 @@
 @import "../../../styles/main.scss";
-@import "../../../styles/colors.scss";
 
 .PlaceCargoInfo {
-  margin: 2vh 2vw;
+  margin: 2vh 0vw;
   padding: 1vh 2vw;
   font-size: $standardFont;
   height: min-content;
@@ -16,7 +15,6 @@
   justify-content: center;
 }
 
-.PlaceCargoInfoStartOverButton {
+// .PlaceCargoInfoStartOverButton {
   // color: $lightBlue;
-  margin-left: 10px;
-}
+// }

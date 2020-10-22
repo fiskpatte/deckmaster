@@ -97,14 +97,16 @@ export const CargoDetails: React.FC<Props> = ({
         onClick={searchEnabled ? startSearch : () => null}
       >
         {isSearchingCargo ? (
-          <FlexContainer flexDirection="column">
+          <FlexContainer flexDirection="column" fullWidth>
             <TextInput
+              className="SearchCargoInput"
               value={input}
               placeholder={registrationNumber || "Cargo ID"}
               onChange={(e) => onInputChange(e.target.value)}
               size="small"
               onSubmit={onSearchSubmit}
               onOutsideClick={onOutsideClick}
+              isSearchInput
               ref={inputRef}
             />
             {showCargoNotFound && <Text value="Cargo not found" color="red" />}
@@ -117,7 +119,7 @@ export const CargoDetails: React.FC<Props> = ({
                 alignItems="center"
               >
                 <CargoDetailsItem
-                  label={!registrationNumber ? "No cargo selected" : "CARGO"}
+                  label={!registrationNumber ? "Search cargo" : "Cargo"}
                   value={registrationNumber}
                   showWideCargoIcon={showWideCargoIcon}
                 />

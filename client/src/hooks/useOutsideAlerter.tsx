@@ -10,8 +10,10 @@ export function useOutsideAlerter(ref: any, outsideClickCallback: any) {
   // If iPad, use touchstart. If desktop, use mousedown
   useEffect(() => {
     document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   });
 }

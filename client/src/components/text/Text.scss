@@ -1,7 +1,6 @@
 @import "../../styles/main.scss";
 
 .Text {
-  margin: $standardMargin;
   @include flexCenter();
   width: min-content;
   white-space: nowrap;

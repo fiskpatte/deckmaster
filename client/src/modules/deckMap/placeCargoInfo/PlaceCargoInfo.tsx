@@ -8,6 +8,7 @@ interface Props {
   lane: string;
   frameId: number | undefined;
   showStartOverButton: boolean;
+  isOverview: boolean;
 }
 
 export const PlaceCargoInfo: React.FC<Props> = ({
@@ -15,32 +16,31 @@ export const PlaceCargoInfo: React.FC<Props> = ({
   lane,
   frameId,
   showStartOverButton,
+  isOverview
 }) => {
-  if (showStartOverButton) {
+  if (lane && frameId) {
     return (
       <div className="PlaceCargoInfo">
         <FlexContainer
           flexDirection="row"
           justifyContent="space-between"
           alignItems="center"
+          fullWidth
         >
-          <Text size="standard">LANE</Text>
-          <div style={{ width: "0.25vw" }}></div>
-          <Text size="standard" weight="medium">
-            {lane}
-          </Text>
-          <div style={{ width: "0.9vw" }}></div>
-
-          <Text size="standard">FRAME</Text>
-          <div style={{ width: "0.25vw" }}></div>
-          <Text size="standard" weight="medium">
-            {frameId}
+          <Text>
+            Lane&nbsp;
+            <Text weight="medium">
+              {lane}
+            </Text>&nbsp;
+            Frame&nbsp;
+            <Text weight="medium">
+              {frameId}
+            </Text>&nbsp;
           </Text>
           {showStartOverButton && (
             <BsArrowCounterclockwise
               className="PlaceCargoInfoStartOverButton"
               onClick={startOverButtonClick}
-              size="2.5vw"
             />
           )}
         </FlexContainer>
@@ -49,7 +49,7 @@ export const PlaceCargoInfo: React.FC<Props> = ({
   } else {
     return (
       <div className="PlaceCargoInfo">
-        <Text size="standard">PLACE THE CARGO</Text>
+        <Text>{isOverview ? "Select a cargo" : "Place the cargo"}</Text>
       </div>
     );
   }

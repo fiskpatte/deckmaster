@@ -37,7 +37,6 @@ export const DeckSelector: React.FC<Props> = ({
 
   return (
     <div className="DeckSelectorContainer">
-      <div></div>
       <Overlay
         visible={isOpen}
         onClick={onOutsideClick}

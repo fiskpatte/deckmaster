@@ -15,9 +15,10 @@ const CargoDetailsItem: React.FC<Props> = ({
 }) => {
   return (
     <div className="CargoDetailItem">
-      <Text size="standard" weight="light" value={`${label}`} />
-      <div style={{ width: "0.45vw" }}></div>
-      <Text size="standard" weight="bold" value={value} />
+      <Text>
+        {label}&nbsp;
+        <Text weight="medium">{value}</Text>&nbsp;
+      </Text>
       {showWideCargoIcon && <WideCargoIcon />}
     </div>
   );

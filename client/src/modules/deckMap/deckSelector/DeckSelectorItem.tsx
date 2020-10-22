@@ -14,15 +14,14 @@ const DeckSelectorItem: React.FC<Props> = ({ name, order, isCurrent, onClick, is
   const extended = {
     opacity: 1,
     translateY: "0%",
-    zIndex: 0,
     transition: { ease: "linear", duration: 0.2 },
   };
-  const collapsed = { opacity: 0, zIndex: 0, translateY: `-${(order - 1) * 100}%`, transition: { ease: "linear", duration: 0.2 } };
+  const collapsed = { opacity: 0, translateY: `-${(order - 1) * 100}%`, transition: { ease: "linear", duration: 0.2 } };
 
   const itemVariants = {
     extended: extended,
     collapsed: collapsed,
-    current: { ...collapsed, opacity: 1, zIndex: 1 }
+    current: { ...collapsed, opacity: 1 }
   };
 
   const getVariant = () => isOpen ? "extended" : isCurrent ? "current" : "collapsed"
@@ -35,7 +34,6 @@ const DeckSelectorItem: React.FC<Props> = ({ name, order, isCurrent, onClick, is
     >
       <Button
         className={`DeckSelectorItemButton ${isCurrent ? "Selected" : ""}`}
-        size="small"
         onClick={onClick}
         label={name}
       />

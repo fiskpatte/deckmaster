@@ -68,7 +68,7 @@ const useCalculateReplacingCargoPlacements = (cargoPlacements: CargoPlacement[])
   const [replacingCargoPlacements, setReplacingCargoPlacements] = useState<
     CargoPlacement[]
   >([]);
-  const [updating, setUpdating] = useState(false);
+  const [updating, setUpdating] = useState(true);
 
   useEffect(() => {
     setUpdating(true);
@@ -87,7 +87,7 @@ const useCalculateViewBoxDimensions = (deck: Deck) => {
   const [viewBoxDimensions, setViewBoxDimensions] = useState<
     ViewBoxDimensions
   >();
-  const [updating, setUpdating] = useState(false);
+  const [updating, setUpdating] = useState(true);
 
   useEffect(() => {
     if (deck) {
@@ -109,8 +109,7 @@ const useCalculateMostForwardValidPlacementForLanes = (deck: Deck, notReplacingC
     mostForwardValidPlacementForLanes,
     setMostForwardValidPlacementForLanes,
   ] = useState<MostForwardValidPlacementForLanes>();
-  const [updating, setUpdating] = useState(false);
-
+  const [updating, setUpdating] = useState(true);
   useEffect(() => {
     if (deck) {
       setUpdating(true);

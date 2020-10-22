@@ -18,11 +18,11 @@ export const Text: React.FC<Props> = ({
   color = "standard",
   className = "",
 }) => (
-    <div
+    <span
       className={`Text weight-${weight} text-size-${size} color-${color} ${className}`}
     >
       {children || value}
-    </div>
+    </span>
   );
 
 export default Text;

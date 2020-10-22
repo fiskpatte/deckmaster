@@ -6,6 +6,7 @@ let fieldMode = PARSER_FIELD_MODE.INIT;
 let currentKey = "";
 let count = 1;
 export const parseLoadPlan = async (file: string) => {
+  count = 1;
   let data: DeckMapType = {};
   await fetch(file)
     .then((response) => response.text())

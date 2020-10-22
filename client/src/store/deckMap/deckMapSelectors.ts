@@ -45,3 +45,8 @@ export const getFrameIdFromPosition = (deckId: string, pos: number | undefined) 
   [getDeckMap], (deckMap) =>
   deckMap[deckId]?.frames.find(frame => frame.distance >= (pos ?? Infinity))?.id
 )
+
+export const getLaneNameFromPlacement = (cargoPlacement: CargoPlacement) => createSelector(
+  [getDeckMap], (deckMap) =>
+  deckMap[cargoPlacement?.deckId]?.lanes.find(lane => lane.id === cargoPlacement?.laneId)?.name || ""
+)

@@ -2,7 +2,7 @@
 
 .DeckSelector {
   @include flexRow();
-  margin: 2vh 2vw;
+  margin: 2vh 0vw;
   height: min-content;
   z-index: $deckSelectorOverlayZIndex + 1;
   .DeckSelectorItemsWrapper{
@@ -28,9 +28,9 @@
 }
 
 .DeckSelectorContainer {
-  min-width: $deckmapHeaderElementWidth;
+  min-width: $deckmapHeaderElementWidth+4vw;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 :export {

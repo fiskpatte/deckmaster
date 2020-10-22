@@ -14,6 +14,7 @@ import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
 import {
   getCurrentDeck,
   getFrameIdFromPosition,
+  getLaneNameFromPlacement,
   getVisibleCargoPlacements,
 } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
@@ -55,7 +56,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [confirming, setConfirming] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  const [currentLaneName, setCurrentLaneName] = useState("");
+  const currentLaneName = useSelector(getLaneNameFromPlacement(currentCargoPlacement));
   const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
   const [cancelResetCargoPlacement, setCancelResetCargoPlacement] = useState(false);
 
@@ -84,14 +85,6 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       history.push(routes.PlaceCargo.path);
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
-
-  useEffect(() => {
-    setCurrentLaneName(
-      currentDeck?.lanes.find(
-        (lane) => lane.id === currentCargoPlacement?.laneId
-      )?.name || ""
-    );
-  }, [currentDeck, currentCargoPlacement]);
 
   const startOverButtonClick = () => {
     if (!isOverview) {
@@ -159,20 +152,20 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   }) => {
     try {
       //This dispatch removes blinking in the client
-      dispatch(addCargoPlacement(currentCargoPlacement));
       if (currentCargoPlacement.id === "") {
         currentCargoPlacement.id =
           cargoPlacements.find(
             (cp) => cp.cargo.id === currentCargoPlacement.cargo.id
           )?.id ?? "";
       }
-      await updateCargoPlacement({
+      const newCargoPlacement = {
         ...currentCargoPlacement,
         deckId: currentDeck.name,
-        cargo: currentCargoPlacement.cargo.id,
         replacing: replacing,
         discharged: discharged,
-      });
+      }
+      dispatch(addCargoPlacement(newCargoPlacement));
+      await updateCargoPlacement({ ...newCargoPlacement, cargo: currentCargoPlacement.cargo.id, });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
       toast.error("Failed to update cargo position");
@@ -237,16 +230,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           cargoPlacements={cargoPlacements}
           onSuccessfulCargoSearch={onSuccessfulCargoSearch}
         />
-
-        {!isOverview && (
-          <PlaceCargoInfo
-            lane={currentLaneName}
-            frameId={frameId}
-            startOverButtonClick={startOverButtonClick}
-            showStartOverButton={showStartOverButton()}
-          />
-        )}
-
+        <PlaceCargoInfo
+          lane={currentLaneName}
+          frameId={frameId}
+          isOverview={isOverview}
+          startOverButtonClick={startOverButtonClick}
+          showStartOverButton={showStartOverButton()}
+        />
         <DeckSelector
           deckSelectorData={getDeckSelectorData(deckMap)}
           currentDeckName={currentDeck.name}
