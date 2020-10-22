@@ -63,6 +63,9 @@ export const ReplacementBox: React.FC<Props> = ({
     return true;
   };
   let areaWidth = sizeX - 4 * DECK_MAP.X_MARGIN;
+
+  if (!isFinite(originY)) return null;
+
   return (
     <g>
       <rect

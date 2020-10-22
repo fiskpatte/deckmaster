@@ -28,29 +28,28 @@ export const Button: React.FC<ButtonProps> = ({
   rightIcon,
   invisible = false,
 }) => (
-  <button
-    className={`Button color-${color} size-${size} ${className}${
-      invisible ? " ButtonInvisible" : ""
-    }`}
-    onClick={loading ? () => null : onClick}
-    disabled={disabled}
-  >
-    <FlexContainer
-      flexDirection="row"
-      justifyContent="space-around"
-      alignItems="center"
+    <button
+      className={`Button color-${color} size-${size} ${className}${invisible ? " ButtonInvisible" : ""
+        }`}
+      onClick={loading ? () => null : onClick}
+      disabled={disabled}
     >
-      {loading ? (
-        <ClipLoader color={"inherit"} loading={true} />
-      ) : (
-        <>
-          {leftIcon ?? <div></div>}
-          <div className="Label">{label}</div>
-          {rightIcon ?? <div></div>}
-        </>
-      )}
-    </FlexContainer>
-  </button>
-);
+      <FlexContainer
+        flexDirection="row"
+        justifyContent="space-around"
+        alignItems="center"
+      >
+        {loading ? (
+          <ClipLoader color={"inherit"} loading={true} />
+        ) : (
+            <>
+              {leftIcon ?? <div></div>}
+              <div className="Label">{label}</div>
+              {rightIcon ?? <div></div>}
+            </>
+          )}
+      </FlexContainer>
+    </button>
+  );
 
 export default Button;

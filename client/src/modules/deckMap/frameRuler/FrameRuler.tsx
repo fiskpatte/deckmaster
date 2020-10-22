@@ -26,7 +26,7 @@ export const FrameRuler: React.FC<Props> = ({ frames, originY }) => {
     });
   }, [frames]);
 
-  if (!distances) return null;
+  if (!distances || !isFinite(originY)) return null;
 
   return (
     <g>

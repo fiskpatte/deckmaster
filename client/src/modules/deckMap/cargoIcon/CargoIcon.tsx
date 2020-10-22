@@ -35,20 +35,11 @@ export const CargoIcon: React.FC<Props> = ({
   const previousCargoId = usePrevious(cargoId);
   const newCargo = previousCargoId !== cargoId;
   const { scale } = useReferenceScale(groupRef, { width, height });
-  // let fontSize = Math.min(scale.width, scale.height);
-  // if (scale.height !== 1 && scale.width !== 1) {
-  //   //Avoid changing the font size before the initial render so that the scale applies correctly
-  //   fontSize *= DECK_MAP.GRID_NAME_FONT_SIZE;
-  // }
-  // const handleDragStart = (event: any, info: any) => {
-  //   console.log("START", event, info); //TODO: save dragOffset
-  // };
 
   const corner = { x: x - width / 2, y: y - height / 2 };
   return (
     <motion.svg
       drag={placing}
-      // onDragStart={(ev, info) => handleDragStart(ev, info)}
       onDrag={(event) => dragCallback && dragCallback(event)}
       onDragEnd={() => dragEndCallback && dragEndCallback()}
       dragMomentum={false}

@@ -8,15 +8,14 @@
   .DeckSelectorItemsWrapper{
     .DeckSelectorItem{
       .DeckSelectorItemButton {
-        font-family: FoundrySterling;
+        font-family: FoundrySterlingLight;
         white-space: nowrap;
-        font-size: $smallFont;
         cursor: pointer;
         background-color: white;
         color: $gray20;
         margin: 0.5vh 0vw;
         padding: 1vh 1vw;
-        min-width: 12vw;
+        width: 100%;
       }
       .DeckSelectorItemButton.Selected {
         background-color: $primaryBlue;
