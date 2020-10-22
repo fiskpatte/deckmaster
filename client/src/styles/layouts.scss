@@ -14,6 +14,8 @@ $standardMargin: 1vh 0;
 
 $deckmapHeaderElementWidth: 24vw;
 
+$deckmapMaxDeckNumber:4;
+
 @mixin flexRow() {
   display: flex;
   flex-direction: row;

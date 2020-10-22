@@ -7,6 +7,7 @@
   z-index: $deckSelectorOverlayZIndex + 1;
   .DeckSelectorItemsWrapper{
     .DeckSelectorItem{
+      transition: all 300ms linear;
       .DeckSelectorItemButton {
         font-family: FoundrySterlingLight;
         white-space: nowrap;
@@ -20,8 +21,21 @@
       .DeckSelectorItemButton.Selected {
         background-color: $primaryBlue;
         color: white;
-        // box-shadow: 0px 0px 0px;
       }
+    }
+    .DeckSelectorItem.open{
+      transform: translateX(0%);
+      opacity: 1;
+    }
+    @for $i from 1 through $deckmapMaxDeckNumber {
+      $val:$i - 1;
+      .DeckSelectorItem.closed-#{$i}{
+        transform: translateY(-1*$val*100%);
+        opacity: 0;
+      }
+    }
+    .DeckSelectorItem.current{
+      opacity: 1;
     }
   }
 }
