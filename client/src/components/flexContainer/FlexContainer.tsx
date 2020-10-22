@@ -13,6 +13,7 @@ interface Props {
   alignItems?: "flex-start" | "flex-end" | "center";
   onClick?: () => void;
   fullWidth?: boolean;
+  className?: string;
 }
 
 export const FlexContainer: React.FC<Props> = ({
@@ -21,9 +22,10 @@ export const FlexContainer: React.FC<Props> = ({
   justifyContent,
   alignItems,
   onClick,
-  fullWidth = false
+  fullWidth = false,
+  className = ""
 }) => (
-    <div style={{ display: "flex", flexDirection, justifyContent, alignItems, width: fullWidth ? "100%" : "auto" }} onClick={onClick}>
+    <div className={className} style={{ display: "flex", flexDirection, justifyContent, alignItems, width: fullWidth ? "100%" : "auto" }} onClick={onClick}>
       {children}
     </div>
   );

@@ -46,21 +46,21 @@ const App: React.FC = () => {
           lanes: res["Weather Deck"].lanes,
           grids: res["Weather Deck"].grids,
           frames: res["Weather Deck"].frames,
-          sortOrder: 1,
+          sortOrder: 4,
         };
         res["Main Deck"] = {
           name: "Main Deck",
           lanes: [],
           grids: [],
           frames: [],
-          sortOrder: 2,
+          sortOrder: 3,
         };
         res["Upper Deck"] = {
           name: "Upper Deck",
           lanes: [],
           grids: [],
           frames: [],
-          sortOrder: 3,
+          sortOrder: 2,
         };
         dispatch(deckMapActions.setDeckMap(res));
         dispatch(deckMapActions.setCurrentDeckId("Weather Deck"));

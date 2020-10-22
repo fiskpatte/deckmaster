@@ -62,6 +62,6 @@ export const DECK_MAP = {
 
 };
 
-// export const SERVER_PREFIX = "http://localhost:4000/";
+export const SERVER_PREFIX = "http://localhost:4000/";
 // export const SERVER_PREFIX = "http://192.168.1.XXX:4000/";
-export const SERVER_PREFIX = "https://server-dot-deckmaster.oa.r.appspot.com/";
+// export const SERVER_PREFIX = "https://server-dot-deckmaster.oa.r.appspot.com/";

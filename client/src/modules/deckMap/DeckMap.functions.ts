@@ -7,6 +7,7 @@ import {
   Lane,
   CargoPlacement,
   cargoPlacementFactory,
+  DeckSelectorData,
 } from "../../types/deckMap";
 import { Coords } from "../../types/util";
 import { DeckMapType, MostForwardValidPlacementForLanes } from "./../../types/deckMap";
@@ -435,9 +436,14 @@ const getOverflowingPlacementForSide = (
   return cargoPlacementFactory();
 };
 
+export const getDeckSelectorData = (deckMap: DeckMapType): DeckSelectorData[] =>
+  getDeckNames(deckMap).map(
+    (key) => { return { name: key, sortOrder: deckMap[key].sortOrder }; }
+  );
+
 export const getDeckNames = (deckMap: DeckMapType) =>
   Object.keys(deckMap).sort(
-    (key1, key2) => deckMap[key2].sortOrder - deckMap[key1].sortOrder
+    (key1, key2) => deckMap[key1].sortOrder - deckMap[key2].sortOrder
   );
 
 export const cargoIsEmpty = (cargo: Cargo) => cargo.id === "";

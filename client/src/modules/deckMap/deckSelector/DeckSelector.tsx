@@ -3,18 +3,18 @@ import OutsideAlerter from "../../../components/outsideAlerter/OutsideAlerter";
 import DeckSelectorItem from "./DeckSelectorItem";
 import "./DeckSelector.scss";
 import { FlexContainer } from "../../../components/flexContainer";
-import { motion } from "framer-motion";
 import variables from "./DeckSelector.scss";
 import { Overlay } from "../../../components/overlay";
+import { DeckSelectorData } from "../../../types/deckMap";
 
 interface Props {
-  deckNames: string[];
+  deckSelectorData: DeckSelectorData[];
   currentDeckName: string;
   setCurrentDeck: (name: string) => void;
 }
 
 export const DeckSelector: React.FC<Props> = ({
-  deckNames,
+  deckSelectorData,
   currentDeckName,
   setCurrentDeck,
 }) => {
@@ -28,26 +28,11 @@ export const DeckSelector: React.FC<Props> = ({
       setIsOpen(true);
     }
   };
-  const isVisible = (deckName: string) =>
-    isOpen || deckName === currentDeckName;
 
   const onOutsideClick = () => {
     if (isOpen) {
       setIsOpen(false);
     }
-  };
-  const itemVariants = {
-    extended: {
-      opacity: 1,
-      height: "auto",
-      zIndex: 1,
-      transition: { ease: "linear", duration: 0.2 },
-    },
-    collapsed: {
-      opacity: 0,
-      height: 0,
-      transition: { ease: "linear", duration: 0.2 },
-    },
   };
 
   return (
@@ -60,20 +45,16 @@ export const DeckSelector: React.FC<Props> = ({
       />
       <div className="DeckSelector">
         <OutsideAlerter outsideClickCallback={onOutsideClick}>
-          <FlexContainer flexDirection="column">
-            {deckNames.map((deckName) => (
-              <motion.div
-                initial={isVisible(deckName) ? "extended" : "collapsed"}
-                animate={isVisible(deckName) ? "extended" : "collapsed"}
-                variants={itemVariants}
-                key={deckName}
-              >
-                <DeckSelectorItem
-                  name={deckName}
-                  isCurrent={deckName === currentDeckName}
-                  onClick={() => onDeckClick(deckName)}
-                />
-              </motion.div>
+          <FlexContainer className="DeckSelectorItemsWrapper" flexDirection="column">
+            {deckSelectorData.map((data) => (
+              <DeckSelectorItem
+                key={data.name}
+                name={data.name}
+                order={data.sortOrder}
+                isCurrent={data.name === currentDeckName}
+                onClick={() => onDeckClick(data.name)}
+                isOpen={isOpen}
+              />
             ))}
           </FlexContainer>
         </OutsideAlerter>

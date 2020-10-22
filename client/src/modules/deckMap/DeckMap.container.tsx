@@ -18,7 +18,7 @@ import {
 } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
 import {
-  getDeckNames,
+  getDeckSelectorData,
   cargoPlacementIsEmpty,
   cargoIsEmpty,
   placementsAreDifferent,
@@ -248,7 +248,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         )}
 
         <DeckSelector
-          deckNames={getDeckNames(deckMap)}
+          deckSelectorData={getDeckSelectorData(deckMap)}
           currentDeckName={currentDeck.name}
           setCurrentDeck={onDeckSelect}
         />

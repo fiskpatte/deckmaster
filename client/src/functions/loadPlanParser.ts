@@ -53,7 +53,7 @@ const setData = (data: DeckMapType, dataElement: string[]) => {
         lanes: [],
         grids: [],
         frames: [],
-        sortOrder: 4,
+        sortOrder: 1,
       };
       break;
     case PARSER_FIELD_MODE.LANE:

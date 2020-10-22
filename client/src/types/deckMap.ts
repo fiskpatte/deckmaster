@@ -142,3 +142,7 @@ export interface ViewBoxDimensions {
   originY: number;
 }
 
+export interface DeckSelectorData {
+  name: string;
+  sortOrder: number;
+}

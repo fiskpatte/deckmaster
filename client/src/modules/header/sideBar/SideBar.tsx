@@ -5,16 +5,14 @@ import { NavItem } from "./navItem";
 import NavItemLogout from "./navItem/NavItemLogout";
 import { SideBarProps } from "./types";
 import { HeaderItem } from "../headerItem";
-import variables from "./SideBar.scss";
 import Text from "../../../components/text";
 
 const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
-  const hiddenWidth = -1 * variables.sideBarWidth.slice(0, -4);
 
   const variants = {
-    visible: { left: "0px", transition: { ease: "linear", duration: 0.14 } },
+    visible: { translateX: "0%", transition: { ease: "linear", duration: 0.14 } },
     hidden: {
-      left: `${hiddenWidth}vmax`,
+      translateX: `-100%`,
       transition: { ease: "linear", duration: 0.14 }
     }
   };
