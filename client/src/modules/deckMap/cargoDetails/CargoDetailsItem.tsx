@@ -11,11 +11,12 @@ interface Props {
 const CargoDetailsItem: React.FC<Props> = ({
   label,
   value,
-  showWideCargoIcon = false
+  showWideCargoIcon = false,
 }) => {
   return (
     <div className="CargoDetailItem">
       <Text size="standard" weight="light" value={`${label}`} />
+      <div style={{ width: "0.45vw" }}></div>
       <Text size="standard" weight="bold" value={value} />
       {showWideCargoIcon && <WideCargoIcon />}
     </div>

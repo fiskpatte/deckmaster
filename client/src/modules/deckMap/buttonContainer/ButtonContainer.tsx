@@ -2,6 +2,7 @@ import React from "react";
 import ConfirmButton from "../../../components/button/ConfirmButton";
 import DischargeButton from "../../../components/button/DischargeButton";
 import CancelButton from "../../../components/button/CancelButton";
+import Button from "../../../components/button";
 
 interface Props {
   isOverview: boolean;
@@ -27,11 +28,11 @@ export const ButtonContainer: React.FC<Props> = ({
   if (isOverview) {
     return (
       <div className="ButtonContainer">
-        <div></div>
+        <InvisibleButton />
         {showConfirmButton ? (
           <ConfirmButton onClick={onConfirm} loading={confirming} />
         ) : (
-          <div></div>
+          <InvisibleButton />
         )}
         {showDischargeButton ? (
           <DischargeButton
@@ -39,7 +40,7 @@ export const ButtonContainer: React.FC<Props> = ({
             loading={discharging}
           />
         ) : (
-          <div></div>
+          <InvisibleButton />
         )}
       </div>
     );
@@ -50,12 +51,16 @@ export const ButtonContainer: React.FC<Props> = ({
         {showConfirmButton ? (
           <ConfirmButton onClick={onConfirm} loading={confirming} />
         ) : (
-          <div></div>
+          <InvisibleButton />
         )}
-        <div></div>
+        <InvisibleButton />
       </div>
     );
   }
 };
+
+const InvisibleButton = () => (
+  <Button invisible size="medium" onClick={() => null} label="Invisible" />
+);
 
 export default ButtonContainer;

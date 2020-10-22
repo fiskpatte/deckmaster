@@ -10,9 +10,13 @@
   font-size: $standardFont;
   border: none;
   outline: none;
-  .Label{
+  .Label {
     padding: 0 5px;
   }
+}
+
+.ButtonInvisible {
+  visibility: hidden;
 }
 
 .Button.color-green {

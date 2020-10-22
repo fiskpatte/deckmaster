@@ -7,17 +7,13 @@ export interface ButtonProps {
   className?: string;
   label?: string;
   onClick: () => void;
-  color?:
-  | "green"
-  | "red"
-  | "blue"
-  | "gray"
-  | "orange";
+  color?: "green" | "red" | "blue" | "gray" | "orange";
   size?: "small" | "standard" | "medium" | "big";
   disabled?: boolean;
   loading?: boolean;
   rightIcon?: React.ReactNode;
   leftIcon?: React.ReactNode;
+  invisible?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -29,29 +25,32 @@ export const Button: React.FC<ButtonProps> = ({
   size = "standard",
   loading = false,
   leftIcon,
-  rightIcon
+  rightIcon,
+  invisible = false,
 }) => (
-    <button
-      className={`Button color-${color} size-${size} ${className}`}
-      onClick={loading ? () => null : onClick}
-      disabled={disabled}
+  <button
+    className={`Button color-${color} size-${size} ${className}${
+      invisible ? " ButtonInvisible" : ""
+    }`}
+    onClick={loading ? () => null : onClick}
+    disabled={disabled}
+  >
+    <FlexContainer
+      flexDirection="row"
+      justifyContent="space-around"
+      alignItems="center"
     >
-      <FlexContainer
-        flexDirection="row"
-        justifyContent="space-around"
-        alignItems="center"
-      >
-        {loading ? (
-          <ClipLoader color={"inherit"} loading={true} />
-        ) : (
-            <>
-              {leftIcon ?? <div></div>}
-              <div className="Label">{label}</div>
-              {rightIcon ?? <div></div>}
-            </>
-          )}
-      </FlexContainer>
-    </button>
-  );
+      {loading ? (
+        <ClipLoader color={"inherit"} loading={true} />
+      ) : (
+        <>
+          {leftIcon ?? <div></div>}
+          <div className="Label">{label}</div>
+          {rightIcon ?? <div></div>}
+        </>
+      )}
+    </FlexContainer>
+  </button>
+);
 
 export default Button;
