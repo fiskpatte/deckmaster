@@ -12,6 +12,8 @@ $smallFont: calc(12px + 0.3vw);
 
 $standardMargin: 1vh 0;
 
+$deckmapHeaderElementWidth: 20vw;
+
 @mixin flexRow() {
   display: flex;
   flex-direction: row;

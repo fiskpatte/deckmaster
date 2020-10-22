@@ -23,6 +23,12 @@
   }
 }
 
+.DeckSelectorContainer {
+  min-width: $deckmapHeaderElementWidth;
+  display: flex;
+  justify-content: space-between;
+}
+
 :export {
   deckSelectorOverlayZIndex: $deckSelectorOverlayZIndex;
 }

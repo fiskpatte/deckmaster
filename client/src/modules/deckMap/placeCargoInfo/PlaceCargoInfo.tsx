@@ -24,11 +24,15 @@ export const PlaceCargoInfo: React.FC<Props> = ({
           justifyContent="space-between"
           alignItems="center"
         >
-          <Text size="standard">{"PLACING IN LANE"}</Text>
-          <div style={{ width: "0.5vw" }}></div>
+          <Text size="standard">LANE</Text>
+          <div style={{ width: "0.25vw" }}></div>
           <Text size="standard" weight="medium">
             {lane}
           </Text>
+          <div style={{ width: "0.9vw" }}></div>
+
+          <Text size="standard">FRAME</Text>
+          <div style={{ width: "0.25vw" }}></div>
           <Text size="standard" weight="medium">
             {frameId}
           </Text>

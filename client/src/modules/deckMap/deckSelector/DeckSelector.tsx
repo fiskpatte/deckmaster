@@ -43,11 +43,16 @@ export const DeckSelector: React.FC<Props> = ({
       zIndex: 1,
       transition: { ease: "linear", duration: 0.2 },
     },
-    collapsed: { opacity: 0, height: 0, transition: { ease: "linear", duration: 0.2 } },
+    collapsed: {
+      opacity: 0,
+      height: 0,
+      transition: { ease: "linear", duration: 0.2 },
+    },
   };
 
   return (
-    <>
+    <div className="DeckSelectorContainer">
+      <div></div>
       <Overlay
         visible={isOpen}
         onClick={onOutsideClick}
@@ -73,7 +78,7 @@ export const DeckSelector: React.FC<Props> = ({
           </FlexContainer>
         </OutsideAlerter>
       </div>
-    </>
+    </div>
   );
 };
 
