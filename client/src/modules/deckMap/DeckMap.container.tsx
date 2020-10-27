@@ -224,7 +224,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   if (!currentDeck) return null;
 
   if (updatingData) return <Loader />;
-
+  console.log(deckMap, currentCargoPlacement, cargoPlacements)
   return (
     <div className="DeckMap">
       <div className="DeckMapHeader">

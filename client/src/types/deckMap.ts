@@ -85,7 +85,6 @@ export interface Cargo {
 
 export interface CargoPlacement {
   id: string;
-  registrationNumber: string;
   deckId: string;
   laneId: string;
   LCG: number;
@@ -102,7 +101,6 @@ export interface CargoPlacement {
 
 export const cargoPlacementFactory = (): CargoPlacement => ({
   id: "",
-  registrationNumber: "",
   deckId: "",
   laneId: "",
   LCG: 0,
