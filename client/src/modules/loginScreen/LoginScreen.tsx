@@ -14,6 +14,7 @@ import { setSessionData } from "./../../store/app/appActions";
 import { SessionData } from "./../../types/sessionData";
 import { routes } from "./../../routes";
 import useToast from "../../hooks/useToast";
+import { useSpring, animated } from "react-spring";
 
 export const LoginScreen: React.FC = () => {
   const history = useHistory();
@@ -48,36 +49,43 @@ export const LoginScreen: React.FC = () => {
     }
   };
 
+  const props = useSpring({
+    opacity: 1,
+    from: { opacity: 0 },
+  });
+
   return (
     <BlueBackground style={{ height: "100vh" }}>
-      <Paper>
-        <TopBar />
-        <Separator />
-        <TextInput
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Email adress"
-          size="big"
-        />
-        <Separator />
-        <TextInput
-          value={password}
-          type={"password"}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          size="big"
-        />
-        <Separator />
-        <FlexRowEndContainer>
-          <Button
-            label="Login"
-            onClick={onLoginButtonClick}
-            color="green"
-            size="medium"
-            loading={loading}
+      <animated.div style={props}>
+        <Paper>
+          <TopBar />
+          <Separator />
+          <TextInput
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Email adress"
+            size="big"
           />
-        </FlexRowEndContainer>
-      </Paper>
+          <Separator />
+          <TextInput
+            value={password}
+            type={"password"}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            size="big"
+          />
+          <Separator />
+          <FlexRowEndContainer>
+            <Button
+              label="Login"
+              onClick={onLoginButtonClick}
+              color="green"
+              size="medium"
+              loading={loading}
+            />
+          </FlexRowEndContainer>
+        </Paper>
+      </animated.div>
     </BlueBackground>
   );
 };

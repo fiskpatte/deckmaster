@@ -3,13 +3,13 @@ export const PARSER_FIELD_MODE = {
   DECK_NAME: 1,
   LANE: 2,
   GRID: 3,
-  FRAME: 4
+  FRAME: 4,
 };
 
 export const DECK_MAP_MODE = {
   OVERVIEW: 1,
   PLACE_CARGO: 2,
-  DISCHARGE: 3
+  DISCHARGE: 3,
 };
 
 export enum SwipeDirection {
@@ -17,13 +17,13 @@ export enum SwipeDirection {
   Up,
   Down,
   Left,
-  Right
+  Right,
 }
 
 export enum AdjacentSide {
   Right = 1,
   Left = -1,
-  Undefined = 0
+  Undefined = 0,
 }
 
 export enum RouteKey {
@@ -35,7 +35,7 @@ export enum RouteKey {
   History = "History",
   Settings = "Settings",
   NoMatch = "NoMatch",
-  DeckOverview = "DeckOverview"
+  DeckOverview = "DeckOverview",
 }
 
 export const DECK_MAP = {
@@ -51,17 +51,16 @@ export const DECK_MAP = {
   ARROW_BUTTON_HEIGHT_RATIO: 0.85,
   LANE_NAME_WIDTH: 8,
   LANE_NAME_FONT_SIZE: 0.25,
-  GRID_NAME_FONT_SIZE: 0.20,
-  REPLACEMENT_BOX_NAME_FONT_SIZE: 0.30,
+  GRID_NAME_FONT_SIZE: 0.2,
+  REPLACEMENT_BOX_NAME_FONT_SIZE: 0.3,
   FRAME_NAME_FONT_SIZE: 0.16,
   BUTTON_ARROW_RATIO: 0.75,
   BASE_MARGIN: 0.5,
   FRAME_HEIGHT: 1,
   REPLACEMENT_BOX_HEIGHT: 5,
-  CARGO_ICON_REGISTRATION_NUMBER_SIZE: 0.16
-
+  CARGO_ICON_REGISTRATION_NUMBER_SIZE: 0.16,
 };
 
-export const SERVER_PREFIX = "http://localhost:4000/";
+// export const SERVER_PREFIX = "http://localhost:4000/";
 // export const SERVER_PREFIX = "http://192.168.1.XXX:4000/";
-// export const SERVER_PREFIX = "https://server-dot-deckmaster.oa.r.appspot.com/";
+export const SERVER_PREFIX = "https://server-dot-deckmaster.oa.r.appspot.com/";

@@ -13,8 +13,8 @@ import {
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
 import {
   getCurrentDeck,
-  getFrameIdFromPosition,
-  getLaneNameFromPlacement,
+  // getFrameIdFromPosition,
+  // getLaneNameFromPlacement,
   getVisibleCargoPlacements,
 } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
@@ -23,7 +23,7 @@ import {
   cargoPlacementIsEmpty,
   cargoIsEmpty,
   placementsAreDifferent,
-  getForwardPosition,
+  // getForwardPosition,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { CargoPlacement, cargoPlacementFactory } from "../../types/deckMap";
@@ -31,7 +31,7 @@ import { Loader } from "../../components/loader";
 
 import { useCalculateData, useResetCargoPlacement } from "./DeckMap.hooks";
 import ButtonContainer from "./buttonContainer";
-import PlaceCargoInfo from "./placeCargoInfo";
+// import PlaceCargoInfo from "./placeCargoInfo";
 import useToast from "../../hooks/useToast";
 
 interface Props {
@@ -56,9 +56,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [confirming, setConfirming] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  const currentLaneName = useSelector(getLaneNameFromPlacement(currentCargoPlacement));
-  const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
-  const [cancelResetCargoPlacement, setCancelResetCargoPlacement] = useState(false);
+  // const currentLaneName = useSelector(getLaneNameFromPlacement(currentCargoPlacement));
+  // const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
+  const [cancelResetCargoPlacement, setCancelResetCargoPlacement] = useState(
+    false
+  );
 
   useResetCargoPlacement(
     isOverview,
@@ -86,15 +88,15 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
 
-  const startOverButtonClick = () => {
-    if (!isOverview) {
-      let resetPlacement = cargoPlacementFactory();
-      resetPlacement.cargo = currentCargoPlacement.cargo;
-      dispatch(setCurrentPlacement(resetPlacement));
-    } else {
-      dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
-    }
-  };
+  // const startOverButtonClick = () => {
+  //   if (!isOverview) {
+  //     let resetPlacement = cargoPlacementFactory();
+  //     resetPlacement.cargo = currentCargoPlacement.cargo;
+  //     dispatch(setCurrentPlacement(resetPlacement));
+  //   } else {
+  //     dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
+  //   }
+  // };
 
   const cancelButtonClick = () => {
     history.push(routes.PlaceCargo.path);
@@ -163,9 +165,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
         deckId: currentDeck.name,
         replacing: replacing,
         discharged: discharged,
-      }
+      };
       dispatch(addCargoPlacement(newCargoPlacement));
-      await updateCargoPlacement({ ...newCargoPlacement, cargo: currentCargoPlacement.cargo.id, });
+      await updateCargoPlacement({
+        ...newCargoPlacement,
+        cargo: currentCargoPlacement.cargo.id,
+      });
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     } catch (error) {
       toast.error("Failed to update cargo position");
@@ -183,11 +188,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return true;
   };
 
-  const showStartOverButton = () => {
-    if (currentCargoPlacement.laneId === "") return false;
+  // const showStartOverButton = () => {
+  //   if (currentCargoPlacement.laneId === "") return false;
 
-    return placementsAreDifferent(currentCargoPlacement, initialCargoPlacement);
-  };
+  //   return placementsAreDifferent(currentCargoPlacement, initialCargoPlacement);
+  // };
 
   const showDischargeButton = () => {
     if (
@@ -214,7 +219,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     setInitialCargoPlacement(cargoPlacement);
     dispatch(setCurrentDeckId(cargoPlacement.deckId));
     dispatch(setCurrentPlacement(cargoPlacement));
-  }
+  };
 
   if (!currentDeck) return null;
 
@@ -230,13 +235,13 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           cargoPlacements={cargoPlacements}
           onSuccessfulCargoSearch={onSuccessfulCargoSearch}
         />
-        <PlaceCargoInfo
+        {/* <PlaceCargoInfo
           lane={currentLaneName}
           frameId={frameId}
           isOverview={isOverview}
           startOverButtonClick={startOverButtonClick}
           showStartOverButton={showStartOverButton()}
-        />
+        /> */}
         <DeckSelector
           deckSelectorData={getDeckSelectorData(deckMap)}
           currentDeckName={currentDeck.name}
