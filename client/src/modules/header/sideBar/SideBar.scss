@@ -8,6 +8,7 @@
   z-index: $sideBarOverlayZIndex + 1;
   background-color: $secondaryBlue;
   color: white;
+  transition: all 0.2s ease-out;
   .SideBarHeader {
     display: flex;
     height: $headerHeight;
@@ -26,6 +27,14 @@
     background-color: $lightBlue;
     height: 100%-$headerHeight;
   }
+}
+
+.SideBar.open{
+  transform: translateX(0%);
+}
+
+.SideBar.closed{
+  transform: translateX(-100%);
 }
 
 :export {
