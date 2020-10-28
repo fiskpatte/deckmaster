@@ -92,9 +92,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="App">
-        <Route>
-          <Header />
-        </Route>
+        {isLoggedIn && (
+          <Route>
+            <Header />
+          </Route>
+        )}
         <Switch>{renderRoutes()}</Switch>
         <ToastContainer
           position="top-right"

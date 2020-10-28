@@ -1,6 +1,6 @@
 $sideBarOverlayZIndex: 100;
 $sideBarWidth: 25vmax;
-$headerHeight: 10%;
+$headerHeight: 10vh;
 $cargoDetailsOverlayZIndex: 50;
 $deckSelectorOverlayZIndex: 60;
 $popupOverlayZIndex: 70;
@@ -14,7 +14,7 @@ $standardMargin: 1vh 0;
 
 $deckmapHeaderElementWidth: 24vw;
 
-$deckmapMaxDeckNumber:4;
+$deckmapMaxDeckNumber: 4;
 
 @mixin flexRow() {
   display: flex;
