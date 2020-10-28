@@ -21,6 +21,12 @@
   }
   .CargoQueueList {
     @include flexColumn();
+    .CargoQueueItem{
+      padding: 1vh 1vw;
+    }
+    .CargoQueueItem:not(:last-child){
+      border-bottom: 1px solid $gray80;
+    }
   }
   .Badge.blink {
     animation: blink 0.5s ease-out;

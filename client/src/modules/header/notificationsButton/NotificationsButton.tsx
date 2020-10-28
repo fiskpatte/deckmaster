@@ -7,7 +7,7 @@ import variables from "./NotificationsButton.scss";
 import { Overlay } from "../../../components/overlay";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store/store";
-import { setCurrentPlacement } from "../../../store/deckMap/deckMapActions";
+import { setCurrentDeckId, setCurrentPlacement } from "../../../store/deckMap/deckMapActions";
 import { Cargo, cargoPlacementFactory } from "../../../types/deckMap";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../../routes";
@@ -30,10 +30,11 @@ export const NotificationsButton: React.FC = () => {
     prevQueueLengthRef.current = cargoQueue.length;
   }, [cargoQueue.length]);
 
-  const onCargoQueueItemClick = (cargo: Cargo) => {
+  const onCargoQueueItemClick = (cargo: Cargo, deckId: string) => {
     let newPlacement = cargoPlacementFactory();
     newPlacement.cargo = cargo;
     dispatch(setCurrentPlacement(newPlacement));
+    dispatch(setCurrentDeckId(deckId));
     history.push(routes.PlaceCargoConfirm.path);
   };
   return (
@@ -52,7 +53,7 @@ export const NotificationsButton: React.FC = () => {
                 <div
                   className="CargoQueueItem"
                   key={cargoQueueItem.id}
-                  onClick={() => onCargoQueueItemClick(cargoQueueItem.cargo)}
+                  onClick={() => onCargoQueueItemClick(cargoQueueItem.cargo, cargoQueueItem.deckId)}
                 >
                   <Text
                     value={`Place ${cargoQueueItem.registrationNumber} on ${cargoQueueItem.deckId}`}
