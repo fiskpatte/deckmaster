@@ -16,9 +16,9 @@ const CargoDetailsItem: React.FC<Props> = ({
   return (
     <div className="CargoDetailItem">
       <Text>
-        {label}&nbsp;
-        <Text weight="medium">{value}</Text>&nbsp;
+        {label}
       </Text>
+      <Text weight="medium">{value}</Text>
       {showWideCargoIcon && <WideCargoIcon />}
     </div>
   );

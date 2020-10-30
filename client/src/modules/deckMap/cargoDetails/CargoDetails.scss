@@ -1,7 +1,7 @@
 @import "../../../styles/main.scss";
 
 .CargoDetails {
-  @include flexRow();
+  @include flexColumn();
   justify-content: space-around;
   align-items: center;
   margin: 2vh 0vw;
@@ -13,17 +13,24 @@
   background-color: white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
-  width: $deckmapHeaderElementWidth;
+  min-width: $deckmapHeaderElementWidth;
   // height: 5vh;
+  .Container{
+    padding: 1vh 0;
+  }
+  .Container:not(:last-child){
+    border-bottom: 1px solid $gray80;
+  }
   .CargoDetailItem {
     @include flexStart();
-    // width: 100%;
     white-space: nowrap;
-    // > div {
-    //   margin: 0vh 0.5vw;
-    //   box-sizing: border-box;
-    //   min-width: 6vw;
-    // }
+    flex: 1;
+    // width: 100%;
+    > span {
+      margin: 0vh 0.5vw;
+      box-sizing: border-box;
+      min-width: 6vw;
+    }
   }
   .SearchCargoInput{
     border: 0;

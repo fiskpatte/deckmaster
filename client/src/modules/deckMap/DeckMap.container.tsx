@@ -13,8 +13,8 @@ import {
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
 import {
   getCurrentDeck,
-  // getFrameIdFromPosition,
-  // getLaneNameFromPlacement,
+  getFrameIdFromPosition,
+  getLaneNameFromPlacement,
   getVisibleCargoPlacements,
 } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
@@ -23,7 +23,7 @@ import {
   cargoPlacementIsEmpty,
   cargoIsEmpty,
   placementsAreDifferent,
-  // getForwardPosition,
+  getForwardPosition,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { CargoPlacement, cargoPlacementFactory } from "../../types/deckMap";
@@ -42,6 +42,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const { deckMap, currentCargoPlacement, cargoPlacements } = useSelector(
     (state: RootState) => state.deckMapReducer
   );
+
   const { bumperToBumperDistance, defaultVCG } = useSelector(
     (state: RootState) => state.appReducer.settings
   );
@@ -56,8 +57,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const history = useHistory();
   const [confirming, setConfirming] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  // const currentLaneName = useSelector(getLaneNameFromPlacement(currentCargoPlacement));
-  // const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
+  const currentLaneName = useSelector(getLaneNameFromPlacement(currentCargoPlacement));
+  const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
   const [cancelResetCargoPlacement, setCancelResetCargoPlacement] = useState(
     false
   );
@@ -88,15 +89,15 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     }
   }, [history, currentCargoPlacement.cargo, isOverview]);
 
-  // const startOverButtonClick = () => {
-  //   if (!isOverview) {
-  //     let resetPlacement = cargoPlacementFactory();
-  //     resetPlacement.cargo = currentCargoPlacement.cargo;
-  //     dispatch(setCurrentPlacement(resetPlacement));
-  //   } else {
-  //     dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
-  //   }
-  // };
+  const startOverButtonClick = () => {
+    if (!isOverview) {
+      let resetPlacement = cargoPlacementFactory();
+      resetPlacement.cargo = currentCargoPlacement.cargo;
+      dispatch(setCurrentPlacement(resetPlacement));
+    } else {
+      dispatch(setCurrentPlacement({ ...initialCargoPlacement }));
+    }
+  };
 
   const cancelButtonClick = () => {
     history.push(routes.PlaceCargo.path);
@@ -188,11 +189,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     return true;
   };
 
-  // const showStartOverButton = () => {
-  //   if (currentCargoPlacement.laneId === "") return false;
+  const showStartOverButton = () => {
+    if (currentCargoPlacement.laneId === "") return false;
 
-  //   return placementsAreDifferent(currentCargoPlacement, initialCargoPlacement);
-  // };
+    return placementsAreDifferent(currentCargoPlacement, initialCargoPlacement);
+  };
 
   const showDischargeButton = () => {
     if (
@@ -224,7 +225,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   if (!currentDeck) return null;
 
   if (updatingData) return <Loader />;
-  console.log(deckMap, currentCargoPlacement, cargoPlacements)
+
   return (
     <div className="DeckMap">
       <div className="DeckMapHeader">
@@ -234,6 +235,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           searchEnabled={isOverview}
           cargoPlacements={cargoPlacements}
           onSuccessfulCargoSearch={onSuccessfulCargoSearch}
+          lane={currentLaneName}
+          frameId={frameId}
+          startOverButtonClick={startOverButtonClick}
+          showStartOverButton={showStartOverButton()}
         />
         {/* <PlaceCargoInfo
           lane={currentLaneName}

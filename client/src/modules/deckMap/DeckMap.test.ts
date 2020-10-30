@@ -35,7 +35,7 @@ describe("Most forward valid placement", () => {
     partial: false,
     width: 2.6,
   } as Lane;
-  test("Should return front of lane for empty lanes and normal cargo without overflowing cargo into lane", () => {
+  test("Should return FWD of lane for empty lanes and normal cargo without overflowing cargo into lane", () => {
     const cargoPlacements = [] as CargoPlacement[];
     const lanes = [laneWithoutAdjacentLanes];
     const mostForwardValidPlacement = getMostForwardValidPlacementForLanes(
@@ -109,6 +109,42 @@ describe("Most forward valid placement", () => {
       updatedAt: new Date(),
     } as CargoPlacement
     const cargoPlacements = [cargoPlacement, { ...cargoPlacement, LCG: 140 }];
+    const lanes = [laneWithoutAdjacentLanes];
+    const mostForwardValidPlacement = getMostForwardValidPlacementForLanes(
+      lanes,
+      cargoPlacements,
+      normalCargo,
+      bumperToBumperDistance,
+      defaultVCG
+    );
+    const expectedValue = {
+      [laneWithoutAdjacentLanes.id]: {
+        LCG: cargoPlacement.LCG - cargoPlacement.cargo.length / 2 - bumperToBumperDistance,
+        TCG: laneWithoutAdjacentLanes.TCG,
+        VCG: laneWithoutAdjacentLanes.VCG + normalCargo.height * defaultVCG,
+        laneId: laneWithoutAdjacentLanes.id,
+        replacing: false,
+      }
+    };
+    expect(mostForwardValidPlacement).toStrictEqual(expectedValue);
+  });
+  test("Should return most AFT of other cargo placements respecting bumperToBumperDistance for normal cargo with overflowing cargo into lane", () => {
+    const cargoPlacement = {
+      id: "5f565a2cb9693730dcde890c",
+      LCG: 132.25,
+      TCG: -4.37,
+      VCG: 24.095,
+      cargo: overflowingCargo,
+      deckId: "Weather Deck",
+      discharged: false,
+      laneId: "4",
+      replacing: false,
+      voyageId: "dummy_voyage_id",
+      overflowingLaneId: "5",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as CargoPlacement
+    const cargoPlacements = [cargoPlacement, { ...cargoPlacement, laneId: "5", overflowingLaneId: "", LCG: 140 }];
     const lanes = [laneWithoutAdjacentLanes];
     const mostForwardValidPlacement = getMostForwardValidPlacementForLanes(
       lanes,

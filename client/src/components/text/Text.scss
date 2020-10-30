@@ -4,6 +4,7 @@
   @include flexCenter();
   width: min-content;
   white-space: nowrap;
+  justify-content: flex-start;
 }
 
 .weight-light {

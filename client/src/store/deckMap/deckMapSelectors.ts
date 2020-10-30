@@ -48,5 +48,5 @@ export const getFrameIdFromPosition = (deckId: string, pos: number | undefined) 
 
 export const getLaneNameFromPlacement = (cargoPlacement: CargoPlacement) => createSelector(
   [getDeckMap], (deckMap) =>
-  deckMap[cargoPlacement?.deckId]?.lanes.find(lane => lane.id === cargoPlacement?.laneId)?.name || ""
+  deckMap[cargoPlacement?.deckId]?.lanes.find(lane => lane.id === cargoPlacement?.laneId)?.name
 )

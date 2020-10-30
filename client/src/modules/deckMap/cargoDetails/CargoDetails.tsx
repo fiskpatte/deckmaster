@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import CargoDetailsItem from "./CargoDetailsItem";
 import "./CargoDetails.scss";
 import { CargoPlacement, Deck, Lane } from "../../../types/deckMap";
-import { BsSearch } from "react-icons/bs";
+import { BsArrowCounterclockwise, BsSearch } from "react-icons/bs";
 import TextInput from "../../../components/textInput";
 import { FlexContainer } from "../../../components/flexContainer";
 import usePrevious from "../../../hooks/usePrevious";
@@ -15,6 +15,10 @@ interface Props {
   deck: Deck;
   onSuccessfulCargoSearch: (cp: CargoPlacement) => void;
   searchEnabled: boolean;
+  startOverButtonClick: () => void;
+  lane: string | undefined;
+  frameId: number | undefined;
+  showStartOverButton: boolean;
 }
 
 export const CargoDetails: React.FC<Props> = ({
@@ -23,6 +27,10 @@ export const CargoDetails: React.FC<Props> = ({
   onSuccessfulCargoSearch,
   deck,
   searchEnabled,
+  startOverButtonClick,
+  lane,
+  frameId,
+  showStartOverButton,
 }) => {
   const { registrationNumber } = cargoPlacement.cargo;
   const [input, setInput] = useState(registrationNumber);
@@ -90,43 +98,78 @@ export const CargoDetails: React.FC<Props> = ({
     setIsSearchingCargo(false);
   }
 
+  const renderSearchRow = () => {
+    return (
+      isSearchingCargo ? (
+        <FlexContainer flexDirection="column" fullWidth className="Container">
+          <TextInput
+            className="SearchCargoInput"
+            value={input}
+            placeholder={registrationNumber || "Cargo ID"}
+            onChange={(e) => onInputChange(e.target.value)}
+            size="small"
+            onSubmit={onSearchSubmit}
+            onOutsideClick={onOutsideClick}
+            isSearchInput
+            ref={inputRef}
+          />
+          {showCargoNotFound && <Text value="Cargo not found" color="red" />}
+        </FlexContainer>
+      ) : (
+          <FlexContainer
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            fullWidth
+            className="Container"
+            onClick={searchEnabled ? startSearch : () => null}
+          >
+            <CargoDetailsItem
+              label={!registrationNumber ? "Search cargo" : "Cargo"}
+              value={registrationNumber}
+              showWideCargoIcon={showWideCargoIcon}
+            />
+            {searchEnabled && <BsSearch />}
+          </FlexContainer>
+        ));
+  }
+
+  const renderPlaceCargoInfo = () => {
+    return (
+      <FlexContainer
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        fullWidth
+        className="Container"
+      >
+        <CargoDetailsItem
+          label="Lane"
+          value={lane ?? "-"}
+        />
+        <CargoDetailsItem
+          label="Frame"
+          value={frameId?.toString() ?? "-"}
+        />
+        <div style={{ display: "flex", flex: 1 }}>
+          {showStartOverButton && (
+            <BsArrowCounterclockwise
+              className="PlaceCargoInfoStartOverButton"
+              onClick={startOverButtonClick}
+            />
+          )}
+        </div>
+      </FlexContainer>
+    );
+  }
+
   return (
     <>
       <div
         className="CargoDetails"
-        onClick={searchEnabled ? startSearch : () => null}
       >
-        {isSearchingCargo ? (
-          <FlexContainer flexDirection="column" fullWidth>
-            <TextInput
-              className="SearchCargoInput"
-              value={input}
-              placeholder={registrationNumber || "Cargo ID"}
-              onChange={(e) => onInputChange(e.target.value)}
-              size="small"
-              onSubmit={onSearchSubmit}
-              onOutsideClick={onOutsideClick}
-              isSearchInput
-              ref={inputRef}
-            />
-            {showCargoNotFound && <Text value="Cargo not found" color="red" />}
-          </FlexContainer>
-        ) : (
-            <FlexContainer flexDirection="column" fullWidth>
-              <FlexContainer
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <CargoDetailsItem
-                  label={!registrationNumber ? "Search cargo" : "Cargo"}
-                  value={registrationNumber}
-                  showWideCargoIcon={showWideCargoIcon}
-                />
-                {searchEnabled && <BsSearch />}
-              </FlexContainer>
-            </FlexContainer>
-          )}
+        {renderSearchRow()}
+        {renderPlaceCargoInfo()}
       </div>
     </>
   );
