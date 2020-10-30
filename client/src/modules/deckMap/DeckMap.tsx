@@ -90,7 +90,7 @@ const DeckMap: React.FC<Props> = ({
     <svg
       className="svgBody"
       viewBox={`${originX} ${originY} ${sizeX} ${sizeY}`}
-      preserveAspectRatio="xMidYMin"
+      preserveAspectRatio="xMidYMid"
       ref={svgRef}
     >
       <g

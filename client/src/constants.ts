@@ -46,10 +46,10 @@ export const DECK_MAP = {
   GRID_RADIUS: 0.2,
   LANE_BORDER_RADIUS: 0.5,
   LANE_BUTTON_WIDTH: 8,
-  REPLACEMENT_BOX_BUTTON_WIDTH: 8,
+  REPLACEMENT_BOX_BUTTON_WIDTH: 9,
   REPLACEMENT_BOX_BUTTON_HEIGHT: 3,
   ARROW_BUTTON_HEIGHT_RATIO: 0.85,
-  LANE_NAME_WIDTH: 8,
+  LANE_NAME_MARGIN: 14,
   LANE_NAME_FONT_SIZE: 0.25,
   GRID_NAME_FONT_SIZE: 0.2,
   REPLACEMENT_BOX_NAME_FONT_SIZE: 0.3,
@@ -61,6 +61,6 @@ export const DECK_MAP = {
   CARGO_ICON_REGISTRATION_NUMBER_SIZE: 0.16,
 };
 
-// export const SERVER_PREFIX = "http://localhost:4000/";
-// export const SERVER_PREFIX = "http://192.168.1.XXX:4000/";
-export const SERVER_PREFIX = "https://server-dot-deckmaster.oa.r.appspot.com/";
+export const SERVER_PREFIX = "http://localhost:4000/";
+// export const SERVER_PREFIX = "http://192.168.1.43:4000/";
+// export const SERVER_PREFIX = "https://server-dot-deckmaster.oa.r.appspot.com/";

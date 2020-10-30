@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const LaneName: React.FC<Props> = ({ lane, rightOrigin }) => {
-  const originX = rightOrigin - (3 * DECK_MAP.X_MARGIN) / 2;
+  const originX = rightOrigin - DECK_MAP.LANE_NAME_MARGIN;
 
   return (
     <text

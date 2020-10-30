@@ -151,7 +151,7 @@ export const CargoDetails: React.FC<Props> = ({
           label="Frame"
           value={frameId?.toString() ?? "-"}
         />
-        <div style={{ display: "flex", flex: 1 }}>
+        <div style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
           {showStartOverButton && (
             <BsArrowCounterclockwise
               className="PlaceCargoInfoStartOverButton"

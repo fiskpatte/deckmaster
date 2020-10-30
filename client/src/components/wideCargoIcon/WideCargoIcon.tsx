@@ -1,6 +1,7 @@
 import React from "react";
 import { FaLongArrowAltLeft, FaLongArrowAltRight } from "react-icons/fa";
 import { FlexContainer } from "../flexContainer";
+import './WideCargoIcon.scss';
 
 interface Props {
   x?: number | string;
@@ -18,8 +19,8 @@ export const WideCargoIconSVG: React.FC<Props> = ({ x = 0, y = 0, width = "100%"
     // viewBox={`${0} ${0} ${width} ${height}`}
     // preserveAspectRatio="xMinYMin meet"
     >
-      <FaLongArrowAltLeft color="red" />
-      <FaLongArrowAltRight x={"1em"} color="red" />
+      <FaLongArrowAltLeft className="WideCargoIconArrow" />
+      <FaLongArrowAltRight x={"1em"} className="WideCargoIconArrow" />
     </svg>
   )
 }
@@ -27,8 +28,8 @@ export const WideCargoIconSVG: React.FC<Props> = ({ x = 0, y = 0, width = "100%"
 const WideCargoIcon: React.FC = () => {
   return (
     <FlexContainer>
-      <FaLongArrowAltLeft color="red" />
-      <FaLongArrowAltRight color="red" />
+      <FaLongArrowAltLeft className="WideCargoIconArrow" />
+      <FaLongArrowAltRight className="WideCargoIconArrow" />
     </FlexContainer>
   );
 };

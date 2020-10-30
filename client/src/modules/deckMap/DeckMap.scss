@@ -2,7 +2,8 @@
 
 .DeckMap {
   height: 100%;
-  background-color: $backgroundGray;
+  // background-color: $backgroundGray;
+  background: $blueBackground;
   .DeckMapHeader {
     @include flexSpaceBetween();
     border: 0;
@@ -10,8 +11,12 @@
     margin: 0vh 2vw;
   }
   .DeckMapBody {
-    width: 99%;
+    // width: 99%;
     height: 60%;
+    margin: 0 2vw;
+    background-color: $backgroundGray;
+    border-radius: 4px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
   .svgBody {
     height: 100%;

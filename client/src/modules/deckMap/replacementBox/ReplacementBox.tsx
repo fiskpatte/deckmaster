@@ -28,7 +28,7 @@ export const ReplacementBox: React.FC<Props> = ({
   const originXWithMargin = originX + 2 * DECK_MAP.X_MARGIN;
   const renderCargoPlacements = () => {
     let result = [];
-    const originYWithMargin = originY + DECK_MAP.BASE_MARGIN;
+    // const originYWithMargin = originY + DECK_MAP.BASE_MARGIN;
     const spaceBetweenCargo = 3 * DECK_MAP.BASE_MARGIN;
     let nextPosition = spaceBetweenCargo;
     for (let cargoPlacement of cargoPlacements.filter(cp => cp.cargo.id !== currentCargoPlacement.cargo.id || currentCargoPlacement.replacing)) {
@@ -38,8 +38,8 @@ export const ReplacementBox: React.FC<Props> = ({
           onClick={() => onCargoPlacementClick(cargoPlacement)}
         >
           <CargoIcon
-            x={originXWithMargin + nextPosition + cargoPlacement.cargo.length / 2}
-            y={originYWithMargin + cargoPlacement.cargo.width / 2}
+            x={originXWithMargin + nextPosition + cargoPlacement.cargo.length / 2 + DECK_MAP.REPLACEMENT_BOX_BUTTON_WIDTH / 2}
+            y={originY + DECK_MAP.REPLACEMENT_BOX_HEIGHT / 2}
             width={cargoPlacement.cargo.length}
             height={cargoPlacement.cargo.width}
             cargoId={cargoPlacement.cargo.id}
@@ -87,7 +87,7 @@ export const ReplacementBox: React.FC<Props> = ({
         {"CARGO SHIFTING AREA"}
       </text>
       <ArrowButton
-        x={originXWithMargin - DECK_MAP.REPLACEMENT_BOX_BUTTON_WIDTH / 2 + DECK_MAP.BASE_MARGIN}
+        x={originXWithMargin - DECK_MAP.BASE_MARGIN}//- DECK_MAP.REPLACEMENT_BOX_BUTTON_WIDTH / 2 
         y={originY + DECK_MAP.REPLACEMENT_BOX_HEIGHT / 2}
         width={DECK_MAP.REPLACEMENT_BOX_BUTTON_WIDTH}
         height={DECK_MAP.REPLACEMENT_BOX_BUTTON_HEIGHT}

@@ -9,7 +9,6 @@
     .DeckSelectorItem{
       transition: all 300ms linear;
       .DeckSelectorItemButton {
-        font-family: FoundrySterlingLight;
         white-space: nowrap;
         cursor: pointer;
         background-color: white;
@@ -18,14 +17,13 @@
         padding: 1vh 1vw;
         width: 100%;
       }
-      .DeckSelectorItemButton.Selected {
-        background-color: $primaryBlue;
-        color: white;
-      }
     }
     .DeckSelectorItem.open{
       transform: translateX(0%);
       opacity: 1;
+          .DeckSelectorItemButton.Selected {
+            background-color: $lightPurple;
+          }
     }
     @for $i from 1 through $deckmapMaxDeckNumber {
       $val:$i - 1;

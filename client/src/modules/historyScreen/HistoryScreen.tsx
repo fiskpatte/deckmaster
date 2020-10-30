@@ -32,7 +32,7 @@ export const HistoryScreen = () => {
 
   return (
     <HeaderAvoider>
-      <div style={{ margin: "30px", backgroundColor: "white" }}>
+      <div style={{ padding: "30px", backgroundColor: "white" }}>
         <Text size="medium" value="History" />
         <table className="HistoryTable">
           <thead>
