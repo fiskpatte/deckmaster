@@ -58,7 +58,6 @@ export const NotificationsButton: React.FC = () => {
                   <Text
                     value={`Place ${cargoQueueItem.registrationNumber} on ${cargoQueueItem.deckId}`}
                   />
-                  {/* {index < cargoQueue.length - 1 && <Separator />} */}
                 </div>
               ))}
             </div>
