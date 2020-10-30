@@ -88,7 +88,7 @@ export class CargoPlacementService {
 
       const placements = cargoPlacements.map(model =>
         transformDbModelAndRefs(model, 'cargo'),
-      ) as CargoPlacement[];
+      ).sort((a, b) => a.updatedAt - b.updatedAt) as CargoPlacement[];
 
       return placements;
     } catch (error) {
