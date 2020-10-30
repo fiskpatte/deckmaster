@@ -9,8 +9,10 @@ import { SideBarContainer } from "./sideBar";
 import { useLocation } from "react-router-dom";
 import { HeaderItem } from "./headerItem";
 import { useIsLoggedIn } from "../../hooks/useIsLoggedIn";
+import { useSpring, animated, config } from "react-spring";
 
 export const Header: React.FC = () => {
+  console.log("render header");
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const location = useLocation();
   const closeSideBar = () => setSideBarOpen(false);
@@ -19,13 +21,19 @@ export const Header: React.FC = () => {
     closeSideBar();
   }, [location]);
 
+  const props = useSpring({
+    marginTop: 0,
+    from: { marginTop: -200 },
+    config: config.slow,
+  });
+
   if (!isLoggedIn) {
     return null;
   }
 
   return (
     <>
-      <div className="Header">
+      <animated.div className="Header" style={props}>
         <div className="FlexContainer">
           <HeaderItem>
             <MenuButton onClick={() => setSideBarOpen(true)} />
@@ -45,7 +53,7 @@ export const Header: React.FC = () => {
             <Logo />
           </HeaderItem>
         </div>
-      </div>
+      </animated.div>
       <SideBarContainer sideBarOpen={sideBarOpen} closeSideBar={closeSideBar} />
     </>
   );

@@ -33,6 +33,7 @@ import { useCalculateData, useResetCargoPlacement } from "./DeckMap.hooks";
 import ButtonContainer from "./buttonContainer";
 // import PlaceCargoInfo from "./placeCargoInfo";
 import useToast from "../../hooks/useToast";
+import HeaderAvoider from "../../components/headerAvoider";
 
 interface Props {
   isOverview: boolean;
@@ -227,57 +228,61 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   if (updatingData) return <Loader />;
 
   return (
-    <div className="DeckMap">
-      <div className="DeckMapHeader">
-        <CargoDetails
-          cargoPlacement={currentCargoPlacement}
-          deck={currentDeck}
-          searchEnabled={isOverview}
-          cargoPlacements={cargoPlacements}
-          onSuccessfulCargoSearch={onSuccessfulCargoSearch}
-          lane={currentLaneName}
-          frameId={frameId}
-          startOverButtonClick={startOverButtonClick}
-          showStartOverButton={showStartOverButton()}
-        />
-        {/* <PlaceCargoInfo
+    <HeaderAvoider>
+      <div className="DeckMap">
+        <div className="DeckMapHeader">
+          <CargoDetails
+            cargoPlacement={currentCargoPlacement}
+            deck={currentDeck}
+            searchEnabled={isOverview}
+            cargoPlacements={cargoPlacements}
+            onSuccessfulCargoSearch={onSuccessfulCargoSearch}
+            lane={currentLaneName}
+            frameId={frameId}
+            startOverButtonClick={startOverButtonClick}
+            showStartOverButton={showStartOverButton()}
+          />
+          {/* <PlaceCargoInfo
           lane={currentLaneName}
           frameId={frameId}
           isOverview={isOverview}
           startOverButtonClick={startOverButtonClick}
           showStartOverButton={showStartOverButton()}
         /> */}
-        <DeckSelector
-          deckSelectorData={getDeckSelectorData(deckMap)}
-          currentDeckName={currentDeck.name}
-          setCurrentDeck={onDeckSelect}
-        />
-      </div>
-      <div className="DeckMapBody">
-        <DeckMap
-          currentCargoPlacement={currentCargoPlacement}
-          deck={currentDeck}
+          <DeckSelector
+            deckSelectorData={getDeckSelectorData(deckMap)}
+            currentDeckName={currentDeck.name}
+            setCurrentDeck={onDeckSelect}
+          />
+        </div>
+        <div className="DeckMapBody">
+          <DeckMap
+            currentCargoPlacement={currentCargoPlacement}
+            deck={currentDeck}
+            isOverview={isOverview}
+            setInitialCargoPlacement={setInitialCargoPlacement}
+            bumperToBumperDistance={bumperToBumperDistance}
+            viewBoxDimensions={viewBoxDimensions}
+            mostForwardValidPlacementForLanes={
+              mostForwardValidPlacementForLanes
+            }
+            replacingCargoPlacements={replacingCargoPlacements}
+            notReplacingCargoPlacements={notReplacingCargoPlacements}
+            replaceButtonClick={replaceButtonClick}
+          />
+        </div>
+        <ButtonContainer
           isOverview={isOverview}
-          setInitialCargoPlacement={setInitialCargoPlacement}
-          bumperToBumperDistance={bumperToBumperDistance}
-          viewBoxDimensions={viewBoxDimensions}
-          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
-          replacingCargoPlacements={replacingCargoPlacements}
-          notReplacingCargoPlacements={notReplacingCargoPlacements}
-          replaceButtonClick={replaceButtonClick}
+          showConfirmButton={showConfirmButton()}
+          showDischargeButton={showDischargeButton()}
+          onConfirm={onConfirm}
+          confirming={confirming}
+          dischargeButtonClick={dischargeButtonClick}
+          discharging={discharging}
+          cancelButtonClick={cancelButtonClick}
         />
       </div>
-      <ButtonContainer
-        isOverview={isOverview}
-        showConfirmButton={showConfirmButton()}
-        showDischargeButton={showDischargeButton()}
-        onConfirm={onConfirm}
-        confirming={confirming}
-        dischargeButtonClick={dischargeButtonClick}
-        discharging={discharging}
-        cancelButtonClick={cancelButtonClick}
-      />
-    </div>
+    </HeaderAvoider>
   );
 };
 

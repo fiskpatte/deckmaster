@@ -25,15 +25,15 @@
   }
   .Body {
     background-color: $lightBlue;
-    height: 100%-$headerHeight;
+    height: 100vh-$headerHeight;
   }
 }
 
-.SideBar.open{
+.SideBar.open {
   transform: translateX(0%);
 }
 
-.SideBar.closed{
+.SideBar.closed {
   transform: translateX(-100%);
 }
 

@@ -7,12 +7,17 @@ import { useDispatch } from "react-redux";
 import TextInput from "../../components/textInput";
 import Text from "../../components/text";
 import Separator from "../../components/separator";
-import { FlexRowEndContainer } from "../../components/flexContainer";
+import {
+  FlexContainer,
+  FlexRowEndContainer,
+} from "../../components/flexContainer";
 import { cargoPlacementFactory } from "../../types/deckMap";
 import { routes } from "./../../routes";
 import ConfirmButton from "../../components/button/ConfirmButton";
 import { BlueBackground } from "../../components/blueBackground";
 import useToast from "../../hooks/useToast";
+import { useSpring, animated, config } from "react-spring";
+import "./EnterCargoScreen.scss";
 
 export const EnterCargoScreen = () => {
   const toast = useToast();
@@ -33,24 +38,35 @@ export const EnterCargoScreen = () => {
     }
   };
 
+  const props = useSpring({
+    height: "24vh",
+    from: { height: "40vh" },
+    config: config.slow,
+  });
+
   return (
     <BlueBackground>
       <Paper>
-        <Text size="medium" value="Enter cargo ID" />
-        <TextInput
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          autoFocus={true}
-          size="big"
-        />
-        <Separator />
-        <FlexRowEndContainer>
-          <ConfirmButton
-            size="medium"
-            onClick={onNextButtonClick}
-            loading={loading}
-          />
-        </FlexRowEndContainer>
+        <animated.div style={props} className="EnterCargoScreenContainer">
+          <FlexContainer flexDirection="column">
+            <Text size="medium" value="Enter cargo ID" />
+            <TextInput
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              autoFocus={true}
+              size="big"
+            />
+            <Separator />
+          </FlexContainer>
+
+          <FlexRowEndContainer>
+            <ConfirmButton
+              size="medium"
+              onClick={onNextButtonClick}
+              loading={loading}
+            />
+          </FlexRowEndContainer>
+        </animated.div>
       </Paper>
     </BlueBackground>
   );
