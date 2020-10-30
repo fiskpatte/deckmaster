@@ -2,12 +2,13 @@ import React from 'react';
 import './Loader.scss'
 
 interface Props {
-    content?: string
+    content?: string;
+    color?: "light" | "dark";
 }
-export const Loader: React.FC<Props> = ({ content }) => {
+export const Loader: React.FC<Props> = ({ content, color = "light" }) => {
     return (
         <>
-            <div className="Loader" >
+            <div className={`Loader color-${color}`} >
                 {content ?
                     <div className="text" >
                         {content}

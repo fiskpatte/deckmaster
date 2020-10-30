@@ -18,7 +18,6 @@
     width: 100%;
     height: 100%;
     border-radius: 500rem;
-    border: .2em solid rgba(0, 0, 0, .1);
 }
 
 .Loader::after {
@@ -31,10 +30,25 @@
     animation: loader .6s linear;
     animation-iteration-count: infinite;
     border-radius: 500rem;
-    border-color: #767676 transparent transparent;
     border-style: solid;
     border-width: .2em;
     box-shadow: 0 0 0 1px transparent;
+}
+
+.Loader.color-light::before{
+    border: .2em solid rgba(255, 255, 255, .1);
+}
+
+.Loader.color-light::after{
+    border-color: $gray80 transparent transparent;
+}
+
+.Loader.color-dark::before{
+    border: .2em solid rgba(0, 0, 0, .1);
+}
+
+.Loader.color-dark::after{
+    border-color: #767676 transparent transparent;
 }
 
 .Loader .text {
