@@ -8,6 +8,7 @@ import { RouteProps } from "react-router-dom";
 import SettingsScreen from "./modules/settingsScreen";
 import HistoryScreen from "./modules/historyScreen";
 import { NoMatchScreen } from "./modules/noMatchScreen";
+import { Transition, Variants } from "framer-motion";
 
 interface Props {
   title: string;
@@ -16,8 +17,29 @@ interface Props {
   path: string;
   component: React.ReactNode;
   routeProps?: RouteProps;
+  variants?: Variants;
+  transition?: Transition;
 }
-
+const defaultVariant = {
+  initial: {
+    opacity: 0,
+    x: "100vw",
+    y: "0"
+  },
+  in: {
+    opacity: 1,
+    x: "0",
+    y: "0"
+  },
+  out: {
+    opacity: 0,
+    x: "-100vw",
+    y: "0"
+  }
+};
+const defaultTransition = {
+  transition: "linear"
+}
 export const routes: { [key in RouteKey]: Props } = {
   [RouteKey.Login]: {
     title: "Login",
@@ -31,14 +53,18 @@ export const routes: { [key in RouteKey]: Props } = {
     private: true,
     exact: true,
     path: "/placecargo",
-    component: <EnterCargoScreen />
+    component: <EnterCargoScreen />,
+    variants: { ...defaultVariant, initial: { ...defaultVariant.initial, opacity: 1, x: "0" } },
+    transition: defaultTransition
   },
   [RouteKey.PlaceCargoConfirm]: {
     title: "Cargo confirmation",
     private: true,
     exact: true,
     path: "/placecargo/confirmcargo",
-    component: <ConfirmCargoScreen />
+    component: <ConfirmCargoScreen />,
+    variants: defaultVariant,
+    transition: defaultTransition
   },
   [RouteKey.PlaceCargoDeckMap]: {
     title: "Place cargo",

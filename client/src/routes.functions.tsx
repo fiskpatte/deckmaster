@@ -4,6 +4,7 @@ import { routes } from "./routes";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import PublicRoute from "./components/routes/PublicRoute";
 import './routes.scss';
+import { motion } from "framer-motion";
 
 export const renderRoutes = () =>
   Object.keys(routes).map((key) =>
@@ -20,9 +21,16 @@ export const renderRoute = (key: string) => {
       path={route.path}
       routeProps={route.routeProps}
     >
-      <div className="RouteContainer">
+      <motion.div
+        className="RouteContainer"
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={route.variants}
+        transition={route.transition}
+      >
         {route.component}
-      </div>
+      </motion.div>
     </Route>
   );
 };

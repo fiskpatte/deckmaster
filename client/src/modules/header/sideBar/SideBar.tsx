@@ -5,6 +5,7 @@ import NavItemLogout from "./navItem/NavItemLogout";
 import { SideBarProps } from "./types";
 import { HeaderItem } from "../headerItem";
 import Text from "../../../components/text";
+import { routes } from "../../../routes";
 
 const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
   return (
@@ -22,12 +23,12 @@ const SideBar: React.FC<SideBarProps> = ({ sideBarOpen, closeSideBar }) => {
         </HeaderItem>
       </div>
       <nav className="Body">
-        <NavItem path="/placecargo" label="Place cargo" />
-        <NavItem path="/overview" label="Move cargo" />
+        <NavItem path={routes.PlaceCargo.path} label="Place cargo" />
+        <NavItem path={routes.DeckOverview.path} label="Move cargo" />
         {/* <NavItem path="/discharge" label="Discharge" /> */}
-        <NavItem path="/history" label="History" />
-        <NavItem path="/settings" label="Settings" />
-        <NavItemLogout path="/login" label="Logout" />
+        <NavItem path={routes.History.path} label="History" />
+        <NavItem path={routes.Settings.path} label="Settings" />
+        <NavItemLogout path={routes.Login.path} label="Logout" />
       </nav>
     </div>
   );

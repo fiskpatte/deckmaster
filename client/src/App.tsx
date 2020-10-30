@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 import "./App.scss";
 import { parseLoadPlan } from "./functions/loadPlanParser";
 import loadPlans from "./assets/data/LoadPlans.dat";
@@ -19,12 +19,15 @@ import { setAllDefaultHeaders } from "./functions/axios";
 import useSocket from "./hooks/useSocket";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AnimatePresence } from "framer-motion";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
+  const location = useLocation();
+
   useEffect(() => {
     setLoading(true);
     if (sessionData) {
@@ -90,29 +93,28 @@ const App: React.FC = () => {
   if (loading) {
     return <Loader />;
   }
-
   return (
-    <Router>
-      <div className="App">
-        {isLoggedIn && (
-          <Route>
-            <Header />
-          </Route>
-        )}
-        <Switch>{renderRoutes()}</Switch>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </div>
-    </Router>
+    <div className="App">
+      {isLoggedIn && (
+        <Route>
+          <Header />
+        </Route>
+      )}
+      <AnimatePresence exitBeforeEnter>
+        <Switch location={location} key={location.pathname}>{renderRoutes()}</Switch>
+      </AnimatePresence>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </div>
   );
 };
 

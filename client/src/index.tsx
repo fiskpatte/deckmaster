@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store, persistor } from "./store";
 import { PersistGate } from 'redux-persist/integration/react'
 import { Loader } from './components/loader/Loader';
+import { BrowserRouter as Router } from "react-router-dom";
 // import { setAuthorizationToken, setUsername } from "./functions/axios";
 
 // if (localStorage.jwtToken) {
@@ -19,7 +20,9 @@ import { Loader } from './components/loader/Loader';
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={<Loader />} persistor={persistor}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </PersistGate>
   </Provider>,
   document.getElementById("root")
