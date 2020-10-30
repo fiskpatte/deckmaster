@@ -21,13 +21,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const App: React.FC = () => {
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
   useEffect(() => {
     if (sessionData) {
       setAllDefaultHeaders(sessionData);
+      setLoading(false);
     }
   }, [sessionData]);
 

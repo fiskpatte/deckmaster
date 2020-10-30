@@ -7,6 +7,7 @@ import { LoginScreen } from "./modules/loginScreen";
 import { RouteProps } from "react-router-dom";
 import SettingsScreen from "./modules/settingsScreen";
 import HistoryScreen from "./modules/historyScreen";
+import { NoMatchScreen } from "./modules/noMatchScreen";
 
 interface Props {
   title: string;
@@ -79,6 +80,6 @@ export const routes: { [key in RouteKey]: Props } = {
     private: true,
     exact: false,
     path: "*",
-    component: <div>NO MATCH!</div>
+    component: <NoMatchScreen />
   }
 };
