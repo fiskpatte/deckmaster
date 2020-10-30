@@ -26,10 +26,11 @@ const App: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const { sessionData } = useSelector((state: RootState) => state.appReducer);
   useEffect(() => {
+    setLoading(true);
     if (sessionData) {
       setAllDefaultHeaders(sessionData);
-      setLoading(false);
     }
+    setLoading(false);
   }, [sessionData]);
 
   useSocket(

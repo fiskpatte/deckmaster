@@ -6,7 +6,7 @@ export const NoMatchScreen: React.FC = () => {
   const history = useHistory();
   useEffect(() => {
     history.push(routes.PlaceCargo.path);
-  }, [])
+  }, [history])
   return null;
 }
 
