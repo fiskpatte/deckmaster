@@ -6,6 +6,8 @@ import { Loader } from "../../components/loader";
 import "./HistoryScreen.scss";
 import { getServerDateAsTime } from "../../functions/date";
 import HeaderAvoider from "../../components/headerAvoider";
+import { BlueBackground } from "../../components/blueBackground";
+import { Paper } from "../../components/paper";
 
 export const HistoryScreen = () => {
   const [history, setHistory] = useState([]);
@@ -32,27 +34,31 @@ export const HistoryScreen = () => {
 
   return (
     <HeaderAvoider>
-      <div style={{ padding: "30px", backgroundColor: "white" }}>
-        <Text size="medium" value="History" />
-        <table className="HistoryTable">
-          <thead>
-            <tr className="HistoryRow">
-              <th className="HistoryTH">Info</th>
-              <th className="HistoryTH">User</th>
-              <th className="HistoryTH">Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {history.map((log: Log) => (
-              <tr key={log.id} className="HistoryRow">
-                <td>{log.text}</td>
-                <td>{log.username}</td>
-                <td>{getServerDateAsTime(log.createdAt)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <BlueBackground>
+        <Paper className="HistoryScreenPaper">
+          <div style={{ padding: "30px", backgroundColor: "white" }}>
+            <Text size="medium" value="History" />
+            <table className="HistoryTable">
+              <thead>
+                <tr className="HistoryRow">
+                  <th className="HistoryTH">Info</th>
+                  <th className="HistoryTH">User</th>
+                  <th className="HistoryTH">Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.map((log: Log) => (
+                  <tr key={log.id} className="HistoryRow">
+                    <td>{log.text}</td>
+                    <td>{log.username}</td>
+                    <td>{getServerDateAsTime(log.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Paper>
+      </BlueBackground>
     </HeaderAvoider>
   );
 };
