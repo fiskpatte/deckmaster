@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Paper } from "../../components/paper";
 import { getMockCargo } from "../../api/endpoints";
 import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
@@ -26,6 +26,16 @@ export const EnterCargoScreen = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const shouldAnimate = !!localStorage.getItem("fromLogin");
+
+  useEffect(() => {
+    return () => {
+      if (shouldAnimate) {
+        localStorage.removeItem("fromLogin");
+      }
+    };
+  }, []);
+
   const onNextButtonClick = async () => {
     setLoading(true);
     try {
@@ -44,12 +54,13 @@ export const EnterCargoScreen = () => {
     config: config.slow,
   });
 
-  return (
+  return shouldAnimate ? (
     <BlueBackground>
       <Paper>
         <animated.div style={props} className="EnterCargoScreenContainer">
           <FlexContainer flexDirection="column">
             <Text size="medium" value="Enter cargo ID" />
+            <Separator />
             <TextInput
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -67,6 +78,29 @@ export const EnterCargoScreen = () => {
             />
           </FlexRowEndContainer>
         </animated.div>
+      </Paper>
+    </BlueBackground>
+  ) : (
+    <BlueBackground>
+      <Paper>
+        <FlexContainer flexDirection="column">
+          <Text size="medium" value="Enter cargo ID" />
+          <TextInput
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            autoFocus={true}
+            size="big"
+          />
+          <Separator />
+        </FlexContainer>
+
+        <FlexRowEndContainer>
+          <ConfirmButton
+            size="medium"
+            onClick={onNextButtonClick}
+            loading={loading}
+          />
+        </FlexRowEndContainer>
       </Paper>
     </BlueBackground>
   );

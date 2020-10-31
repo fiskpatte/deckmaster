@@ -42,6 +42,7 @@ export const LoginScreen: React.FC = () => {
       const loginCallback = (data: SessionData) =>
         dispatch(setSessionData(data));
       await login(username, password, loginCallback);
+      localStorage.setItem("fromLogin", "true");
       history.push(routes.PlaceCargo.path);
     } catch (error) {
       toast.error("Login failed");
