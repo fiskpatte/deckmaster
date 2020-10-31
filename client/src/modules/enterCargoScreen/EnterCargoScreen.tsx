@@ -5,7 +5,7 @@ import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TextInput from "../../components/textInput";
-// import Text from "../../components/text";
+import Text from "../../components/text";
 import Separator from "../../components/separator";
 import {
   FlexContainer,
@@ -35,7 +35,7 @@ export const EnterCargoScreen = () => {
         localStorage.removeItem("fromLogin");
       }
     };
-  }, []);
+  }, [shouldAnimate]);
 
   const onNextButtonClick = async () => {
     setLoading(true);
@@ -60,7 +60,7 @@ export const EnterCargoScreen = () => {
       <Paper>
         <animated.div style={props} className="EnterCargoScreenContainer">
           <FlexContainer flexDirection="column">
-            <TopBar text="Enter Cargo Id" fadeOutLogoOnMount={true} />
+            <TopBar text="Enter Cargo ID" fadeOutLogoOnMount={true} />
             {/* <Separator /> */}
             <TextInput
               value={value}
@@ -85,7 +85,7 @@ export const EnterCargoScreen = () => {
     <BlueBackground>
       <Paper>
         <FlexContainer flexDirection="column">
-          <TopBar text="Enter Cargo ID" fadeOutLogoOnMount={false} />
+          <Text size="medium" value="Enter cargo ID" />
           <TextInput
             value={value}
             onChange={(e) => setValue(e.target.value)}

@@ -1,5 +1,17 @@
+@import "../../styles/main.scss";
+
 .EnterCargoScreenContainer {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.TopBar {
+  @include flexRow();
+  justify-content: space-between;
+  .LogoContainer {
+    max-width: 200px;
+    min-width: 100px;
+    width: 20vw;
+  }
 }
