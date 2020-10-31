@@ -5,7 +5,7 @@ import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import TextInput from "../../components/textInput";
-import Text from "../../components/text";
+// import Text from "../../components/text";
 import Separator from "../../components/separator";
 import {
   FlexContainer,
@@ -18,6 +18,7 @@ import { BlueBackground } from "../../components/blueBackground";
 import useToast from "../../hooks/useToast";
 import { useSpring, animated, config } from "react-spring";
 import "./EnterCargoScreen.scss";
+import TopBar from "../loginScreen/TopBar";
 
 export const EnterCargoScreen = () => {
   const toast = useToast();
@@ -59,8 +60,8 @@ export const EnterCargoScreen = () => {
       <Paper>
         <animated.div style={props} className="EnterCargoScreenContainer">
           <FlexContainer flexDirection="column">
-            <Text size="medium" value="Enter cargo ID" />
-            <Separator />
+            <TopBar text="Enter Cargo Id" fadeOutLogoOnMount={true} />
+            {/* <Separator /> */}
             <TextInput
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -84,14 +85,14 @@ export const EnterCargoScreen = () => {
     <BlueBackground>
       <Paper>
         <FlexContainer flexDirection="column">
-          <Text size="medium" value="Enter cargo ID" />
+          <TopBar text="Enter Cargo ID" fadeOutLogoOnMount={false} />
           <TextInput
             value={value}
             onChange={(e) => setValue(e.target.value)}
             autoFocus={true}
             size="big"
           />
-          <Separator />
+          {/* <Separator /> */}
         </FlexContainer>
 
         <FlexRowEndContainer>
