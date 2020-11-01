@@ -49,11 +49,27 @@ export const EnterCargoScreen = () => {
     }
   };
 
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    onNextButtonClick();
+  };
+
   const props = useSpring({
     height: "24vh",
     from: { height: "40vh" },
     config: config.slow,
   });
+
+  // const blurInput = () => {
+  //   console.log("TEST");
+  //   setValue("asdasdas.");
+
+  //   const element = document.getElementById("EnterCargoScreenInput");
+  //   if (element) {
+  //     setValue("Gitt555a.");
+  //   }
+  //   // document.getElementById("EnterCargoScreenInput")?.blur();
+  // };
 
   return shouldAnimate ? (
     <BlueBackground>
@@ -62,10 +78,13 @@ export const EnterCargoScreen = () => {
           <FlexContainer flexDirection="column">
             <TopBar text="Enter Cargo ID" fadeOutLogoOnMount={true} />
             <TextInput
+              id="EnterCargoScreenInput"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               autoFocus={true}
               size="big"
+              onSubmit={onSubmit}
+              // onOutsideClick={blurInput}
             />
             <Separator />
           </FlexContainer>
@@ -90,6 +109,8 @@ export const EnterCargoScreen = () => {
             onChange={(e) => setValue(e.target.value)}
             autoFocus={true}
             size="big"
+            onSubmit={onSubmit}
+            // onOutsideClick={blurInput}
           />
           <Separator />
         </FlexContainer>

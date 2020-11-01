@@ -50,6 +50,11 @@ export const LoginScreen: React.FC = () => {
     }
   };
 
+  const onSubmit = (e: any) => {
+    e.preventDefault();
+    onLoginButtonClick();
+  };
+
   const props = useSpring({
     opacity: 1,
     from: { opacity: 0 },
@@ -66,6 +71,7 @@ export const LoginScreen: React.FC = () => {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Email adress"
             size="big"
+            onSubmit={onSubmit}
           />
           <Separator />
           <TextInput
@@ -74,6 +80,7 @@ export const LoginScreen: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             size="big"
+            onSubmit={onSubmit}
           />
           <Separator />
           <FlexRowEndContainer>
