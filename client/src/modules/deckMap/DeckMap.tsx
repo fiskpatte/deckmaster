@@ -92,6 +92,8 @@ const DeckMap: React.FC<Props> = ({
       viewBox={`${originX} ${originY} ${sizeX} ${sizeY}`}
       preserveAspectRatio="xMidYMid"
       ref={svgRef}
+      xmlns="http://www.w3.org/2000/svg"
+      version="2.0"
     >
       <g
         className="containerGroup"

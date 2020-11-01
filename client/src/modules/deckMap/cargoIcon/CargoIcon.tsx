@@ -51,6 +51,8 @@ export const CargoIcon: React.FC<Props> = ({
       fill="none"
       preserveAspectRatio="xMidYMid meet"
       onClick={() => console.log(cargoId)}
+      xmlns="http://www.w3.org/2000/svg"
+      version="2.0"
     >
       <g ref={groupRef} className={`CargoIcon ${placing ? "Placing" : ""}`}>
         <g

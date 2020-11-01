@@ -16,6 +16,8 @@ export const WideCargoIconSVG: React.FC<Props> = ({ x = 0, y = 0, width = "100%"
       y={y}
       width={width}
       height={height}
+      xmlns="http://www.w3.org/2000/svg"
+      version="2.0"
     // viewBox={`${0} ${0} ${width} ${height}`}
     // preserveAspectRatio="xMinYMin meet"
     >
