@@ -20,33 +20,33 @@ interface Props {
   variants?: Variants;
   transition?: Transition;
 }
-const defaultVariant = {
-  initial: {
-    opacity: 0,
-    x: "100vw",
-    y: "0"
-  },
-  in: {
-    opacity: 1,
-    x: "0",
-    y: "0"
-  },
-  out: {
-    opacity: 0,
-    x: "-100vw",
-    y: "0"
-  }
-};
-const defaultTransition = {
-  transition: "linear"
-}
+// const defaultVariant = {
+//   initial: {
+//     opacity: 0,
+//     x: "100vw",
+//     y: "0",
+//   },
+//   in: {
+//     opacity: 1,
+//     x: "0",
+//     y: "0",
+//   },
+//   out: {
+//     opacity: 0,
+//     x: "-100vw",
+//     y: "0",
+//   },
+// };
+// const defaultTransition = {
+//   transition: "linear",
+// };
 export const routes: { [key in RouteKey]: Props } = {
   [RouteKey.Login]: {
     title: "Login",
     private: false,
     exact: true,
     path: "/login",
-    component: <LoginScreen />
+    component: <LoginScreen />,
   },
   [RouteKey.PlaceCargo]: {
     title: "Initiate cargo placement",
@@ -54,8 +54,8 @@ export const routes: { [key in RouteKey]: Props } = {
     exact: true,
     path: "/placecargo",
     component: <EnterCargoScreen />,
-    variants: { ...defaultVariant, initial: { ...defaultVariant.initial, opacity: 1, x: "0" } },
-    transition: defaultTransition
+    // variants: { ...defaultVariant, initial: { ...defaultVariant.initial, opacity: 1, x: "0" } },
+    // transition: defaultTransition
   },
   [RouteKey.PlaceCargoConfirm]: {
     title: "Cargo confirmation",
@@ -63,29 +63,29 @@ export const routes: { [key in RouteKey]: Props } = {
     exact: true,
     path: "/placecargo/confirmcargo",
     component: <ConfirmCargoScreen />,
-    variants: defaultVariant,
-    transition: defaultTransition
+    // variants: defaultVariant,
+    // transition: defaultTransition
   },
   [RouteKey.PlaceCargoDeckMap]: {
     title: "Place cargo",
     private: true,
     exact: true,
     path: "/placecargo/deckmap",
-    component: <DeckMapContainer isOverview={false} />
+    component: <DeckMapContainer isOverview={false} />,
   },
   [RouteKey.DeckOverview]: {
     title: "Move/dischage cargo",
     private: true,
     exact: true,
     path: "/overview",
-    component: <DeckMapContainer isOverview={true} />
+    component: <DeckMapContainer isOverview={true} />,
   },
   [RouteKey.History]: {
     title: "History",
     private: true,
     exact: true,
     path: "/history",
-    component: <HistoryScreen />
+    component: <HistoryScreen />,
   },
   // [RouteKey.Discharge]: {
   //   title: "Discharge cargo",
@@ -99,13 +99,13 @@ export const routes: { [key in RouteKey]: Props } = {
     private: true,
     exact: true,
     path: "/settings",
-    component: <SettingsScreen />
+    component: <SettingsScreen />,
   },
   [RouteKey.NoMatch]: {
     title: "No matching page",
     private: true,
     exact: false,
     path: "*",
-    component: <NoMatchScreen />
-  }
+    component: <NoMatchScreen />,
+  },
 };
