@@ -61,7 +61,6 @@ export const EnterCargoScreen = () => {
         <animated.div style={props} className="EnterCargoScreenContainer">
           <FlexContainer flexDirection="column">
             <TopBar text="Enter Cargo ID" fadeOutLogoOnMount={true} />
-            {/* <Separator /> */}
             <TextInput
               value={value}
               onChange={(e) => setValue(e.target.value)}
@@ -92,7 +91,7 @@ export const EnterCargoScreen = () => {
             autoFocus={true}
             size="big"
           />
-          {/* <Separator /> */}
+          <Separator />
         </FlexContainer>
 
         <FlexRowEndContainer>
