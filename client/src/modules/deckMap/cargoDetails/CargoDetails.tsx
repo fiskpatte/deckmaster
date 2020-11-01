@@ -47,12 +47,10 @@ export const CargoDetails: React.FC<Props> = ({
     }
   }, [deck, cargoPlacement.cargo]);
 
+  // When user presses the search button, we auto fill the current cargo registration number, if any.
   useEffect(() => {
     if (isSearchingCargo && !previousIsSearchingCargo) {
       setInput(registrationNumber);
-      setTimeout(() => {
-        inputRef.current?.select();
-      }, 1);
     }
   }, [isSearchingCargo, previousIsSearchingCargo, registrationNumber]);
 
