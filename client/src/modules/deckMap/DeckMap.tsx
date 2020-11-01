@@ -103,9 +103,8 @@ const DeckMap: React.FC<Props> = ({
           lanes={deck.lanes}
           rightOrigin={sizeX + originX}
           currentCargo={currentCargoPlacement.cargo}
-          mostForwardValidPlacementForLanes={
-            mostForwardValidPlacementForLanes
-          }
+          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
+          onLaneButtonClick={setCargoPlacementFromFrontPlacement}
         />
         <Grids
           grids={deck.grids}
@@ -113,17 +112,15 @@ const DeckMap: React.FC<Props> = ({
           currentCargo={currentCargoPlacement.cargo}
           cargoPlacements={notReplacingCargoPlacements}
           lanes={deck.lanes}
-          mostForwardValidPlacementForLanes={
-            mostForwardValidPlacementForLanes
-          }
+          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
         />
-        {deck.lanes.map(lane =>
+        {/* {deck.lanes.map(lane =>
           <use
             key={lane.id}
             href={`#arrowButton_${lane.id}`}
             onClick={() => setCargoPlacementFromFrontPlacement(mostForwardValidPlacementForLanes[lane.id])}
           />
-        )}
+        )} */}
         <FrameRuler frames={deck.frames} originY={getDeckMapBottom(deck)} />
         {isOverview && (
           <ReplacementBox
