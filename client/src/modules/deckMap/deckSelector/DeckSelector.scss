@@ -5,9 +5,11 @@
   margin: 2vh 0vw;
   height: min-content;
   z-index: $deckSelectorOverlayZIndex + 1;
+  pointer-events: none;
   .DeckSelectorItemsWrapper{
     .DeckSelectorItem{
       transition: all 300ms linear;
+      pointer-events: auto;
       .DeckSelectorItemButton {
         white-space: nowrap;
         cursor: pointer;
