@@ -72,6 +72,7 @@ export const SettingsScreen = () => {
                       bumperToBumperDistance: e.target.value,
                     })
                   }
+                  onSubmit={() => null}
                 />
               </td>
             </tr>
@@ -89,6 +90,7 @@ export const SettingsScreen = () => {
                       defaultVCG: e.target.value,
                     })
                   }
+                  onSubmit={() => null}
                 />
               </td>
             </tr>
