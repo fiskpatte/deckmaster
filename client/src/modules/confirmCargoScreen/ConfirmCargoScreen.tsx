@@ -50,7 +50,7 @@ export const ConfirmCargoScreen = () => {
             </tr>
             <tr>
               <td className="LabelCell">Weight</td>
-              <td className="ValueCell">{cargo.weight + " m"}</td>
+              <td className="ValueCell">{cargo.weight + " mT"}</td>
             </tr>
           </tbody>
         </table>
