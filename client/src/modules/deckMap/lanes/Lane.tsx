@@ -42,20 +42,20 @@ const LaneComponent: React.FC<Props> = ({
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
-        // onClick={onClick}
+        onClick={(ev) => console.log("LANECLICK", ev)}
       />
       <LaneName lane={lane} rightOrigin={rightOrigin} />
-      {/* <defs> */}
-      <ArrowButton
-        id={`arrowButton_${lane.id}`}
-        visible={lanePlacementButtonVisible && !!currentCargo.id}
-        x={lane.LCG - lane.length / 2}
-        y={lane.TCG}
-        height={lane.width * DECK_MAP.ARROW_BUTTON_HEIGHT_RATIO}
-        width={DECK_MAP.LANE_BUTTON_WIDTH}
-        onClick={() => onLaneButtonClick(mostForwardValidPlacementForLane)}
-      />
-      {/* </defs> */}
+      <defs>
+        <ArrowButton
+          id={`arrowButton_${lane.id}`}
+          visible={lanePlacementButtonVisible && !!currentCargo.id}
+          x={lane.LCG - lane.length / 2}
+          y={lane.TCG}
+          height={lane.width * DECK_MAP.ARROW_BUTTON_HEIGHT_RATIO}
+          width={DECK_MAP.LANE_BUTTON_WIDTH}
+          onClick={() => onLaneButtonClick(mostForwardValidPlacementForLane)}
+        />
+      </defs>
     </>
   );
 };
