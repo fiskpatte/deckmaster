@@ -1,5 +1,10 @@
-import { Cargo, CargoPlacement, Lane } from "../../types/deckMap";
-import { getMostForwardValidPlacementForLanes } from "./DeckMap.functions"
+import {
+  Cargo,
+  CargoPlacement,
+  cargoPlacementFactory,
+  Lane,
+} from "../../types/deckMap";
+import { getMostForwardValidPlacementForLanes } from "./DeckMap.functions";
 
 describe("Most forward valid placement", () => {
   const bumperToBumperDistance = 0.6;
@@ -52,7 +57,7 @@ describe("Most forward valid placement", () => {
         VCG: laneWithoutAdjacentLanes.VCG + normalCargo.height * defaultVCG,
         laneId: laneWithoutAdjacentLanes.id,
         replacing: false,
-      }
+      },
     };
     expect(mostForwardValidPlacement).toStrictEqual(expectedValue);
   });
@@ -71,7 +76,7 @@ describe("Most forward valid placement", () => {
       overflowingLaneId: "",
       createdAt: new Date(),
       updatedAt: new Date(),
-    } as CargoPlacement
+    } as CargoPlacement;
     const cargoPlacements = [cargoPlacement];
     const lanes = [laneWithoutAdjacentLanes];
     const mostForwardValidPlacement = getMostForwardValidPlacementForLanes(
@@ -88,7 +93,7 @@ describe("Most forward valid placement", () => {
         VCG: laneWithoutAdjacentLanes.VCG + normalCargo.height * defaultVCG,
         laneId: laneWithoutAdjacentLanes.id,
         replacing: false,
-      }
+      },
     };
     expect(mostForwardValidPlacement).toStrictEqual(expectedValue);
   });
@@ -107,7 +112,7 @@ describe("Most forward valid placement", () => {
       overflowingLaneId: "",
       createdAt: new Date(),
       updatedAt: new Date(),
-    } as CargoPlacement
+    } as CargoPlacement;
     const cargoPlacements = [cargoPlacement, { ...cargoPlacement, LCG: 140 }];
     const lanes = [laneWithoutAdjacentLanes];
     const mostForwardValidPlacement = getMostForwardValidPlacementForLanes(
@@ -119,12 +124,15 @@ describe("Most forward valid placement", () => {
     );
     const expectedValue = {
       [laneWithoutAdjacentLanes.id]: {
-        LCG: cargoPlacement.LCG - cargoPlacement.cargo.length / 2 - bumperToBumperDistance,
+        LCG:
+          cargoPlacement.LCG -
+          cargoPlacement.cargo.length / 2 -
+          bumperToBumperDistance,
         TCG: laneWithoutAdjacentLanes.TCG,
         VCG: laneWithoutAdjacentLanes.VCG + normalCargo.height * defaultVCG,
         laneId: laneWithoutAdjacentLanes.id,
         replacing: false,
-      }
+      },
     };
     expect(mostForwardValidPlacement).toStrictEqual(expectedValue);
   });
@@ -143,8 +151,11 @@ describe("Most forward valid placement", () => {
       overflowingLaneId: "5",
       createdAt: new Date(),
       updatedAt: new Date(),
-    } as CargoPlacement
-    const cargoPlacements = [cargoPlacement, { ...cargoPlacement, laneId: "5", overflowingLaneId: "", LCG: 140 }];
+    } as CargoPlacement;
+    const cargoPlacements = [
+      cargoPlacement,
+      { ...cargoPlacement, laneId: "5", overflowingLaneId: "", LCG: 140 },
+    ];
     const lanes = [laneWithoutAdjacentLanes];
     const mostForwardValidPlacement = getMostForwardValidPlacementForLanes(
       lanes,
@@ -155,13 +166,52 @@ describe("Most forward valid placement", () => {
     );
     const expectedValue = {
       [laneWithoutAdjacentLanes.id]: {
-        LCG: cargoPlacement.LCG - cargoPlacement.cargo.length / 2 - bumperToBumperDistance,
+        LCG:
+          cargoPlacement.LCG -
+          cargoPlacement.cargo.length / 2 -
+          bumperToBumperDistance,
         TCG: laneWithoutAdjacentLanes.TCG,
         VCG: laneWithoutAdjacentLanes.VCG + normalCargo.height * defaultVCG,
         laneId: laneWithoutAdjacentLanes.id,
         replacing: false,
-      }
+      },
     };
     expect(mostForwardValidPlacement).toStrictEqual(expectedValue);
   });
-})
+  test("Should return empty placement when there is not enough space for the current cargo in the lane", () => {
+    const cargoPlacement = {
+      id: "5f565a2cb9693730dcde890c",
+      LCG: 13.25,
+      TCG: -4.37,
+      VCG: 24.095,
+      cargo: overflowingCargo,
+      deckId: "Weather Deck",
+      discharged: false,
+      laneId: "4",
+      replacing: false,
+      voyageId: "dummy_voyage_id",
+      overflowingLaneId: "5",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as CargoPlacement;
+    const cargoPlacements = [cargoPlacement];
+    const lanes = [laneWithoutAdjacentLanes];
+    const mostForwardValidPlacement = getMostForwardValidPlacementForLanes(
+      lanes,
+      cargoPlacements,
+      normalCargo,
+      bumperToBumperDistance,
+      defaultVCG
+    );
+    const expectedValue = {
+      [laneWithoutAdjacentLanes.id]: cargoPlacementFactory(),
+    };
+    expect(mostForwardValidPlacement).toStrictEqual(expectedValue);
+  });
+});
+
+// describe("Get overflowing placement", () => {
+//   test("Should return empty placement when adjacent lanes are occupied and recursive is false", () => {
+
+//   })
+// });

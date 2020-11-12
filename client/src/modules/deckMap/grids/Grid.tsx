@@ -4,17 +4,19 @@ import { DECK_MAP } from "../../../constants";
 import { Grid, Cargo, Lane } from "../../../types/deckMap";
 import "./Grid.scss";
 import { GridName } from "./GridName";
-import { getOverflowingPlacement } from "../DeckMap.functions";
-import { CargoPlacement } from './../../../types/deckMap';
+import {
+  getPlacementFromForwardPlacement,
+  isValidPlacement,
+} from "../DeckMap.functions";
+import { CargoPlacement } from "./../../../types/deckMap";
 
 interface Props {
   grid: Grid;
-  onClick: (placement: CargoPlacement) => void;
-  isOverflow: boolean;
+  setPlacementFromForward: (placement: CargoPlacement) => void;
   currentCargo: Cargo;
+  cargoPlacementsForLane: CargoPlacement[];
   adjacentCargoPlacementsForLane: CargoPlacement[];
   lane: Lane;
-  mostForwardValidPlacementForLane: CargoPlacement;
 }
 
 const radius =
@@ -24,40 +26,34 @@ const boundingBoxRadius = radius * 8;
 
 const GridComponent: React.FC<Props> = ({
   grid,
-  onClick,
-  isOverflow,
+  setPlacementFromForward,
   currentCargo,
+  cargoPlacementsForLane,
   adjacentCargoPlacementsForLane,
   lane,
-  mostForwardValidPlacementForLane
 }) => {
-  let gridPlacement = {
+  let gridPlacementFromForward = {
     LCG: grid.LCG + grid.length / 2,
     TCG: grid.TCG,
     laneId: lane.id,
-    replacing: false
+    replacing: false,
   } as CargoPlacement;
-  let isVisible = grid.LCG + grid.length / 2 <= mostForwardValidPlacementForLane.LCG;
 
-  if (isOverflow) {
-    const overflowingPlacement = getOverflowingPlacement(
-      lane,
-      currentCargo,
-      gridPlacement,
-      adjacentCargoPlacementsForLane,
-      false
-    );
-    if (overflowingPlacement.laneId === "") return null;
-    gridPlacement = overflowingPlacement;
-  }
+  let validPlacement = getPlacementFromForwardPlacement(
+    lane,
+    currentCargo,
+    gridPlacementFromForward,
+    cargoPlacementsForLane,
+    adjacentCargoPlacementsForLane
+  );
 
-  if (!isVisible) return null;
+  if (!isValidPlacement(validPlacement)) return null;
 
   return (
     <g
-      onClick={ev => {
+      onClick={(ev) => {
         ev.stopPropagation();
-        onClick(gridPlacement);
+        setPlacementFromForward(validPlacement);
       }}
     >
       <GridItem grid={grid} radius={radius} upper />

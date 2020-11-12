@@ -81,8 +81,6 @@ export interface Cargo {
   updatedAt: Date;
 }
 
-
-
 export interface CargoPlacement {
   id: string;
   deckId: string;
@@ -112,8 +110,23 @@ export const cargoPlacementFactory = (): CargoPlacement => ({
   voyageId: "",
   cargo: cargoFactory(),
   replacing: false,
-  discharged: false
+  discharged: false,
 });
+
+export const cargoPlacementAsDeckMapElement = (
+  cargoPlacement: CargoPlacement,
+  cargo?: Cargo,
+  fromForwardPlacement?: boolean
+): DeckMapElement => {
+  let cargoToUse = cargo ? cargo : cargoPlacement.cargo;
+  let LCG = cargoPlacement.LCG;
+  LCG -= fromForwardPlacement ? cargoToUse.length / 2 : 0;
+  return {
+    ...cargoPlacement,
+    ...cargoToUse,
+    LCG,
+  };
+};
 
 export const cargoFactory = (): Cargo => ({
   id: "",
@@ -131,7 +144,9 @@ export interface Frame {
   distance: number;
 }
 
-export interface MostForwardValidPlacementForLanes { [id: string]: CargoPlacement }
+export interface MostForwardValidPlacementForLanes {
+  [id: string]: CargoPlacement;
+}
 
 export interface ViewBoxDimensions {
   sizeX: number;

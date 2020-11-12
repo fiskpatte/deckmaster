@@ -62,7 +62,7 @@ const DeckMap: React.FC<Props> = ({
     dispatch(setCurrentPlacement({ ...cargoPlacement, deckId: deck.name }));
   };
 
-  const setCargoPlacementFromFrontPlacement = (placement: CargoPlacement) => {
+  const setPlacementFromForward = (placement: CargoPlacement) => {
     if (
       cargoIsEmpty(currentCargoPlacement.cargo) ||
       cargoPlacementIsEmpty(placement)
@@ -104,15 +104,15 @@ const DeckMap: React.FC<Props> = ({
           rightOrigin={sizeX + originX}
           currentCargo={currentCargoPlacement.cargo}
           mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
-          onLaneButtonClick={setCargoPlacementFromFrontPlacement}
+          onLaneButtonClick={setPlacementFromForward}
         />
         <Grids
           grids={deck.grids}
-          onClick={setCargoPlacementFromFrontPlacement}
+          setPlacementFromForward={setPlacementFromForward}
           currentCargo={currentCargoPlacement.cargo}
           cargoPlacements={notReplacingCargoPlacements}
           lanes={deck.lanes}
-          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
+          // mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
         />
         {/* {deck.lanes.map(lane =>
           <use
