@@ -8,16 +8,19 @@ interface Props {
 
 export const PlacedCargo: React.FC<Props> = ({
   cargo: cargoPlacements,
-  onCargoPlacementClick
+  onCargoPlacementClick,
 }) => {
   if (cargoPlacements.length === 0) return null;
 
   return (
     <>
-      {cargoPlacements.map(cp => (
+      {cargoPlacements.map((cp) => (
         <g
           key={`cargoIcon${cp.id}`}
-          onClick={() => onCargoPlacementClick(cp)}
+          onClick={(ev) => {
+            ev.preventDefault();
+            onCargoPlacementClick(cp);
+          }}
         >
           <CargoIcon
             x={cp.LCG}

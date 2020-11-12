@@ -9,6 +9,8 @@ import {
   isValidPlacement,
 } from "../DeckMap.functions";
 import { CargoPlacement } from "./../../../types/deckMap";
+import { getVCGForCargoAndLane } from "../../../store/app/appSelectors";
+import { useSelector } from "react-redux";
 
 interface Props {
   grid: Grid;
@@ -32,14 +34,18 @@ const GridComponent: React.FC<Props> = ({
   adjacentCargoPlacementsForLane,
   lane,
 }) => {
-  let gridPlacementFromForward = {
+  const VCGForCargoAndLane = useSelector(
+    getVCGForCargoAndLane(currentCargo, lane)
+  );
+  const gridPlacementFromForward = {
     LCG: grid.LCG + grid.length / 2,
     TCG: grid.TCG,
+    VCG: VCGForCargoAndLane,
     laneId: lane.id,
     replacing: false,
   } as CargoPlacement;
 
-  let validPlacement = getPlacementFromForwardPlacement(
+  const validPlacement = getPlacementFromForwardPlacement(
     lane,
     currentCargo,
     gridPlacementFromForward,

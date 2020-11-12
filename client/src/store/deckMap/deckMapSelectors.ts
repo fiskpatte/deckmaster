@@ -16,10 +16,15 @@ export const getCurrentDeck = createSelector(
   (currentDeckId, deckMap) => deckMap[currentDeckId]
 );
 
-export const getVisibleCargoPlacements = createSelector(
+export const getReplacingCargoPlacements = createSelector(
+  [getCargoPlacements],
+  (cargoPlacements) => cargoPlacements.filter((cp) => cp.replacing)
+);
+
+export const getVisibleNotReplacingCargoPlacements = createSelector(
   [getCurrentDeckId, getCargoPlacements],
   (currentDeckId, cargoPlacements) =>
-    cargoPlacements.filter((cp) => cp.deckId === currentDeckId || cp.replacing)
+    cargoPlacements.filter((cp) => cp.deckId === currentDeckId && !cp.replacing)
 );
 
 export const getCargoPlacementsForLane = (laneId: string) =>
@@ -41,12 +46,18 @@ export const getCargoPlacementByRegistrationNumber = (input: string) =>
     )
   );
 
-export const getFrameIdFromPosition = (deckId: string, pos: number | undefined) => createSelector(
-  [getDeckMap], (deckMap) =>
-  deckMap[deckId]?.frames.find(frame => frame.distance >= (pos ?? Infinity))?.id
-)
+export const getFrameIdFromPosition = (deckId: string, pos: number) =>
+  createSelector(
+    [getDeckMap],
+    (deckMap) =>
+      deckMap[deckId]?.frames.find((frame) => frame.distance >= pos)?.id
+  );
 
-export const getLaneNameFromPlacement = (cargoPlacement: CargoPlacement) => createSelector(
-  [getDeckMap], (deckMap) =>
-  deckMap[cargoPlacement?.deckId]?.lanes.find(lane => lane.id === cargoPlacement?.laneId)?.name
-)
+export const getLaneNameFromPlacement = (cargoPlacement: CargoPlacement) =>
+  createSelector(
+    [getDeckMap],
+    (deckMap) =>
+      deckMap[cargoPlacement?.deckId]?.lanes.find(
+        (lane) => lane.id === cargoPlacement?.laneId
+      )?.name
+  );

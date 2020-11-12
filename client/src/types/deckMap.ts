@@ -150,6 +150,10 @@ export interface MostForwardValidPlacementForLanes {
   [id: string]: CargoPlacement;
 }
 
+export interface CargoPlacementsForLanes {
+  [id: string]: CargoPlacement[];
+}
+
 export interface ViewBoxDimensions {
   sizeX: number;
   sizeY: number;

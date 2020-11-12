@@ -2,10 +2,28 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import usePrevious from "../../hooks/usePrevious";
 import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
-import { CargoPlacement, cargoPlacementFactory, Deck, MostForwardValidPlacementForLanes, ViewBoxDimensions } from "../../types/deckMap";
-import { getMostForwardValidPlacementForLanes, getViewBoxOriginX, getViewBoxOriginY, getViewBoxSizeX, getViewBoxSizeY } from "./DeckMap.functions";
+import {
+  CargoPlacement,
+  cargoPlacementFactory,
+  CargoPlacementsForLanes,
+  Deck,
+  MostForwardValidPlacementForLanes,
+  ViewBoxDimensions,
+} from "../../types/deckMap";
+import {
+  getMostForwardValidPlacementForLanes,
+  getViewBoxOriginX,
+  getViewBoxOriginY,
+  getViewBoxSizeX,
+  getViewBoxSizeY,
+} from "./DeckMap.functions";
 
-export const useResetCargoPlacement = (isOverview: boolean, cancelNextReset: boolean, cargoPlacement: CargoPlacement, deckId: string,) => {
+export const useResetCargoPlacement = (
+  isOverview: boolean,
+  cancelNextReset: boolean,
+  cargoPlacement: CargoPlacement,
+  deckId: string
+) => {
   const dispatch = useDispatch();
   const previousDeckId = usePrevious(deckId);
   const previousCancelNextReset = usePrevious(cancelNextReset);
@@ -41,47 +59,61 @@ export const useResetCargoPlacement = (isOverview: boolean, cancelNextReset: boo
       dispatch(setCurrentPlacement(cargoPlacementFactory()));
     }
   }, [dispatch, isOverview]);
-}
+};
 
-export const useCalculateData = (deck: Deck, cargoPlacements: CargoPlacement[], cargoPlacement: CargoPlacement, bumperToBumperDistance: number, defaultVCG: number) => {
-  const { updatingReplacingCargoPlacements, replacingCargoPlacements, notReplacingCargoPlacements } = useCalculateReplacingCargoPlacements(cargoPlacements);
-  const { updatingViewBoxDimensions, viewBoxDimensions } = useCalculateViewBoxDimensions(deck);
-  const { updatingMostForwardValidPlacementForLanes, mostForwardValidPlacementForLanes } = useCalculateMostForwardValidPlacementForLanes(deck, notReplacingCargoPlacements, cargoPlacement, bumperToBumperDistance, defaultVCG);
+export const useCalculateData = (
+  deck: Deck,
+  notReplacingCargoPlacements: CargoPlacement[],
+  cargoPlacement: CargoPlacement,
+  bumperToBumperDistance: number,
+  defaultVCG: number
+) => {
+  const {
+    updatingViewBoxDimensions,
+    viewBoxDimensions,
+  } = useCalculateViewBoxDimensions(deck);
+  const {
+    updatingMostForwardValidPlacementForLanes,
+    mostForwardValidPlacementForLanes,
+  } = useCalculateMostForwardValidPlacementForLanes(
+    deck,
+    notReplacingCargoPlacements,
+    cargoPlacement,
+    bumperToBumperDistance,
+    defaultVCG
+  );
+  const {
+    updatingCargoPlacementsForLanes,
+    cargoPlacementsForLanes,
+    adjacentCargoPlacementsForLanes,
+  } = useCalculateCargoPlacementsForLanes(deck, notReplacingCargoPlacements);
+
   const [updatingData, setupdatingData] = useState(true);
 
   useEffect(() => {
-    if (updatingReplacingCargoPlacements || updatingViewBoxDimensions || updatingMostForwardValidPlacementForLanes) {
+    if (
+      updatingViewBoxDimensions ||
+      updatingMostForwardValidPlacementForLanes ||
+      updatingCargoPlacementsForLanes
+    ) {
       setupdatingData(true);
     } else {
       setupdatingData(false);
     }
-  }, [updatingReplacingCargoPlacements, updatingViewBoxDimensions, updatingMostForwardValidPlacementForLanes]);
+  }, [
+    updatingViewBoxDimensions,
+    updatingMostForwardValidPlacementForLanes,
+    updatingCargoPlacementsForLanes,
+  ]);
 
-  return { updatingData, viewBoxDimensions, mostForwardValidPlacementForLanes, replacingCargoPlacements, notReplacingCargoPlacements }
-}
-
-const useCalculateReplacingCargoPlacements = (cargoPlacements: CargoPlacement[]) => {
-  const [
-    notReplacingCargoPlacements,
-    setNotReplacingCargoPlacements,
-  ] = useState<CargoPlacement[]>([]);
-  const [replacingCargoPlacements, setReplacingCargoPlacements] = useState<
-    CargoPlacement[]
-  >([]);
-  const [updating, setUpdating] = useState(true);
-
-  useEffect(() => {
-    setUpdating(true);
-    const notReplacingCargoPlacements =
-      cargoPlacements.filter((cp) => !cp.replacing) ?? [];
-    const replacingCargoPlacements =
-      cargoPlacements.filter((cp) => cp.replacing) ?? [];
-    setNotReplacingCargoPlacements(notReplacingCargoPlacements);
-    setReplacingCargoPlacements(replacingCargoPlacements);
-    setUpdating(false);
-  }, [cargoPlacements]);
-  return { updatingReplacingCargoPlacements: updating, replacingCargoPlacements, notReplacingCargoPlacements }
-}
+  return {
+    updatingData,
+    viewBoxDimensions,
+    mostForwardValidPlacementForLanes,
+    cargoPlacementsForLanes,
+    adjacentCargoPlacementsForLanes,
+  };
+};
 
 const useCalculateViewBoxDimensions = (deck: Deck) => {
   const [viewBoxDimensions, setViewBoxDimensions] = useState<
@@ -101,10 +133,16 @@ const useCalculateViewBoxDimensions = (deck: Deck) => {
       setUpdating(false);
     }
   }, [deck]);
-  return { updatingViewBoxDimensions: updating, viewBoxDimensions }
-}
+  return { updatingViewBoxDimensions: updating, viewBoxDimensions };
+};
 
-const useCalculateMostForwardValidPlacementForLanes = (deck: Deck, notReplacingCargoPlacements: CargoPlacement[], cargoPlacement: CargoPlacement, bumperToBumperDistance: number, defaultVCG: number) => {
+const useCalculateMostForwardValidPlacementForLanes = (
+  deck: Deck,
+  notReplacingCargoPlacements: CargoPlacement[],
+  cargoPlacement: CargoPlacement,
+  bumperToBumperDistance: number,
+  defaultVCG: number
+) => {
   const [
     mostForwardValidPlacementForLanes,
     setMostForwardValidPlacementForLanes,
@@ -131,5 +169,47 @@ const useCalculateMostForwardValidPlacementForLanes = (deck: Deck, notReplacingC
     bumperToBumperDistance,
     defaultVCG,
   ]);
-  return { updatingMostForwardValidPlacementForLanes: updating, mostForwardValidPlacementForLanes: mostForwardValidPlacementForLanes ?? {} }
-}
+  return {
+    updatingMostForwardValidPlacementForLanes: updating,
+    mostForwardValidPlacementForLanes: mostForwardValidPlacementForLanes ?? {},
+  };
+};
+
+const useCalculateCargoPlacementsForLanes = (
+  deck: Deck,
+  notReplacingCargoPlacements: CargoPlacement[]
+) => {
+  const [cargoPlacementsForLanes, setCargoPlacementsForLanes] = useState<
+    CargoPlacementsForLanes
+  >();
+  const [
+    adjacentCargoPlacementsForLanes,
+    setAdjacentCargoPlacementsForLanes,
+  ] = useState<CargoPlacementsForLanes>();
+  const [updating, setUpdating] = useState(true);
+  useEffect(() => {
+    if (deck) {
+      setUpdating(true);
+      let cargoPlacements = {} as CargoPlacementsForLanes;
+      let adjacentCargoPlacements = {} as CargoPlacementsForLanes;
+      for (let lane of deck.lanes) {
+        cargoPlacements[lane.id] = notReplacingCargoPlacements.filter(
+          (cp) => cp.laneId === lane.id || cp.overflowingLaneId === lane.id
+        );
+        adjacentCargoPlacements[
+          lane.id
+        ] = notReplacingCargoPlacements.filter((cp) =>
+          lane.adjacentLanes.some((al) => al.id === cp.laneId)
+        );
+      }
+      setCargoPlacementsForLanes(cargoPlacements);
+      setAdjacentCargoPlacementsForLanes(adjacentCargoPlacements);
+      setUpdating(false);
+    }
+  }, [deck, notReplacingCargoPlacements]);
+  return {
+    updatingCargoPlacementsForLanes: updating,
+    cargoPlacementsForLanes: cargoPlacementsForLanes ?? {},
+    adjacentCargoPlacementsForLanes: adjacentCargoPlacementsForLanes ?? {},
+  };
+};

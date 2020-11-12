@@ -5,7 +5,6 @@ import {
   Lane,
   Cargo,
   MostForwardValidPlacementForLanes,
-  CargoPlacement,
 } from "../../../types/deckMap";
 
 interface Props {
@@ -13,7 +12,11 @@ interface Props {
   rightOrigin: number;
   currentCargo: Cargo;
   mostForwardValidPlacementForLanes: MostForwardValidPlacementForLanes;
-  onLaneButtonClick: (placement: CargoPlacement) => void;
+  onLaneClick: (
+    event: React.MouseEvent | React.TouchEvent | React.PointerEvent,
+    lane: Lane,
+    VCG: number
+  ) => void;
 }
 
 export const Lanes: React.FC<Props> = ({
@@ -21,7 +24,7 @@ export const Lanes: React.FC<Props> = ({
   rightOrigin,
   currentCargo,
   mostForwardValidPlacementForLanes,
-  onLaneButtonClick,
+  onLaneClick,
 }) => {
   return (
     <>
@@ -35,7 +38,7 @@ export const Lanes: React.FC<Props> = ({
             mostForwardValidPlacementForLane={
               mostForwardValidPlacementForLanes[lane.id]
             }
-            onLaneButtonClick={onLaneButtonClick}
+            onLaneClick={onLaneClick}
           />
         );
       })}

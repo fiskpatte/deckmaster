@@ -6,6 +6,8 @@ import {
   cargoIsEmpty,
   cargoPlacementIsEmpty,
   getReplacementBoxOrigin,
+  getPlacementFromEvent,
+  isValidPlacement,
 } from "./DeckMap.functions";
 import { useDispatch } from "react-redux";
 import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
@@ -14,6 +16,8 @@ import {
   CargoPlacement,
   ViewBoxDimensions,
   MostForwardValidPlacementForLanes,
+  CargoPlacementsForLanes,
+  Lane,
 } from "../../types/deckMap";
 import "./DeckMap.scss";
 import FrameRuler from "./frameRuler";
@@ -30,6 +34,8 @@ interface Props {
   bumperToBumperDistance: number;
   viewBoxDimensions: ViewBoxDimensions | undefined;
   mostForwardValidPlacementForLanes: MostForwardValidPlacementForLanes;
+  cargoPlacementsForLanes: CargoPlacementsForLanes;
+  adjacentCargoPlacementsForLanes: CargoPlacementsForLanes;
   replacingCargoPlacements: CargoPlacement[];
   notReplacingCargoPlacements: CargoPlacement[];
   replaceButtonClick: () => Promise<void>;
@@ -43,6 +49,8 @@ const DeckMap: React.FC<Props> = ({
   bumperToBumperDistance,
   viewBoxDimensions,
   mostForwardValidPlacementForLanes,
+  cargoPlacementsForLanes,
+  adjacentCargoPlacementsForLanes,
   replacingCargoPlacements,
   notReplacingCargoPlacements,
   replaceButtonClick,
@@ -52,6 +60,7 @@ const DeckMap: React.FC<Props> = ({
     (placement: CargoPlacement) => dispatch(setCurrentPlacement(placement)),
     [dispatch]
   );
+
   const svgRef = useRef<SVGSVGElement>(null);
 
   const onCargoPlacementClick = (cargoPlacement: CargoPlacement) => {
@@ -59,7 +68,7 @@ const DeckMap: React.FC<Props> = ({
     if (currentCargoPlacement.cargo.id !== cargoPlacement.cargo.id) {
       setInitialCargoPlacement({ ...cargoPlacement });
     }
-    dispatch(setCurrentPlacement({ ...cargoPlacement, deckId: deck.name }));
+    setPlacement({ ...cargoPlacement, deckId: deck.name });
   };
 
   const setPlacementFromForward = (placement: CargoPlacement) => {
@@ -70,6 +79,29 @@ const DeckMap: React.FC<Props> = ({
       return;
     placement.LCG -= currentCargoPlacement.cargo.length / 2;
     setPlacement({ ...currentCargoPlacement, ...placement, deckId: deck.name });
+  };
+
+  const onLaneClick = (
+    event: React.MouseEvent | React.TouchEvent | React.PointerEvent,
+    lane: Lane,
+    VCG: number
+  ) => {
+    if (cargoIsEmpty(currentCargoPlacement.cargo)) return;
+    const newPlacement = getPlacementFromEvent(
+      event,
+      svgRef,
+      cargoPlacementsForLanes[lane.id],
+      adjacentCargoPlacementsForLanes[lane.id],
+      lane,
+      currentCargoPlacement
+      // bumperToBumperDistance
+    );
+    if (!isValidPlacement(newPlacement)) return;
+    setPlacement({
+      ...newPlacement,
+      deckId: deck.name,
+      VCG: VCG,
+    });
   };
 
   if (!viewBoxDimensions) return null;
@@ -104,13 +136,14 @@ const DeckMap: React.FC<Props> = ({
           rightOrigin={sizeX + originX}
           currentCargo={currentCargoPlacement.cargo}
           mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
-          onLaneButtonClick={setPlacementFromForward}
+          onLaneClick={onLaneClick}
         />
         <Grids
           grids={deck.grids}
           setPlacementFromForward={setPlacementFromForward}
           currentCargo={currentCargoPlacement.cargo}
-          cargoPlacements={notReplacingCargoPlacements}
+          cargoPlacementsForLanes={cargoPlacementsForLanes}
+          adjacentCargoPlacementsForLanes={adjacentCargoPlacementsForLanes}
           lanes={deck.lanes}
         />
         {deck.lanes.map((lane) => (
@@ -118,11 +151,12 @@ const DeckMap: React.FC<Props> = ({
             key={lane.id}
             href={`#arrowButton_${lane.id}`}
             xlinkHref={`#arrowButton_${lane.id}`}
-            onClick={() =>
+            onClick={(ev) => {
+              ev.preventDefault();
               setPlacementFromForward(
                 mostForwardValidPlacementForLanes[lane.id]
-              )
-            }
+              );
+            }}
           />
         ))}
         <FrameRuler frames={deck.frames} originY={getDeckMapBottom(deck)} />

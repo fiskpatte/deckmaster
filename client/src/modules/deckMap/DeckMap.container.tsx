@@ -15,7 +15,8 @@ import {
   getCurrentDeck,
   getFrameIdFromPosition,
   getLaneNameFromPlacement,
-  getVisibleCargoPlacements,
+  getReplacingCargoPlacements,
+  getVisibleNotReplacingCargoPlacements,
 } from "../../store/deckMap/deckMapSelectors";
 import { useHistory } from "react-router-dom";
 import {
@@ -24,6 +25,7 @@ import {
   cargoIsEmpty,
   placementsAreDifferent,
   getForwardPosition,
+  isValidPlacement,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import { CargoPlacement, cargoPlacementFactory } from "../../types/deckMap";
@@ -53,13 +55,23 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
 
   const toast = useToast();
   const currentDeck = useSelector(getCurrentDeck);
-  const visibleCargoPlacements = useSelector(getVisibleCargoPlacements);
+  const replacingCargoPlacements = useSelector(getReplacingCargoPlacements);
+  const notReplacingCargoPlacements = useSelector(
+    getVisibleNotReplacingCargoPlacements
+  );
   const dispatch = useDispatch();
   const history = useHistory();
   const [confirming, setConfirming] = useState(false);
   const [discharging, setDischarging] = useState(false);
-  const currentLaneName = useSelector(getLaneNameFromPlacement(currentCargoPlacement));
-  const frameId = useSelector(getFrameIdFromPosition(currentCargoPlacement?.deckId, getForwardPosition(currentCargoPlacement)));
+  const currentLaneName = useSelector(
+    getLaneNameFromPlacement(currentCargoPlacement)
+  );
+  const frameId = useSelector(
+    getFrameIdFromPosition(
+      currentCargoPlacement?.deckId,
+      getForwardPosition(currentCargoPlacement)
+    )
+  );
   const [cancelResetCargoPlacement, setCancelResetCargoPlacement] = useState(
     false
   );
@@ -74,11 +86,11 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     updatingData,
     viewBoxDimensions,
     mostForwardValidPlacementForLanes,
-    replacingCargoPlacements,
-    notReplacingCargoPlacements,
+    cargoPlacementsForLanes,
+    adjacentCargoPlacementsForLanes,
   } = useCalculateData(
     currentDeck,
-    visibleCargoPlacements,
+    notReplacingCargoPlacements,
     currentCargoPlacement,
     bumperToBumperDistance,
     defaultVCG
@@ -180,7 +192,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   };
 
   const showConfirmButton = () => {
-    if (currentCargoPlacement.laneId === "") return false;
+    if (!isValidPlacement(currentCargoPlacement)) return false;
     if (isOverview) {
       return placementsAreDifferent(
         currentCargoPlacement,
@@ -266,6 +278,8 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             mostForwardValidPlacementForLanes={
               mostForwardValidPlacementForLanes
             }
+            cargoPlacementsForLanes={cargoPlacementsForLanes}
+            adjacentCargoPlacementsForLanes={adjacentCargoPlacementsForLanes}
             replacingCargoPlacements={replacingCargoPlacements}
             notReplacingCargoPlacements={notReplacingCargoPlacements}
             replaceButtonClick={replaceButtonClick}

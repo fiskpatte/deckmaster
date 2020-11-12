@@ -6,13 +6,15 @@ import {
   Lane,
   CargoPlacement,
   laneFactory,
+  CargoPlacementsForLanes,
 } from "../../../types/deckMap";
 
 interface Props {
   grids: Array<Grid>;
   setPlacementFromForward: (placement: CargoPlacement) => void;
   currentCargo: Cargo;
-  cargoPlacements: CargoPlacement[];
+  cargoPlacementsForLanes: CargoPlacementsForLanes;
+  adjacentCargoPlacementsForLanes: CargoPlacementsForLanes;
   lanes: Array<Lane>;
 }
 
@@ -20,7 +22,8 @@ export const Grids: React.FC<Props> = ({
   grids,
   setPlacementFromForward,
   currentCargo,
-  cargoPlacements,
+  cargoPlacementsForLanes,
+  adjacentCargoPlacementsForLanes,
   lanes,
 }) => {
   return (
@@ -38,12 +41,10 @@ export const Grids: React.FC<Props> = ({
             key={grid.id}
             currentCargo={currentCargo}
             lane={lane}
-            cargoPlacementsForLane={cargoPlacements.filter(
-              (cp) => cp.laneId === lane.id
-            )}
-            adjacentCargoPlacementsForLane={cargoPlacements.filter((cp) =>
-              lane.adjacentLanes.some((al) => al.id === cp.laneId)
-            )}
+            cargoPlacementsForLane={cargoPlacementsForLanes[lane.id]}
+            adjacentCargoPlacementsForLane={
+              adjacentCargoPlacementsForLanes[lane.id]
+            }
           />
         );
       })}

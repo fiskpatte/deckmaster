@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { CargoPlacement, Lane, laneFactory } from './../../../types/deckMap';
-import { getPlacementFromEvent } from "../DeckMap.functions";
+import { CargoPlacement, Lane, laneFactory } from "./../../../types/deckMap";
+import {
+  getPlacementFromDragEvent,
+  isValidPlacement,
+} from "../DeckMap.functions";
 import { CargoIcon } from "../cargoIcon";
 
 interface Props {
@@ -18,31 +21,64 @@ export const PlacingCargo: React.FC<Props> = ({
   lanes,
   cargoPlacements,
   svgRef,
-  bumperToBumperDistance
+  bumperToBumperDistance,
 }) => {
-
   const [placingLane, setPlacingLane] = useState<Lane>();
-  const [cargoPlacementsForLane, setCargoPlacementsForLane] = useState<CargoPlacement[]>();
-  const [adjacentCargoPlacementsForLane, setAdjacentCargoPlacementsForLane] = useState<CargoPlacement[]>();
-  const [cargoPlacementsOverflowingIntoLane, setCargoPlacementsOverflowingIntoLane] = useState<CargoPlacement[]>();
+  const [cargoPlacementsForLane, setCargoPlacementsForLane] = useState<
+    CargoPlacement[]
+  >();
+  const [
+    adjacentCargoPlacementsForLane,
+    setAdjacentCargoPlacementsForLane,
+  ] = useState<CargoPlacement[]>();
+  const [
+    cargoPlacementsOverflowingIntoLane,
+    setCargoPlacementsOverflowingIntoLane,
+  ] = useState<CargoPlacement[]>();
 
   useEffect(() => {
-    setPlacingLane(lanes.find((l) => l.id === currentCargoPlacement.laneId) ?? laneFactory());
-  }, [lanes, currentCargoPlacement])
+    setPlacingLane(
+      lanes.find((l) => l.id === currentCargoPlacement.laneId) ?? laneFactory()
+    );
+  }, [lanes, currentCargoPlacement]);
 
   useEffect(() => {
     if (!placingLane?.id) return;
-    setCargoPlacementsForLane(cargoPlacements.filter(cp => cp.laneId === placingLane.id && cp.cargo.id !== currentCargoPlacement.cargo.id) ?? []);
-    setAdjacentCargoPlacementsForLane(cargoPlacements.filter(cp => placingLane.adjacentLanes.some(al => al.id === cp.laneId) && cp.cargo.id !== currentCargoPlacement.cargo.id) ?? []);
-    setCargoPlacementsOverflowingIntoLane(cargoPlacements.filter((cp) => cp.overflowingLaneId === placingLane.id && cp.cargo.id !== currentCargoPlacement.cargo.id) ?? []);
-  }, [placingLane, cargoPlacements, currentCargoPlacement.cargo.id])
+    setCargoPlacementsForLane(
+      cargoPlacements.filter(
+        (cp) =>
+          cp.laneId === placingLane.id &&
+          cp.cargo.id !== currentCargoPlacement.cargo.id
+      ) ?? []
+    );
+    setAdjacentCargoPlacementsForLane(
+      cargoPlacements.filter(
+        (cp) =>
+          placingLane.adjacentLanes.some((al) => al.id === cp.laneId) &&
+          cp.cargo.id !== currentCargoPlacement.cargo.id
+      ) ?? []
+    );
+    setCargoPlacementsOverflowingIntoLane(
+      cargoPlacements.filter(
+        (cp) =>
+          cp.overflowingLaneId === placingLane.id &&
+          cp.cargo.id !== currentCargoPlacement.cargo.id
+      ) ?? []
+    );
+  }, [placingLane, cargoPlacements, currentCargoPlacement.cargo.id]);
 
-  if (!currentCargoPlacement.laneId || !placingLane?.id || !cargoPlacementsForLane || !cargoPlacementsOverflowingIntoLane || !adjacentCargoPlacementsForLane || currentCargoPlacement.replacing) return null;
+  if (
+    !currentCargoPlacement.laneId ||
+    !placingLane?.id ||
+    !cargoPlacementsForLane ||
+    !cargoPlacementsOverflowingIntoLane ||
+    !adjacentCargoPlacementsForLane ||
+    currentCargoPlacement.replacing
+  )
+    return null;
 
-  const onCargoDrag = (
-    event: MouseEvent | TouchEvent | PointerEvent,
-  ) => {
-    let newPlacement = getPlacementFromEvent(
+  const onCargoDrag = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    let newPlacement = getPlacementFromDragEvent(
       event,
       svgRef,
       cargoPlacementsForLane,
@@ -52,11 +88,10 @@ export const PlacingCargo: React.FC<Props> = ({
       currentCargoPlacement,
       bumperToBumperDistance
     );
-    if (newPlacement.laneId !== "") setCurrentCargoPlacement(newPlacement);
+    if (isValidPlacement(newPlacement)) setCurrentCargoPlacement(newPlacement);
   };
   const pinCargoAfterDrag = () => {
-
-    if (currentCargoPlacement.laneId === "") return;
+    if (!isValidPlacement(currentCargoPlacement)) return;
 
     if (currentCargoPlacement.cargo.width > placingLane.width) {
       let pinnedPlacement = { ...currentCargoPlacement };
@@ -64,7 +99,7 @@ export const PlacingCargo: React.FC<Props> = ({
         placingLane.TCG +
         ((currentCargoPlacement.TCG > placingLane.TCG ? 1 : -1) *
           (currentCargoPlacement.cargo.width - placingLane.width)) /
-        2;
+          2;
       setCurrentCargoPlacement(pinnedPlacement);
     }
   };
