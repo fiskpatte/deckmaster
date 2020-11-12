@@ -12,6 +12,7 @@ import ConfirmButton from "../../components/button/ConfirmButton";
 import CancelButton from "../../components/button/CancelButton";
 import { BlueBackground } from "../../components/blueBackground";
 import { FlexContainer } from "../../components/flexContainer";
+import { getCargoType } from "../../types/util";
 
 export const ConfirmCargoScreen = () => {
   const { currentCargoPlacement } = useSelector(
@@ -34,7 +35,7 @@ export const ConfirmCargoScreen = () => {
             </tr>
             <tr>
               <td className="LabelCell">Type</td>
-              <td className="ValueCell">Truck</td>
+              <td className="ValueCell">{getCargoType(cargo.type)}</td>
             </tr>
             <tr>
               <td className="LabelCell">Length</td>

@@ -40,7 +40,7 @@ export const EnterCargoScreen = () => {
   const onNextButtonClick = async () => {
     setLoading(true);
     try {
-      const cargo = await getMockCargo();
+      const cargo = await getMockCargo(value.toUpperCase().trim());
       dispatch(setCurrentPlacement({ ...cargoPlacementFactory(), cargo }));
       history.push(routes.PlaceCargoConfirm.path);
     } catch (error) {
@@ -59,17 +59,6 @@ export const EnterCargoScreen = () => {
     from: { height: "40vh" },
     config: config.slow,
   });
-
-  // const blurInput = () => {
-  //   console.log("TEST");
-  //   setValue("asdasdas.");
-
-  //   const element = document.getElementById("EnterCargoScreenInput");
-  //   if (element) {
-  //     setValue("Gitt555a.");
-  //   }
-  //   // document.getElementById("EnterCargoScreenInput")?.blur();
-  // };
 
   return shouldAnimate ? (
     <BlueBackground>

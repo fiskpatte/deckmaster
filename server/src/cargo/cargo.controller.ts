@@ -36,11 +36,11 @@ export class CargoController {
   }
 
   @Post('mock')
-  async devMockCargo(
-    @Headers('username') userName,
-    @Headers('voyageid') voyageId,
-  ) {
-    const cargo = await this.cargoService.mockCargo(userName, voyageId);
+  async devMockCargo(@Headers('voyageid') voyageId, @Body() body) {
+    const cargo = await this.cargoService.mockCargo(
+      voyageId,
+      body.registrationNumber,
+    );
     return cargo;
   }
 

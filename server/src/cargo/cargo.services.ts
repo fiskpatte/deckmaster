@@ -1,16 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Chance } from 'chance';
 import { Cargo } from './cargo.model';
 import { transformDbModel, removeReadOnlyFields } from 'src/utils/mongo';
-import { LogService } from 'src/log/log.service.';
+import { getRandomCargo } from './cargo.services.helpers';
 
 @Injectable()
 export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
-  ) { }
+  ) {}
 
   async addCargo(newCargo: Cargo) {
     const newCargoModel = new this.cargoModel(removeReadOnlyFields(newCargo));
@@ -65,36 +64,11 @@ export class CargoService {
     }
   }
 
-  async mockCargo(username: string, voyageId: string) {
+  async mockCargo(voyageId: string, registrationNumber: string = '') {
     try {
-      const chance = new Chance();
-
-      const registrationNumber = `${chance.string({
-        length: 3,
-        casing: 'upper',
-        alpha: true,
-        numeric: false,
-      })} ${chance.string({ length: 3, pool: '1234567890' })}`;
-      const length = chance.floating({ min: 10, max: 14, fixed: 1 });
-      let width = chance.floating({ min: 2.1, max: 2.6, fixed: 1 });
-      const height = chance.floating({ min: 2.8, max: 3.2, fixed: 1 });
-      const type = chance.integer({ min: 1, max: 2 }) * 10;
-      const weight = chance.integer({ min: 15, max: 20 });
-
-      if (Math.random() < 0.2) width = 4;
-
-      const dto = {
-        registrationNumber,
-        length,
-        width,
-        height,
-        type,
-        weight,
-        voyageId,
-      } as Cargo;
-
+      let dto = getRandomCargo(registrationNumber);
+      dto.voyageId = voyageId;
       const cargo = await this.addCargo(dto);
-
       return cargo;
     } catch (error) {
       console.log(error);

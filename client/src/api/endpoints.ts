@@ -27,8 +27,8 @@ export const login = async (
   }
 };
 
-export const getMockCargo = async () => {
-  const cargo = await post("cargo/mock");
+export const getMockCargo = async (registrationNumber: string) => {
+  const cargo = await post("cargo/mock", { registrationNumber });
   if (!cargo) throw new Error("Failed to get mock cargo");
 
   return cargo;

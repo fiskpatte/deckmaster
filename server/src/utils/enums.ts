@@ -1,8 +1,7 @@
 enum CargoType {
-  Truck = 10,
-  Trailer = 20,
-  Car = 30,
-  Other = 100,
+  Trailer = 10,
+  Mafi40 = 20,
+  OversizeCargo = 30,
 }
 
 export { CargoType };

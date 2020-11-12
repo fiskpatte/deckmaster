@@ -79,6 +79,7 @@ export interface Cargo {
   weight: number;
   createdAt: Date;
   updatedAt: Date;
+  type: number;
 }
 
 export interface CargoPlacement {
@@ -137,6 +138,7 @@ export const cargoFactory = (): Cargo => ({
   weight: 0,
   createdAt: new Date(),
   updatedAt: new Date(),
+  type: 10,
 });
 
 export interface Frame {
