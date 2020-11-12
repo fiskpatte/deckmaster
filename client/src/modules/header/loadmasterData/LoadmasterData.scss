@@ -1,0 +1,13 @@
+@import "../../../styles/main.scss";
+
+.DataTable {
+  border-collapse: collapse;
+}
+
+tr.DataRow td {
+  padding: 8px 40px 8px 2px;
+}
+
+tr.DataRow:not(:last-child) {
+  border-bottom: 1px solid $gray80;
+}

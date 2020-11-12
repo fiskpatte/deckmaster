@@ -6,7 +6,6 @@ import {
   Lane,
   CargoPlacement,
   laneFactory,
-  // MostForwardValidPlacementForLanes,
 } from "../../../types/deckMap";
 
 interface Props {
@@ -15,7 +14,6 @@ interface Props {
   currentCargo: Cargo;
   cargoPlacements: CargoPlacement[];
   lanes: Array<Lane>;
-  // mostForwardValidPlacementForLanes: MostForwardValidPlacementForLanes;
 }
 
 export const Grids: React.FC<Props> = ({
@@ -24,7 +22,6 @@ export const Grids: React.FC<Props> = ({
   currentCargo,
   cargoPlacements,
   lanes,
-  // mostForwardValidPlacementForLanes,
 }) => {
   return (
     <>
@@ -34,13 +31,11 @@ export const Grids: React.FC<Props> = ({
           console.log(`FATAL ERROR: Can't find lane for grid ${grid}`);
           return null;
         }
-        // let isOverflow = currentCargo.width > lane.width;
         return (
           <GridComponent
             grid={grid}
             setPlacementFromForward={setPlacementFromForward}
             key={grid.id}
-            // isOverflow={isOverflow}
             currentCargo={currentCargo}
             lane={lane}
             cargoPlacementsForLane={cargoPlacements.filter(
@@ -49,9 +44,6 @@ export const Grids: React.FC<Props> = ({
             adjacentCargoPlacementsForLane={cargoPlacements.filter((cp) =>
               lane.adjacentLanes.some((al) => al.id === cp.laneId)
             )}
-            // mostForwardValidPlacementForLane={
-            //   mostForwardValidPlacementForLanes[lane.id]
-            // }
           />
         );
       })}

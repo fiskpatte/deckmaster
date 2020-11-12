@@ -11,13 +11,21 @@ tr.HistoryRow td {
 
 .HistoryTH {
   text-align: left;
+  position: sticky;
+  top: 0;
+  background-color: white;
 }
 
 .HistoryTable {
   border-spacing: 0;
+  position: relative;
+}
+
+.HistoryTableContainer {
+  height: 90%;
+  overflow-y: auto;
 }
 
 .HistoryScreenPaper {
   height: 70vh;
-  overflow-y: auto;
 }

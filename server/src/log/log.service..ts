@@ -21,7 +21,9 @@ export class LogService {
   async voyageLog(voyageId: string) {
     try {
       const logs = await this.logModel.find({ voyageId }).exec();
-      return logs.map(transformDbModel) as Log[];
+      return logs
+        .map(transformDbModel)
+        .sort((a, b) => b.createdAt - a.createdAt) as Log[];
     } catch (error) {
       throw error;
     }

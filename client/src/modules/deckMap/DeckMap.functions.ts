@@ -244,23 +244,6 @@ export const getPlacementFromScreenCoords = (
   return cargoPlacementFactory();
 };
 
-// export const updatePlacementFromFrontPlacement = (
-//   placement: CargoPlacement,
-//   cargo: Cargo,
-//   callback: (cargoPlacement: CargoPlacement) => void
-// ) => {
-//   placement.LCG -= cargo.length / 2;
-//   updatePlacementFromSVGCoords(placement, callback);
-// };
-
-// export const updatePlacementFromSVGCoords = (
-//   placement: CargoPlacement,
-//   callback: (cargoPlacement: CargoPlacement) => void
-// ) => {
-//   if (cargoPlacementIsEmpty(placement)) return;
-//   callback(placement);
-// };
-
 const getEndpoints = (elem: DeckMapElement) => {
   const left = elem.TCG - elem.width / 2;
   const right = left + elem.width;

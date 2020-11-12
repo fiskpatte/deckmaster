@@ -112,7 +112,6 @@ const DeckMap: React.FC<Props> = ({
           currentCargo={currentCargoPlacement.cargo}
           cargoPlacements={notReplacingCargoPlacements}
           lanes={deck.lanes}
-          // mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
         />
         {/* {deck.lanes.map(lane =>
           <use

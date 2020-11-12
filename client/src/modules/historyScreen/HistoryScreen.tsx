@@ -17,7 +17,6 @@ export const HistoryScreen = () => {
       try {
         setLoading(true);
         const result = await getLog();
-        result.sort((a: Log, b: Log) => (a.createdAt < b.createdAt ? 1 : -1));
         setHistory(result);
         setLoading(false);
       } catch (error) {
@@ -36,8 +35,8 @@ export const HistoryScreen = () => {
     <HeaderAvoider>
       <BlueBackground>
         <Paper className="HistoryScreenPaper">
-          <div style={{ padding: "30px", backgroundColor: "white" }}>
-            <Text size="medium" value="History" />
+          <Text size="medium" value="History" />
+          <div className="HistoryTableContainer">
             <table className="HistoryTable">
               <thead>
                 <tr className="HistoryRow">
