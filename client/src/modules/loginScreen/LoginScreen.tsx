@@ -20,7 +20,7 @@ export const LoginScreen: React.FC = () => {
   const history = useHistory();
   const toast = useToast();
 
-  const [username, setUsername] = useState("Pontus2");
+  const [username, setUsername] = useState("DeckOfficer");
   const [password, setPassword] = useState("testtest");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
