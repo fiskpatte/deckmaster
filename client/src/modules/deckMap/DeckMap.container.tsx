@@ -15,6 +15,7 @@ import {
   getCurrentDeck,
   getFrameIdFromPosition,
   getLaneNameFromPlacement,
+  getPlacingLane,
   getReplacingCargoPlacements,
   getVisibleNotReplacingCargoPlacements,
 } from "../../store/deckMap/deckMapSelectors";
@@ -56,6 +57,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   const toast = useToast();
   const currentDeck = useSelector(getCurrentDeck);
   const replacingCargoPlacements = useSelector(getReplacingCargoPlacements);
+  const placingLane = useSelector(getPlacingLane);
   const notReplacingCargoPlacements = useSelector(
     getVisibleNotReplacingCargoPlacements
   );
@@ -283,6 +285,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             replacingCargoPlacements={replacingCargoPlacements}
             notReplacingCargoPlacements={notReplacingCargoPlacements}
             replaceButtonClick={replaceButtonClick}
+            placingLane={placingLane}
           />
         </div>
         <ButtonContainer

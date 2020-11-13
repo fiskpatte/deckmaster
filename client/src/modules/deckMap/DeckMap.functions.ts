@@ -11,10 +11,7 @@ import {
   cargoPlacementAsDeckMapElement,
 } from "../../types/deckMap";
 import { Coords } from "../../types/util";
-import {
-  DeckMapType,
-  MostForwardValidPlacementForLanes,
-} from "./../../types/deckMap";
+import { DeckMapType } from "./../../types/deckMap";
 
 export const getViewBoxOriginX = (currentDeck: Deck): number => {
   return (
@@ -186,7 +183,6 @@ export const getPlacementFromDragEvent = (
     | PointerEvent,
   svgRef: React.RefObject<SVGSVGElement>,
   cargoPlacementsForLane: Array<CargoPlacement>,
-  overflowingCargoPlacementsIntoLane: Array<CargoPlacement>,
   adjacentCargoPlacementsForLane: Array<CargoPlacement>,
   lane: Lane,
   placement: CargoPlacement,
@@ -202,7 +198,6 @@ export const getPlacementFromDragEvent = (
   const cargoPlacement = cargoPlacementAsDeckMapElement(placement);
   const { cargo } = placement;
   const isOverflow = isOverflowing(cargo, lane);
-  let overflowingIntoLaneXPlacement = 1000;
   let overflowingXPlacement = 1000;
   if (isOverflow) {
     //Set a limit in the y displacement
@@ -268,12 +263,6 @@ export const getPlacementFromDragEvent = (
       .map((c) => c.LCG - c.cargo.length / 2),
     getEndpoints(lane).forward
   );
-  if (overflowingCargoPlacementsIntoLane.length > 0) {
-    overflowingIntoLaneXPlacement = arrayMin(
-      overflowingCargoPlacementsIntoLane.map((c) => c.LCG - c.cargo.length / 2)
-    );
-    max = Math.min(max, overflowingIntoLaneXPlacement);
-  }
   max -= cargo.length / 2 + bumperToBumperDistance;
   max = Math.min(max, overflowingXPlacement);
   const min = lane.LCG - (lane.length - cargo.length) / 2;
@@ -389,50 +378,49 @@ export const getAdjacentSide = (
   return AdjacentSide.Undefined;
 };
 
-export const getMostForwardValidPlacementForLanes = (
-  lanes: Array<Lane>,
-  cargoPlacements: CargoPlacement[],
-  currentCargo: Cargo,
-  bumperToBumperDistance: number,
-  defaultVCG: number
-) => {
-  let result = {} as MostForwardValidPlacementForLanes;
-  for (let lane of lanes) {
-    const mostForwardLanePlacement = {
-      LCG: lane.LCG + lane.length / 2,
-      TCG: lane.TCG,
-      VCG: lane.VCG + currentCargo.height * defaultVCG,
-      laneId: lane.id,
-      replacing: false,
-    } as CargoPlacement;
-    const cargoPlacementsForLane = cargoPlacements.filter(
-      (cp) => cp.laneId === lane.id && cp.cargo.id !== currentCargo.id
-    );
-    const overflowingCargoPlacementsIntoLane = cargoPlacements.filter(
-      (cp) =>
-        cp.overflowingLaneId === lane.id && cp.cargo.id !== currentCargo.id
-    );
-    const adjacentCargoPlacementsForLane = cargoPlacements.filter(
-      (cp) =>
-        lane.adjacentLanes.some((al) => al.id === cp.laneId) &&
-        cp.cargo.id !== currentCargo.id
-    );
-    result[lane.id] = getMostForwardValidPlacementForLane(
-      lane,
-      cargoPlacementsForLane,
-      overflowingCargoPlacementsIntoLane,
-      adjacentCargoPlacementsForLane,
-      currentCargo,
-      mostForwardLanePlacement,
-      bumperToBumperDistance
-    );
-  }
-  return result;
-};
+// export const getMostForwardValidPlacementForLanes = (
+//   lanes: Array<Lane>,
+//   cargoPlacements: CargoPlacement[],
+//   currentCargo: Cargo,
+//   bumperToBumperDistance: number,
+//   defaultVCG: number
+// ) => {
+//   let result = {} as MostForwardValidPlacementForLanes;
+//   for (let lane of lanes) {
+//     const mostForwardLanePlacement = {
+//       LCG: lane.LCG + lane.length / 2,
+//       TCG: lane.TCG,
+//       VCG: lane.VCG + currentCargo.height * defaultVCG,
+//       laneId: lane.id,
+//       replacing: false,
+//     } as CargoPlacement;
+//     const cargoPlacementsForLane = cargoPlacements.filter(
+//       (cp) => cp.laneId === lane.id && cp.cargo.id !== currentCargo.id
+//     );
+//     const overflowingCargoPlacementsIntoLane = cargoPlacements.filter(
+//       (cp) =>
+//         cp.overflowingLaneId === lane.id && cp.cargo.id !== currentCargo.id
+//     );
+//     const adjacentCargoPlacementsForLane = cargoPlacements.filter(
+//       (cp) =>
+//         lane.adjacentLanes.some((al) => al.id === cp.laneId) &&
+//         cp.cargo.id !== currentCargo.id
+//     );
+//     result[lane.id] = getMostForwardValidPlacementForLane(
+//       lane,
+//       cargoPlacementsForLane,
+//       overflowingCargoPlacementsIntoLane,
+//       adjacentCargoPlacementsForLane,
+//       currentCargo,
+//       mostForwardLanePlacement,
+//       bumperToBumperDistance
+//     );
+//   }
+//   return result;
+// };
 export const getMostForwardValidPlacementForLane = (
   lane: Lane,
   cargoPlacementsForLane: Array<CargoPlacement>,
-  overflowingCargoPlacementsIntoLane: Array<CargoPlacement>,
   adjacentCargoPlacementsForLane: Array<CargoPlacement>,
   currentCargo: Cargo,
   mostForwardLanePlacement: CargoPlacement,
@@ -440,11 +428,7 @@ export const getMostForwardValidPlacementForLane = (
 ): CargoPlacement => {
   let resultPlacement = { ...mostForwardLanePlacement };
   // there are no other vehicles blocking the forward most position, just return it
-  if (
-    cargoPlacementsForLane.length === 0 &&
-    currentCargo.width <= lane.width &&
-    overflowingCargoPlacementsIntoLane.length === 0
-  )
+  if (cargoPlacementsForLane.length === 0 && currentCargo.width <= lane.width)
     return resultPlacement;
 
   const afterOfLane = getEndpoints(lane).after;
@@ -452,16 +436,6 @@ export const getMostForwardValidPlacementForLane = (
     cargoPlacementsForLane.map((c) => c.LCG - c.cargo.length / 2),
     resultPlacement.LCG
   );
-
-  if (overflowingCargoPlacementsIntoLane.length > 0) {
-    const mostAfterOverflowingCargoPlacement = arrayMin(
-      overflowingCargoPlacementsIntoLane.map((c) => c.LCG - c.cargo.length / 2)
-    );
-    mostAfterCargoPlacement = Math.min(
-      mostAfterCargoPlacement,
-      mostAfterOverflowingCargoPlacement
-    );
-  }
 
   if (
     mostAfterCargoPlacement <

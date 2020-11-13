@@ -39,6 +39,7 @@ interface Props {
   replacingCargoPlacements: CargoPlacement[];
   notReplacingCargoPlacements: CargoPlacement[];
   replaceButtonClick: () => Promise<void>;
+  placingLane: Lane;
 }
 
 const DeckMap: React.FC<Props> = ({
@@ -54,6 +55,7 @@ const DeckMap: React.FC<Props> = ({
   replacingCargoPlacements,
   notReplacingCargoPlacements,
   replaceButtonClick,
+  placingLane,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -174,17 +176,18 @@ const DeckMap: React.FC<Props> = ({
           />
         )}
         <PlacedCargo
-          cargo={notReplacingCargoPlacements.filter(
-            (cp) => cp.cargo.id !== currentCargoPlacement.cargo.id
-          )}
+          cargo={notReplacingCargoPlacements}
           onCargoPlacementClick={(cp: CargoPlacement) =>
             onCargoPlacementClick(cp)
           }
         />
         <PlacingCargo
           currentCargoPlacement={currentCargoPlacement}
-          lanes={deck.lanes}
-          cargoPlacements={notReplacingCargoPlacements}
+          placingLane={placingLane}
+          cargoPlacementsForLane={cargoPlacementsForLanes[placingLane.id]}
+          adjacentCargoPlacementsForLane={
+            adjacentCargoPlacementsForLanes[placingLane.id]
+          }
           svgRef={svgRef}
           setCurrentCargoPlacement={setPlacement}
           bumperToBumperDistance={bumperToBumperDistance}

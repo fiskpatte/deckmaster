@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { CargoPlacement } from "../../types/deckMap";
+import { CargoPlacement, laneFactory } from "../../types/deckMap";
 import { CargoState } from "../types";
 
 const getCurrentDeckId = (state: { deckMapReducer: CargoState }) =>
@@ -7,6 +7,9 @@ const getCurrentDeckId = (state: { deckMapReducer: CargoState }) =>
 
 const getDeckMap = (state: { deckMapReducer: CargoState }) =>
   state.deckMapReducer.deckMap;
+
+const getCurrentCargoPlacement = (state: { deckMapReducer: CargoState }) =>
+  state.deckMapReducer.currentCargoPlacement;
 
 const getCargoPlacements = (state: { deckMapReducer: CargoState }) =>
   state.deckMapReducer.cargoPlacements;
@@ -22,20 +25,32 @@ export const getReplacingCargoPlacements = createSelector(
 );
 
 export const getVisibleNotReplacingCargoPlacements = createSelector(
-  [getCurrentDeckId, getCargoPlacements],
-  (currentDeckId, cargoPlacements) =>
-    cargoPlacements.filter((cp) => cp.deckId === currentDeckId && !cp.replacing)
+  [getCurrentDeckId, getCargoPlacements, getCurrentCargoPlacement],
+  (currentDeckId, cargoPlacements, currentCargoPlacement) =>
+    cargoPlacements.filter(
+      (cp) =>
+        cp.deckId === currentDeckId &&
+        !cp.replacing &&
+        cp.cargo.id !== currentCargoPlacement.cargo.id
+    )
 );
 
-export const getCargoPlacementsForLane = (laneId: string) =>
-  createSelector(getCargoPlacements, (cargoPlacements) =>
-    cargoPlacements.filter((cp) => cp.laneId === laneId)
-  );
+export const getPlacingLane = createSelector(
+  [getDeckMap, getCurrentCargoPlacement],
+  (deckMap, currentCargoPlacement) =>
+    deckMap[currentCargoPlacement?.deckId]?.lanes.find(
+      (lane) => lane.id === currentCargoPlacement?.laneId
+    ) ?? laneFactory()
+);
+// export const getCargoPlacementsForLane = (laneId: string) =>
+//   createSelector(getCargoPlacements, (cargoPlacements) =>
+//     cargoPlacements.filter((cp) => cp.laneId === laneId)
+//   );
 
-export const getOverflowingCargoPlacementsIntoLane = (laneId: string) =>
-  createSelector(getCargoPlacements, (cargoPlacements) =>
-    cargoPlacements.filter((cp) => cp.overflowingLaneId === laneId)
-  );
+// export const getOverflowingCargoPlacementsIntoLane = (laneId: string) =>
+//   createSelector(getCargoPlacements, (cargoPlacements) =>
+//     cargoPlacements.filter((cp) => cp.overflowingLaneId === laneId)
+//   );
 
 export const getCargoPlacementByRegistrationNumber = (input: string) =>
   createSelector(getCargoPlacements, (cargoPlacements) =>
