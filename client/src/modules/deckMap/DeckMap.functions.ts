@@ -661,3 +661,17 @@ export const getAfterPosition = (cargoPlacement: CargoPlacement) => {
   if (!cargoPlacement) return -Infinity;
   return cargoPlacement.LCG - cargoPlacement.cargo.length / 2;
 };
+export const getOverflowingLaneId = (
+  lane: Lane,
+  cargoPlacementAsDeckMapElement: DeckMapElement,
+  overflowSide: AdjacentSide
+) => {
+  const adjacentLanes = lane.adjacentLanes.filter(
+    (al) =>
+      al.adjacentSide === overflowSide &&
+      isAdjacent(al, cargoPlacementAsDeckMapElement, true)
+  );
+  if (adjacentLanes.length !== 1) return "";
+
+  return adjacentLanes[0].id;
+};
