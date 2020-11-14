@@ -6,11 +6,11 @@ import {
 } from "./../../../types/deckMap";
 import {
   getOverflowingLaneId,
+  getOverflowingSide,
   getPlacementFromDragEvent,
   isValidPlacement,
 } from "../DeckMap.functions";
 import { CargoIcon } from "../cargoIcon";
-import { AdjacentSide } from "../../../constants";
 
 interface Props {
   currentCargoPlacement: CargoPlacement;
@@ -57,10 +57,10 @@ export const PlacingCargo: React.FC<Props> = ({
 
     if (currentCargoPlacement.cargo.width > placingLane.width) {
       let pinnedPlacement = { ...currentCargoPlacement };
-      let overflowingSide =
-        currentCargoPlacement.TCG > placingLane.TCG
-          ? AdjacentSide.Right
-          : AdjacentSide.Left;
+      let overflowingSide = getOverflowingSide(
+        placingLane,
+        currentCargoPlacement
+      );
       pinnedPlacement.overflowingLaneId = getOverflowingLaneId(
         placingLane,
         cargoPlacementAsDeckMapElement(currentCargoPlacement),

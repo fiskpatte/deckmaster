@@ -219,13 +219,13 @@ export const getPlacementFromDragEvent = (
       (acp) =>
         someLeftAdjacentLane &&
         acp.laneId === leftAdjacentLane[0].id &&
-        isAdjacent({ ...acp.cargo, ...acp }, cargoPlacement)
+        isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
     );
     const adjacentCargoInRightAdjacentLane = adjacentCargoPlacementsForLane.filter(
       (acp) =>
         someRightAdjacentLane &&
         acp.laneId === rightAdjacentLane[0].id &&
-        isAdjacent({ ...acp.cargo, ...acp }, cargoPlacement)
+        isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
     );
     const someAdjacentCargoInLeftAdjacentLane =
       adjacentCargoInLeftAdjacentLane.length > 0;
@@ -257,15 +257,26 @@ export const getPlacementFromDragEvent = (
     deckMapCoords.y = placement.TCG;
   }
   //Set a limit in the x displacement
+  let laneEndpoints = getEndpoints(lane);
   let max = arrayMin(
     cargoPlacementsForLane
-      .filter((c) => c.cargo.id !== cargo.id)
-      .map((c) => c.LCG - c.cargo.length / 2),
-    getEndpoints(lane).forward
+      .filter((c) => c.LCG > placement.LCG)
+      .map(getAfterPosition),
+    laneEndpoints.forward
   );
-  max -= cargo.length / 2 + bumperToBumperDistance;
+  max -=
+    cargo.length / 2 +
+    (isEqual(max, laneEndpoints.forward) ? 0 : bumperToBumperDistance);
   max = Math.min(max, overflowingXPlacement);
-  const min = lane.LCG - (lane.length - cargo.length) / 2;
+  let min = arrayMax(
+    cargoPlacementsForLane
+      .filter((c) => c.LCG < placement.LCG)
+      .map(getForwardPosition),
+    laneEndpoints.after
+  );
+  min +=
+    cargo.length / 2 +
+    (isEqual(min, laneEndpoints.after) ? 0 : bumperToBumperDistance);
   deckMapCoords.x = Math.min(Math.max(deckMapCoords.x, min), max);
 
   if (deckMapCoords.x !== placement.LCG || deckMapCoords.y !== placement.TCG) {
@@ -278,6 +289,40 @@ export const getPlacementFromDragEvent = (
   }
   return cargoPlacementFactory();
 };
+
+// const overflowingLimitMap = (
+//   lane: Lane,
+//   cargoPlacementsForLane: CargoPlacement[],
+//   adjacentCargoPlacementsForLane: CargoPlacement[],
+//   cargoPlacement: DeckMapElement
+// ) => {
+//   const leftAdjacentLane = lane.adjacentLanes.filter(
+//     (al) =>
+//       al.adjacentSide === AdjacentSide.Left &&
+//       isAdjacent(al, cargoPlacement, true)
+//   );
+//   const rightAdjacentLane = lane.adjacentLanes.filter(
+//     (al) =>
+//       al.adjacentSide === AdjacentSide.Right &&
+//       isAdjacent(al, cargoPlacement, true)
+//   );
+//   const someLeftAdjacentLane = leftAdjacentLane.length > 0;
+//     const someRightAdjacentLane = rightAdjacentLane.length > 0;
+//     if (!someRightAdjacentLane && !someLeftAdjacentLane)
+//       return cargoPlacementFactory();
+//   const cargoInLeftAdjacentLane = adjacentCargoPlacementsForLane.filter(
+//     (acp) =>
+//       someLeftAdjacentLane &&
+//       acp.laneId === leftAdjacentLane[0].id //&&
+//       // isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
+//   );
+//   const cargoInRightAdjacentLane = adjacentCargoPlacementsForLane.filter(
+//     (acp) =>
+//       someRightAdjacentLane &&
+//       acp.laneId === rightAdjacentLane[0].id //&&
+//       // isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
+//   );
+// };
 
 const getDeckMapCoordsFromScreenCoords = (
   svgElement: SVGSVGElement,
@@ -660,6 +705,16 @@ export const getForwardPosition = (cargoPlacement: CargoPlacement) => {
 export const getAfterPosition = (cargoPlacement: CargoPlacement) => {
   if (!cargoPlacement) return -Infinity;
   return cargoPlacement.LCG - cargoPlacement.cargo.length / 2;
+};
+export const getOverflowingSide = (
+  lane: Lane,
+  cargoPlacement: CargoPlacement
+) => {
+  if (cargoPlacement.laneId !== lane.id)
+    throw new Error(
+      `getOverflowingSide: Invalid lane or cargoPlacement. Lane: ${lane}; CargoPlacement: ${cargoPlacement}`
+    );
+  return cargoPlacement.TCG > lane.TCG ? AdjacentSide.Right : AdjacentSide.Left;
 };
 export const getOverflowingLaneId = (
   lane: Lane,
