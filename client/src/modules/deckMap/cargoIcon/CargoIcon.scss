@@ -5,6 +5,7 @@
   stroke-width: 1;
   stroke: $gray20;
   pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
   .BoundingBox {
     fill: $gray20;
     opacity: 0.6;
@@ -25,7 +26,7 @@
     // stroke: $gray80;
   }
 }
-.CargoRegistrationNumber{
+.CargoRegistrationNumber {
   fill: white;
   stroke: none;
   font-family: FoundrySterlingLight;
