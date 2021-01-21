@@ -3,9 +3,9 @@ import useReferenceScale from "../../../hooks/useReferenceScale";
 import { ReactComponent as Icon } from "../../../assets/icons/cargoIcon.svg";
 import "./CargoIcon.scss";
 import { motion } from "framer-motion";
-import usePrevious from './../../../hooks/usePrevious';
+import usePrevious from "./../../../hooks/usePrevious";
 import { DECK_MAP } from "../../../constants";
-import { WideCargoIconSVG } from "../../../components/wideCargoIcon/WideCargoIcon";
+// import { WideCargoIconSVG } from "../../../components/wideCargoIcon/WideCargoIcon";
 
 interface Props {
   x: number;
@@ -29,7 +29,7 @@ export const CargoIcon: React.FC<Props> = ({
   dragCallback,
   dragEndCallback,
   cargoId,
-  registrationNumber
+  registrationNumber,
 }) => {
   const groupRef = useRef<SVGPathElement>(null);
   const previousCargoId = usePrevious(cargoId);
@@ -56,7 +56,9 @@ export const CargoIcon: React.FC<Props> = ({
     >
       <g ref={groupRef} className={`CargoIcon ${placing ? "Placing" : ""}`}>
         <g
-          transform={`scale(${newCargo ? 1 : scale.width} ${newCargo ? 1 : scale.height})`}
+          transform={`scale(${newCargo ? 1 : scale.width} ${
+            newCargo ? 1 : scale.height
+          })`}
           style={{ pointerEvents: "none" }}
         >
           <Icon />
@@ -70,12 +72,12 @@ export const CargoIcon: React.FC<Props> = ({
           ry={DECK_MAP.LANE_BORDER_RADIUS}
           className={`BoundingBox ${placing ? "Placing" : ""}`}
         />
-        <WideCargoIconSVG />
+        {/* <WideCargoIconSVG /> */}
 
         <text
           className="CargoRegistrationNumber"
-          x={DECK_MAP.X_SCALE * width / 2}
-          y={DECK_MAP.Y_SCALE * height / 2}
+          x={(DECK_MAP.X_SCALE * width) / 2}
+          y={(DECK_MAP.Y_SCALE * height) / 2}
           fontSize={`${DECK_MAP.CARGO_ICON_REGISTRATION_NUMBER_SIZE}em`}
           transform={`scale(${1 / DECK_MAP.X_SCALE} ${1 / DECK_MAP.Y_SCALE})`}
         >
