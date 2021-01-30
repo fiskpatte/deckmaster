@@ -11,9 +11,11 @@ import { CargoModule } from './cargo/cargo.module';
 import { LogModule } from './log/log.module';
 import { AppGateway } from './app.gateway';
 import { DataModule } from './data/data.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     CargoQueueModule,
     SettingsModule,
     UsersModule,
@@ -22,14 +24,13 @@ import { DataModule } from './data/data.module';
     CargoModule,
     LogModule,
     DataModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://dbUser:0cP6knNISFBnrwoC@loadmaster-przxq.mongodb.net/test?retryWrites=true&w=majority',
-      { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
-    ),
+    MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    }),
   ],
   controllers: [AppController],
-  providers: [
-    AppService, AppGateway
-  ],
+  providers: [AppService, AppGateway],
 })
-export class AppModule { }
+export class AppModule {}
