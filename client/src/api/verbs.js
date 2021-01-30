@@ -1,10 +1,8 @@
 import axios from "axios";
-import { SERVER_PREFIX } from "./../constants";
-
 axios.defaults.headers.get["Content-Type"] = "application/json";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const serverPrefix = SERVER_PREFIX;
+const serverPrefix = process.env.REACT_APP_API_HOST;
 
 export const get = async (endpoint) => {
   try {

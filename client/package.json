@@ -23,6 +23,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "customize-cra": "^0.9.1",
+    "dotenv": "^8.2.0",
     "framer-motion": "^1.11.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",

@@ -6,7 +6,8 @@ import { CargoQueueItem } from "../types/CargoQueueItem";
 import cargoQueueActions from "../store/cargoQueue/cargoQueueActions";
 import { Settings } from "../types/settings";
 import appActions from "../store/app/appActions";
-import { SERVER_PREFIX } from './../constants';
+
+const apiHost = process.env.REACT_APP_API_HOST || "";
 
 const useSocket = (isLoggedIn: boolean, voyageId: string, vesselId: string) => {
   const dispatch = useDispatch();
@@ -15,7 +16,6 @@ const useSocket = (isLoggedIn: boolean, voyageId: string, vesselId: string) => {
     if (isLoggedIn && voyageId !== "") {
       const updateCargoPlacements = (socket: SocketIOClient.Socket) => {
         socket.on(`cargoPlacements___${voyageId}`, (payload: any) => {
-          console.log("cargo placements updated, ", payload);
           dispatch(deckMapActions.setCargoPlacements(payload));
         });
       };
@@ -29,19 +29,16 @@ const useSocket = (isLoggedIn: boolean, voyageId: string, vesselId: string) => {
       };
       const updateSettings = (socket: SocketIOClient.Socket) => {
         socket.on(`settingsUpdated___${vesselId}`, (payload: Settings) => {
-          console.log("settings updated, ", payload);
           dispatch(appActions.setSettings(payload));
         });
       };
 
       // const socket = socketIOClient("http://192.168.1.228:4000");
-      const socket = socketIOClient(SERVER_PREFIX);
-      console.log("connecting to socket");
+      const socket = socketIOClient(apiHost);
       updateCargoPlacements(socket);
       updateCargoQueue(socket);
       updateSettings(socket);
       return () => {
-        console.log("Disconnecting socket")
         socket.disconnect();
       };
     }
