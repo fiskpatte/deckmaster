@@ -7,10 +7,13 @@ import {
   NotFoundException,
   Put,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { CargoPlacementService } from './cargoPlacement.services';
 import { CargoPlacement } from './cargoPlacement.model';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('cargoplacement')
 export class CargoPlacementController {
   constructor(private readonly cargoPlacementService: CargoPlacementService) {}

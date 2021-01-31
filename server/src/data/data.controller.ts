@@ -1,9 +1,17 @@
-import { Controller, Get, NotFoundException, Param } from "@nestjs/common";
-import { DataService } from "./data.service";
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { DataService } from './data.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('data')
 export class DataController {
-  constructor(private readonly dataService: DataService) { }
+  constructor(private readonly dataService: DataService) {}
 
   @Get('placedCargo/:id')
   async getCargoPlacementDataByVoyageId(@Param('id') voyageId: string) {
