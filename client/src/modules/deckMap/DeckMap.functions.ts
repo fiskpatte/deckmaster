@@ -730,3 +730,8 @@ export const getOverflowingLaneId = (
 
   return adjacentLanes[0].id;
 };
+
+export const getVCG = (cargo: Cargo, lane: Lane, defaultVCG: number) => {
+  if (!cargo?.id || !lane?.id) return 0;
+  return lane.VCG + cargo.height * defaultVCG;
+};

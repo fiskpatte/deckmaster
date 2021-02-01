@@ -7,6 +7,7 @@ const initialState: CargoState = {
   deckMap: {},
   currentDeckId: undefined,
   cargoPlacements: [],
+  suggestedCargoPlacement: undefined,
 };
 const deckMapReducer = (state = initialState, action: any): CargoState => {
   const { type, payload } = action;
@@ -41,11 +42,19 @@ const deckMapReducer = (state = initialState, action: any): CargoState => {
     case DECK_MAP_ACTION_TYPES.REMOVE_CARGO_PLACEMENT: {
       return {
         ...state,
-        cargoPlacements: state.cargoPlacements.filter(cp => cp.id !== payload.cargoPlacementId)
+        cargoPlacements: state.cargoPlacements.filter(
+          (cp) => cp.id !== payload.cargoPlacementId
+        ),
       };
     }
     case DECK_MAP_ACTION_TYPES.SET_CARGO_PLACEMENTS: {
       return { ...state, cargoPlacements: payload };
+    }
+    case DECK_MAP_ACTION_TYPES.SET_SUGGESTED_CARGO_PLACEMENT: {
+      return {
+        ...state,
+        suggestedCargoPlacement: payload,
+      };
     }
     default:
       return state;

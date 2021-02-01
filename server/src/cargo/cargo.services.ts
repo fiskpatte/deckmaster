@@ -4,11 +4,13 @@ import { Model } from 'mongoose';
 import { Cargo } from './cargo.model';
 import { transformDbModel, removeReadOnlyFields } from 'src/utils/mongo';
 import { getRandomCargo } from './cargo.services.helpers';
+import { AppGateway } from 'src/app.gateway';
 
 @Injectable()
 export class CargoService {
   constructor(
     @InjectModel('Cargo') private readonly cargoModel: Model<Cargo>,
+    private readonly appGateway: AppGateway,
   ) {}
 
   async addCargo(newCargo: Cargo) {
@@ -69,6 +71,10 @@ export class CargoService {
       let dto = getRandomCargo(registrationNumber);
       dto.voyageId = voyageId;
       const cargo = await this.addCargo(dto);
+      this.appGateway.pushSuggestedCargoPlacementToClients(
+        { deckId: 'Weather Deck', laneId: '2', LCG: 45.99, TCG: -10.1 },
+        voyageId,
+      );
       return cargo;
     } catch (error) {
       console.log(error);

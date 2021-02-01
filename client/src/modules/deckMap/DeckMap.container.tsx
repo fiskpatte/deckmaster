@@ -27,9 +27,14 @@ import {
   placementsAreDifferent,
   getForwardPosition,
   isValidPlacement,
+  getVCG,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
-import { CargoPlacement, cargoPlacementFactory } from "../../types/deckMap";
+import {
+  CargoPlacement,
+  cargoPlacementFactory,
+  laneFactory,
+} from "../../types/deckMap";
 import { Loader } from "../../components/loader";
 
 import { useCalculateData, useResetCargoPlacement } from "./DeckMap.hooks";
@@ -43,9 +48,12 @@ interface Props {
 }
 
 export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
-  const { deckMap, currentCargoPlacement, cargoPlacements } = useSelector(
-    (state: RootState) => state.deckMapReducer
-  );
+  const {
+    deckMap,
+    currentCargoPlacement,
+    cargoPlacements,
+    suggestedCargoPlacement,
+  } = useSelector((state: RootState) => state.deckMapReducer);
 
   const { bumperToBumperDistance, defaultVCG } = useSelector(
     (state: RootState) => state.appReducer.settings
@@ -97,6 +105,26 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     bumperToBumperDistance,
     defaultVCG
   );
+
+  useEffect(() => {
+    if (suggestedCargoPlacement && !isOverview) {
+      let newPlacement = {
+        ...currentCargoPlacement,
+        ...suggestedCargoPlacement,
+        VCG: getVCG(
+          currentCargoPlacement.cargo,
+          currentDeck?.lanes?.find(
+            (l) => l.id === suggestedCargoPlacement.laneId
+          ) ?? laneFactory(),
+          defaultVCG
+        ),
+      };
+      //TODO: Handle overflowing cargo
+      setInitialCargoPlacement(newPlacement);
+      dispatch(setCurrentDeckId(suggestedCargoPlacement.deckId));
+      dispatch(setCurrentPlacement(newPlacement));
+    }
+  }, [suggestedCargoPlacement]);
 
   useEffect(() => {
     if (!isOverview && cargoIsEmpty(currentCargoPlacement.cargo)) {
@@ -267,6 +295,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             deckSelectorData={getDeckSelectorData(deckMap)}
             currentDeckName={currentDeck.name}
             setCurrentDeck={onDeckSelect}
+            suggestedDeckId={suggestedCargoPlacement?.deckId}
           />
         </div>
         <div className="DeckMapBody">
@@ -286,6 +315,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
             notReplacingCargoPlacements={notReplacingCargoPlacements}
             replaceButtonClick={replaceButtonClick}
             placingLane={placingLane}
+            suggestedCargoPlacement={suggestedCargoPlacement}
           />
         </div>
         <ButtonContainer

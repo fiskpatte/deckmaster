@@ -1,4 +1,8 @@
-import { DeckMapType, CargoPlacement } from "../types/deckMap";
+import {
+  DeckMapType,
+  CargoPlacement,
+  SuggestedCargoPlacement,
+} from "../types/deckMap";
 import { Settings } from "../types/settings";
 import { SessionData } from "./../types/sessionData";
 
@@ -12,4 +16,5 @@ export interface CargoState {
   deckMap: DeckMapType;
   currentDeckId?: string;
   cargoPlacements: Array<CargoPlacement>;
+  suggestedCargoPlacement?: SuggestedCargoPlacement;
 }

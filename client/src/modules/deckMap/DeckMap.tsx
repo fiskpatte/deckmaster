@@ -18,6 +18,7 @@ import {
   MostForwardValidPlacementForLanes,
   CargoPlacementsForLanes,
   Lane,
+  SuggestedCargoPlacement,
 } from "../../types/deckMap";
 import "./DeckMap.scss";
 import FrameRuler from "./frameRuler";
@@ -25,6 +26,7 @@ import { PlacedCargo } from "./placedCargo";
 import { Grids } from "./grids";
 import { PlacingCargo } from "./placingCargo";
 import { ReplacementBox } from "./replacementBox";
+import { SuggestedCargoPlacementIndicator } from "./suggestedCargoPlacementIndicator";
 
 interface Props {
   deck: Deck;
@@ -40,6 +42,7 @@ interface Props {
   notReplacingCargoPlacements: CargoPlacement[];
   replaceButtonClick: () => Promise<void>;
   placingLane: Lane;
+  suggestedCargoPlacement?: SuggestedCargoPlacement;
 }
 
 const DeckMap: React.FC<Props> = ({
@@ -56,6 +59,7 @@ const DeckMap: React.FC<Props> = ({
   notReplacingCargoPlacements,
   replaceButtonClick,
   placingLane,
+  suggestedCargoPlacement,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -191,6 +195,10 @@ const DeckMap: React.FC<Props> = ({
           svgRef={svgRef}
           setCurrentCargoPlacement={setPlacement}
           bumperToBumperDistance={bumperToBumperDistance}
+        />
+        <SuggestedCargoPlacementIndicator
+          suggestedCargoPlacement={suggestedCargoPlacement}
+          cargo={currentCargoPlacement.cargo}
         />
       </g>
     </svg>

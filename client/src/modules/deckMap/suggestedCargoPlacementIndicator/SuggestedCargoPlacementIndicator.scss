@@ -1,0 +1,8 @@
+@import "../../../styles/main.scss";
+
+.SuggestedCargoPlacementIndicator {
+  fill: $suggestionYellow;
+  opacity: 0.7;
+  stroke: none;
+  pointer-events: none;
+}

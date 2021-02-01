@@ -165,3 +165,10 @@ export interface DeckSelectorData {
   name: string;
   sortOrder: number;
 }
+
+export interface SuggestedCargoPlacement {
+  deckId: string;
+  laneId: string;
+  TCG: number;
+  LCG: number;
+}

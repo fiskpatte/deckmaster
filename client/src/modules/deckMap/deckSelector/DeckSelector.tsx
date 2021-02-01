@@ -11,12 +11,14 @@ interface Props {
   deckSelectorData: DeckSelectorData[];
   currentDeckName: string;
   setCurrentDeck: (name: string) => void;
+  suggestedDeckId?: string;
 }
 
 export const DeckSelector: React.FC<Props> = ({
   deckSelectorData,
   currentDeckName,
   setCurrentDeck,
+  suggestedDeckId,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,13 +46,17 @@ export const DeckSelector: React.FC<Props> = ({
       />
       <div className="DeckSelector">
         <OutsideAlerter outsideClickCallback={onOutsideClick}>
-          <FlexContainer className="DeckSelectorItemsWrapper" flexDirection="column">
+          <FlexContainer
+            className="DeckSelectorItemsWrapper"
+            flexDirection="column"
+          >
             {deckSelectorData.map((data) => (
               <DeckSelectorItem
                 key={data.name}
                 name={data.name}
                 order={data.sortOrder}
                 isCurrent={data.name === currentDeckName}
+                isSuggested={data.name === suggestedDeckId}
                 onClick={() => onDeckClick(data.name)}
                 isOpen={isOpen}
               />

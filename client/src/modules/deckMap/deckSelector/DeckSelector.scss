@@ -6,8 +6,8 @@
   height: min-content;
   z-index: $deckSelectorOverlayZIndex + 1;
   pointer-events: none;
-  .DeckSelectorItemsWrapper{
-    .DeckSelectorItem{
+  .DeckSelectorItemsWrapper {
+    .DeckSelectorItem {
       transition: all 300ms linear;
       pointer-events: auto;
       .DeckSelectorItemButton {
@@ -19,29 +19,32 @@
         padding: 1vh 1vw;
         width: 100%;
       }
-    }
-    .DeckSelectorItem.open{
-      transform: translateX(0%);
-      opacity: 1;
-          .DeckSelectorItemButton.Selected {
-            background-color: $lightPurple;
-          }
+      &.open {
+        transform: translateX(0%);
+        opacity: 1;
+        .DeckSelectorItemButton.selected:not(.suggested) {
+          background-color: $lightPurple;
+        }
+      }
+      .DeckSelectorItemButton.suggested {
+        background-color: $suggestionYellow;
+      }
     }
     @for $i from 1 through $deckmapMaxDeckNumber {
-      $val:$i - 1;
-      .DeckSelectorItem.closed-#{$i}{
-        transform: translateY(-1*$val*100%);
+      $val: $i - 1;
+      .DeckSelectorItem.closed-#{$i} {
+        transform: translateY(-1 * $val * 100%);
         opacity: 0;
       }
     }
-    .DeckSelectorItem.current{
+    .DeckSelectorItem.current {
       opacity: 1;
     }
   }
 }
 
 .DeckSelectorContainer {
-  min-width: $deckmapHeaderElementWidth+4vw;
+  min-width: $deckmapHeaderElementWidth + 4vw;
   display: flex;
   justify-content: flex-end;
 }

@@ -9,7 +9,10 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { CargoPlacement } from './cargoPlacement/cargoPlacement.model';
+import {
+  CargoPlacement,
+  SuggestedCargoPlacement,
+} from './cargoPlacement/cargoPlacement.model';
 import { CargoQueueItem } from './cargoQueue/cargoQueue.model';
 import { Settings } from './settings/settings.model';
 
@@ -63,6 +66,19 @@ export class AppGateway
 
   pushSettingsToClients(settings: Settings) {
     // TODO: This needs to be rebuilt so that it only sends the settings to a user on the specific vessel
-    this.webSocketServer.emit(`settingsUpdated___${settings.vesselId}`, settings);
+    this.webSocketServer.emit(
+      `settingsUpdated___${settings.vesselId}`,
+      settings,
+    );
+  }
+
+  pushSuggestedCargoPlacementToClients(
+    suggestedCargoPlacement: SuggestedCargoPlacement,
+    voyageId: string,
+  ) {
+    this.webSocketServer.emit(
+      `suggestedCargoPlacementUpdated__${voyageId}`,
+      suggestedCargoPlacement,
+    );
   }
 }
