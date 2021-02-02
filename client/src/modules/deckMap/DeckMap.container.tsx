@@ -29,6 +29,8 @@ import {
   getForwardPosition,
   isValidPlacement,
   getVCG,
+  getOverflowingPlacement,
+  isOverflowing,
 } from "./DeckMap.functions";
 import { routes } from "./../../routes";
 import {
@@ -43,6 +45,7 @@ import ButtonContainer from "./buttonContainer";
 // import PlaceCargoInfo from "./placeCargoInfo";
 import useToast from "../../hooks/useToast";
 import HeaderAvoider from "../../components/headerAvoider";
+import { arrayMin } from "../../functions/math";
 
 interface Props {
   isOverview: boolean;
@@ -55,7 +58,10 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     cargoPlacements,
     suggestedCargoPlacement,
   } = useSelector((state: RootState) => state.deckMapReducer);
-
+  const [
+    suggestedCargoPlacementMocked,
+    setSuggestedCargoPlacementMocked,
+  ] = useState(false);
   const { bumperToBumperDistance, defaultVCG } = useSelector(
     (state: RootState) => state.appReducer.settings
   );
@@ -108,22 +114,78 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   );
 
   useEffect(() => {
-    if (suggestedCargoPlacement && !isOverview) {
+    if (
+      suggestedCargoPlacement &&
+      !suggestedCargoPlacementMocked &&
+      Object.keys(cargoPlacementsForLanes).length !== 0 &&
+      !isOverview
+    ) {
+      //This is only temporary until we get correct data from the backend
+      const { lanes } = deckMap[suggestedCargoPlacement.deckId];
+      const { cargo } = currentCargoPlacement;
+      let randomLane = laneFactory();
+      let minAFT = 1000;
+      do {
+        randomLane = lanes[Math.floor(Math.random() * lanes.length)];
+        let randomLaneId = randomLane.id;
+        minAFT = arrayMin(
+          cargoPlacementsForLanes[randomLaneId].map(
+            (cp) => cp.LCG - cp.cargo.length / 2
+          ),
+          randomLane.LCG + randomLane.length / 2
+        );
+      } while (
+        minAFT -
+          (randomLane.LCG - randomLane.length / 2) -
+          bumperToBumperDistance <
+        cargo.length
+      );
+      let smartSuggestedCargoPlacement = {
+        ...suggestedCargoPlacement,
+        laneId: randomLane.id,
+        LCG: minAFT - cargo.length / 2 - bumperToBumperDistance,
+        TCG: randomLane.TCG,
+      };
+      //
       let newPlacement = {
         ...currentCargoPlacement,
-        ...suggestedCargoPlacement,
+        ...smartSuggestedCargoPlacement,
         VCG: getVCG(
-          currentCargoPlacement.cargo,
+          cargo,
           currentDeck?.lanes?.find(
-            (l) => l.id === suggestedCargoPlacement.laneId
+            (l) => l.id === smartSuggestedCargoPlacement.laneId
           ) ?? laneFactory(),
           defaultVCG
         ),
       };
+      let overflowingPlacement = undefined;
+      if (isOverflowing(cargo, randomLane)) {
+        overflowingPlacement = getOverflowingPlacement(
+          randomLane,
+          cargo,
+          newPlacement,
+          adjacentCargoPlacementsForLanes[randomLane.id],
+          true,
+          false
+        );
+        if (!cargoIsEmpty(overflowingPlacement.cargo)) {
+          smartSuggestedCargoPlacement = {
+            ...smartSuggestedCargoPlacement,
+            LCG: overflowingPlacement.LCG,
+            TCG: overflowingPlacement.TCG,
+          };
+          newPlacement = overflowingPlacement;
+        }
+      }
       //TODO: Handle overflowing cargo
       setInitialCargoPlacement(newPlacement);
+      setSuggestedCargoPlacementMocked(true);
+      dispatch(setSuggestedCargoPlacement(smartSuggestedCargoPlacement));
       dispatch(setCurrentDeckId(suggestedCargoPlacement.deckId));
       dispatch(setCurrentPlacement(newPlacement));
+    } else if (isOverview) {
+      dispatch(setSuggestedCargoPlacement(undefined));
+      setSuggestedCargoPlacementMocked(false);
     }
   }, [
     suggestedCargoPlacement,
@@ -132,6 +194,12 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     defaultVCG,
     currentCargoPlacement,
     dispatch,
+    deckMap,
+    cargoPlacements,
+    cargoPlacementsForLanes,
+    suggestedCargoPlacementMocked,
+    bumperToBumperDistance,
+    adjacentCargoPlacementsForLanes,
   ]);
 
   useEffect(() => {
@@ -184,6 +252,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           cargo: currentCargoPlacement.cargo.id,
         });
         dispatch(setSuggestedCargoPlacement(undefined));
+        setSuggestedCargoPlacementMocked(false);
         history.push(routes.PlaceCargo.path);
       } catch (error) {
         toast.error("Failed to place cargo");
