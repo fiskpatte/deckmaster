@@ -47,7 +47,7 @@ export const removeCargoPlacement = (
 });
 
 export const setSuggestedCargoPlacement = (
-  suggestedCargoPlacement: SuggestedCargoPlacement
+  suggestedCargoPlacement?: SuggestedCargoPlacement
 ) => ({
   type: DECK_MAP_ACTION_TYPES.SET_SUGGESTED_CARGO_PLACEMENT,
   payload: suggestedCargoPlacement,

@@ -197,6 +197,7 @@ const DeckMap: React.FC<Props> = ({
           bumperToBumperDistance={bumperToBumperDistance}
         />
         <SuggestedCargoPlacementIndicator
+          currentDeckId={deck.name}
           suggestedCargoPlacement={suggestedCargoPlacement}
           cargo={currentCargoPlacement.cargo}
         />

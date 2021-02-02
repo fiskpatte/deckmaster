@@ -9,6 +9,7 @@ import {
   addCargoPlacement,
   setCurrentDeckId,
   setCurrentPlacement,
+  setSuggestedCargoPlacement,
 } from "../../store/deckMap/deckMapActions";
 import { placeCargo, updateCargoPlacement } from "../../api/cargoPlacement";
 import {
@@ -124,7 +125,14 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       dispatch(setCurrentDeckId(suggestedCargoPlacement.deckId));
       dispatch(setCurrentPlacement(newPlacement));
     }
-  }, [suggestedCargoPlacement]);
+  }, [
+    suggestedCargoPlacement,
+    isOverview,
+    currentDeck,
+    defaultVCG,
+    currentCargoPlacement,
+    dispatch,
+  ]);
 
   useEffect(() => {
     if (!isOverview && cargoIsEmpty(currentCargoPlacement.cargo)) {
@@ -175,6 +183,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           deckId: currentDeck.name,
           cargo: currentCargoPlacement.cargo.id,
         });
+        dispatch(setSuggestedCargoPlacement(undefined));
         history.push(routes.PlaceCargo.path);
       } catch (error) {
         toast.error("Failed to place cargo");

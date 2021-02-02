@@ -5,13 +5,19 @@ import "./SuggestedCargoPlacementIndicator.scss";
 interface Props {
   suggestedCargoPlacement?: SuggestedCargoPlacement;
   cargo: Cargo;
+  currentDeckId: string;
 }
 
 export const SuggestedCargoPlacementIndicator: React.FC<Props> = ({
   suggestedCargoPlacement,
   cargo,
+  currentDeckId,
 }) => {
-  if (!suggestedCargoPlacement) return null;
+  if (
+    !suggestedCargoPlacement ||
+    currentDeckId !== suggestedCargoPlacement?.deckId
+  )
+    return null;
 
   const { width, length } = cargo;
   const { LCG, TCG } = suggestedCargoPlacement;
