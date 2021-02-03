@@ -172,3 +172,16 @@ export interface SuggestedCargoPlacement {
   TCG: number;
   LCG: number;
 }
+
+export interface ValidPlacementInterval {
+  start: number;
+  end: number;
+  overflowingSide: AdjacentSide;
+}
+
+export interface DeckMapElementEndpoints {
+  forward: number;
+  after: number;
+  left: number;
+  right: number;
+}

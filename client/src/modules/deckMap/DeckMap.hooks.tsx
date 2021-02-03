@@ -152,14 +152,16 @@ const useCalculateDataForLanes = (
       let adjacentCargoPlacements = {} as CargoPlacementsForLanes;
       let mostForwardValidPlacements = {} as MostForwardValidPlacementForLanes;
       for (let lane of deck.lanes) {
-        cargoPlacements[lane.id] = notReplacingCargoPlacements.filter(
-          (cp) => cp.laneId === lane.id || cp.overflowingLaneId === lane.id
-        );
+        cargoPlacements[lane.id] = notReplacingCargoPlacements
+          .filter(
+            (cp) => cp.laneId === lane.id || cp.overflowingLaneId === lane.id
+          )
+          .sort((a, b) => a.LCG - b.LCG);
         adjacentCargoPlacements[
           lane.id
-        ] = notReplacingCargoPlacements.filter((cp) =>
-          lane.adjacentLanes.some((al) => al.id === cp.laneId)
-        );
+        ] = notReplacingCargoPlacements
+          .filter((cp) => lane.adjacentLanes.some((al) => al.id === cp.laneId))
+          .sort((a, b) => a.LCG - b.LCG);
         let mostForwardLanePlacement = {
           LCG: lane.LCG + lane.length / 2,
           TCG: lane.TCG,

@@ -1,5 +1,9 @@
 import { arrayMax, arrayMin, isEqual } from "../../functions/math";
-import { DECK_MAP, AdjacentSide } from "../../constants";
+import {
+  DECK_MAP,
+  AdjacentSide,
+  SMALLEST_VALID_PLACEMENT_INTERVAL,
+} from "../../constants";
 import {
   Deck,
   Cargo,
@@ -9,6 +13,9 @@ import {
   cargoPlacementFactory,
   DeckSelectorData,
   cargoPlacementAsDeckMapElement,
+  ValidPlacementInterval,
+  DeckMapElementEndpoints,
+  AdjacentLane,
 } from "../../types/deckMap";
 import { Coords } from "../../types/util";
 import { DeckMapType } from "./../../types/deckMap";
@@ -290,39 +297,90 @@ export const getPlacementFromDragEvent = (
   return cargoPlacementFactory();
 };
 
-// const overflowingLimitMap = (
-//   lane: Lane,
-//   cargoPlacementsForLane: CargoPlacement[],
-//   adjacentCargoPlacementsForLane: CargoPlacement[],
-//   cargoPlacement: DeckMapElement
-// ) => {
-//   const leftAdjacentLane = lane.adjacentLanes.filter(
-//     (al) =>
-//       al.adjacentSide === AdjacentSide.Left &&
-//       isAdjacent(al, cargoPlacement, true)
-//   );
-//   const rightAdjacentLane = lane.adjacentLanes.filter(
-//     (al) =>
-//       al.adjacentSide === AdjacentSide.Right &&
-//       isAdjacent(al, cargoPlacement, true)
-//   );
-//   const someLeftAdjacentLane = leftAdjacentLane.length > 0;
-//     const someRightAdjacentLane = rightAdjacentLane.length > 0;
-//     if (!someRightAdjacentLane && !someLeftAdjacentLane)
-//       return cargoPlacementFactory();
-//   const cargoInLeftAdjacentLane = adjacentCargoPlacementsForLane.filter(
-//     (acp) =>
-//       someLeftAdjacentLane &&
-//       acp.laneId === leftAdjacentLane[0].id //&&
-//       // isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
-//   );
-//   const cargoInRightAdjacentLane = adjacentCargoPlacementsForLane.filter(
-//     (acp) =>
-//       someRightAdjacentLane &&
-//       acp.laneId === rightAdjacentLane[0].id //&&
-//       // isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
-//   );
-// };
+const pushIntervalIfValid = (
+  intervals: ValidPlacementInterval[],
+  start: number,
+  end: number,
+  overflowingSide = AdjacentSide.Undefined
+) => {
+  if (end - start >= SMALLEST_VALID_PLACEMENT_INTERVAL) {
+    intervals.push({
+      start: start,
+      end: end,
+      overflowingSide: overflowingSide,
+    });
+  }
+};
+const getIntervals = (
+  lane: Lane | AdjacentLane,
+  cargoPlacementsForLane: CargoPlacement[],
+  bumperToBumperDistance: number
+) => {
+  //This code assumes cargoPlacementsForLane is sorted from least LCG to highest.
+  let intervals = [] as ValidPlacementInterval[];
+  const laneEndpoints = getEndpoints(lane);
+  const adjacentSide =
+    (<AdjacentLane>lane).adjacentSide ?? AdjacentSide.Undefined;
+  let cargoPlacementForLaneEndpoints = {} as DeckMapElementEndpoints;
+  let start = laneEndpoints.after;
+  let end;
+  for (let cargoPlacementForLane of cargoPlacementsForLane) {
+    cargoPlacementForLaneEndpoints = getEndpoints(
+      cargoPlacementAsDeckMapElement(cargoPlacementForLane)
+    );
+    end = cargoPlacementForLaneEndpoints.after - bumperToBumperDistance;
+    pushIntervalIfValid(intervals, start, end, adjacentSide);
+    start = cargoPlacementForLaneEndpoints.forward + bumperToBumperDistance;
+  }
+  end = laneEndpoints.forward;
+  pushIntervalIfValid(intervals, start, end, adjacentSide);
+  return intervals;
+};
+export const getValidPlacementIntervals = (
+  lane: Lane,
+  cargoPlacementsForLane: CargoPlacement[],
+  adjacentCargoPlacementsForLane: CargoPlacement[],
+  bumperToBumperDistance: number
+) => {
+  let intervals = [] as ValidPlacementInterval[];
+
+  //Not overflowing intervals
+  const notOverflowingIntervals = getIntervals(
+    lane,
+    cargoPlacementsForLane,
+    bumperToBumperDistance
+  );
+  let overflowingIntervals = [] as ValidPlacementInterval[];
+  for (let adjacentLane of lane.adjacentLanes) {
+    let cargoPlacementsForAdjacentLane = adjacentCargoPlacementsForLane.filter(
+      (acpl) => acpl.laneId === adjacentLane.id
+    );
+    overflowingIntervals = overflowingIntervals.concat(
+      getIntervals(
+        adjacentLane,
+        cargoPlacementsForAdjacentLane,
+        bumperToBumperDistance
+      )
+    );
+  }
+  //Overflowing intervals
+  // for (let adjacentLane of lane.adjacentLanes) {
+  //   let adjacentLaneEndpoints = getEndpoints(adjacentLane);
+  //   let cargoPlacementsForAdjacentLane = adjacentCargoPlacementsForLane.filter(
+  //     (acpl) => acpl.laneId === adjacentLane.id
+  //   );
+  //   if (cargoPlacementsForAdjacentLane.length > 0) {
+  //     //TODO
+  //   } else {
+  //     intervals.push({
+  //       start: Math.max(adjacentLaneEndpoints.after, laneEndpoints.after),
+  //       end: Math.min(adjacentLaneEndpoints.forward, laneEndpoints.forward),
+  //       overflowingSide: adjacentLane.adjacentSide,
+  //     });
+  //   }
+  // }
+  return notOverflowingIntervals;
+};
 
 const getDeckMapCoordsFromScreenCoords = (
   svgElement: SVGSVGElement,
@@ -341,7 +399,7 @@ const getEndpoints = (elem: DeckMapElement) => {
   const after = elem.LCG - elem.length / 2;
   const forward = after + elem.length;
 
-  return { left, right, after, forward };
+  return { left, right, after, forward } as DeckMapElementEndpoints;
 };
 
 const hasSpaceInBetween = (side1: number, side2: number, width: number) => {
