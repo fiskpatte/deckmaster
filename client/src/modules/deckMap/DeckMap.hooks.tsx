@@ -130,7 +130,6 @@ const useCalculateDataForLanes = (
   const [updating, setUpdating] = useState(true);
 
   useEffect(() => {
-    console.log("CALCULATING DATA FOR LANES");
     if (deck) {
       setUpdating(true);
       let cargoPlacements = {} as CargoPlacementsForLanes;
