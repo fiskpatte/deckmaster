@@ -1,4 +1,4 @@
-import { arrayMax, arrayMin, isEqual } from "../../functions/math";
+import { arrayMax, arrayMin, isBetween, isEqual } from "../../functions/math";
 import {
   DECK_MAP,
   AdjacentSide,
@@ -16,6 +16,7 @@ import {
   ValidPlacementInterval,
   DeckMapElementEndpoints,
   AdjacentLane,
+  Grid,
 } from "../../types/deckMap";
 import { Coords } from "../../types/util";
 import { DeckMapType } from "./../../types/deckMap";
@@ -118,66 +119,68 @@ const getScreenCoordinatesFromEvent = (
 export const getPlacementFromEvent = (
   event: React.MouseEvent | React.TouchEvent | React.PointerEvent,
   svgRef: React.RefObject<SVGSVGElement>,
-  cargoPlacementsForLane: Array<CargoPlacement>,
-  adjacentCargoPlacementsForLane: Array<CargoPlacement>,
+  validPlacementIntervalsForLane: ValidPlacementInterval[],
   lane: Lane,
-  placement: CargoPlacement
-  // bumperToBumperDistance: number
+  cargo: Cargo,
+  defaultVCG: number
 ) => {
   let coords = getScreenCoordinatesFromEvent(event);
   return getPlacementFromScreenCoords(
     coords,
     svgRef,
-    cargoPlacementsForLane,
-    adjacentCargoPlacementsForLane,
+    validPlacementIntervalsForLane,
     lane,
-    placement
-    // bumperToBumperDistance
+    cargo,
+    defaultVCG
   );
 };
-
+export const getValidPlacementIntervalForFreePlacement = (
+  intervals: ValidPlacementInterval[],
+  coords: Coords,
+  cargo: Cargo,
+  isOverflowing: boolean
+) => {
+  const forward = coords.x + cargo.length / 2;
+  const after = coords.x - cargo.length / 2;
+  const getCorrectIntervals = (interval: ValidPlacementInterval) =>
+    (isOverflowing
+      ? interval.overflowingLaneId !== ""
+      : interval.overflowingLaneId === "") &&
+    after >= interval.start &&
+    forward <= interval.end;
+  return intervals.find(getCorrectIntervals);
+};
 export const getPlacementFromScreenCoords = (
   coords: Coords | undefined,
   svgRef: React.RefObject<SVGSVGElement>,
-  cargoPlacementsForLane: Array<CargoPlacement>,
-  adjacentCargoPlacementsForLane: Array<CargoPlacement>,
+  validPlacementIntervalsForLane: ValidPlacementInterval[],
   lane: Lane,
-  placement: CargoPlacement
-  // bumperToBumperDistance: number
+  cargo: Cargo,
+  defaultVCG: number
 ) => {
   if (!svgRef.current || !coords) return cargoPlacementFactory();
   let deckMapCoords = getDeckMapCoordsFromScreenCoords(svgRef.current, coords);
-  let resultPlacement = {
-    ...placement,
-    LCG: deckMapCoords.x,
-    TCG: lane.TCG,
+  let interval = getValidPlacementIntervalForFreePlacement(
+    validPlacementIntervalsForLane,
+    deckMapCoords,
+    cargo,
+    isOverflowing(cargo, lane)
+  );
+  if (!interval) return cargoPlacementFactory();
+  return {
+    cargo: cargo,
     laneId: lane.id,
-    replacing: false,
-  };
-  if (isPlacementOutOfBounds(resultPlacement, lane))
-    return cargoPlacementFactory();
-  let { cargo } = placement;
-  const cargoPlacement = cargoPlacementAsDeckMapElement(resultPlacement);
-  if (
-    cargoPlacementsForLane.some((cp) =>
-      isOverlapping(cargoPlacementAsDeckMapElement(cp), cargoPlacement)
-    )
-  ) {
-    return cargoPlacementFactory();
-  }
-  if (isOverflowing(cargo, lane)) {
-    const overflowingPlacement = getOverflowingPlacement(
+    TCG: getOverflowingTCG(
       lane,
       cargo,
-      resultPlacement,
-      adjacentCargoPlacementsForLane,
-      false,
-      false
-    );
-    if (!isValidPlacement(overflowingPlacement)) return cargoPlacementFactory();
-    resultPlacement = overflowingPlacement;
-  }
-  return resultPlacement;
+      getOverflowingSideFromLaneId(lane, interval.overflowingLaneId)
+    ),
+    LCG: deckMapCoords.x,
+    VCG: getVCG(cargo, lane, defaultVCG),
+    overflowingLaneId: interval.overflowingLaneId,
+    replacing: false,
+    discharged: false,
+  } as CargoPlacement;
 };
 
 export const getPlacementFromDragEvent = (
@@ -189,102 +192,69 @@ export const getPlacementFromDragEvent = (
     | TouchEvent
     | PointerEvent,
   svgRef: React.RefObject<SVGSVGElement>,
-  cargoPlacementsForLane: Array<CargoPlacement>,
-  adjacentCargoPlacementsForLane: Array<CargoPlacement>,
+  validPlacementIntervalsForLane: ValidPlacementInterval[],
   lane: Lane,
-  placement: CargoPlacement,
-  bumperToBumperDistance: number
+  placement: CargoPlacement
 ) => {
-  let coords = getScreenCoordinatesFromEvent(event);
+  const coords = getScreenCoordinatesFromEvent(event);
 
   if (!coords || !svgRef.current) {
     return cargoPlacementFactory();
   }
   let deckMapCoords = getDeckMapCoordsFromScreenCoords(svgRef.current, coords);
-
-  const cargoPlacement = cargoPlacementAsDeckMapElement(placement);
   const { cargo } = placement;
   const isOverflow = isOverflowing(cargo, lane);
-  let overflowingXPlacement = 1000;
+  const intervals = validPlacementIntervalsForLane.filter(
+    (interval) =>
+      (isOverflow
+        ? interval.overflowingLaneId !== ""
+        : interval.overflowingLaneId === "") &&
+      isBetween(placement.LCG, interval.start, interval.end)
+  );
+
+  if (intervals.length === 0) return cargoPlacementFactory();
+
   if (isOverflow) {
-    //Set a limit in the y displacement
-    const leftAdjacentLane = lane.adjacentLanes.filter(
-      (al) =>
-        al.adjacentSide === AdjacentSide.Left &&
-        isAdjacent(al, cargoPlacement, true)
-    );
-    const rightAdjacentLane = lane.adjacentLanes.filter(
-      (al) =>
-        al.adjacentSide === AdjacentSide.Right &&
-        isAdjacent(al, cargoPlacement, true)
-    );
-    const someLeftAdjacentLane = leftAdjacentLane.length > 0;
-    const someRightAdjacentLane = rightAdjacentLane.length > 0;
-    if (!someRightAdjacentLane && !someLeftAdjacentLane)
-      return cargoPlacementFactory();
-    const adjacentCargoInLeftAdjacentLane = adjacentCargoPlacementsForLane.filter(
-      (acp) =>
-        someLeftAdjacentLane &&
-        acp.laneId === leftAdjacentLane[0].id &&
-        isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
-    );
-    const adjacentCargoInRightAdjacentLane = adjacentCargoPlacementsForLane.filter(
-      (acp) =>
-        someRightAdjacentLane &&
-        acp.laneId === rightAdjacentLane[0].id &&
-        isAdjacent(cargoPlacementAsDeckMapElement(acp), cargoPlacement)
-    );
-    const someAdjacentCargoInLeftAdjacentLane =
-      adjacentCargoInLeftAdjacentLane.length > 0;
-    const someAdjacentCargoInRightAdjacentLane =
-      adjacentCargoInRightAdjacentLane.length > 0;
     const cargoInLeftEdge = lane.TCG + (cargo.width - lane.width) / 2;
     const cargoInRightEdge = lane.TCG - (cargo.width - lane.width) / 2;
-    let max =
-      someRightAdjacentLane && !someAdjacentCargoInRightAdjacentLane
-        ? cargoInLeftEdge
-        : cargoInRightEdge;
-    let min =
-      someLeftAdjacentLane && !someAdjacentCargoInLeftAdjacentLane
-        ? cargoInRightEdge
-        : cargoInLeftEdge;
+    const leftIntervals = intervals.filter(
+      (interval) =>
+        getOverflowingSideFromLaneId(lane, interval.overflowingLaneId) ===
+        AdjacentSide.Left
+    );
+    const rightIntervals = intervals.filter(
+      (interval) =>
+        getOverflowingSideFromLaneId(lane, interval.overflowingLaneId) ===
+        AdjacentSide.Right
+    );
+    const someLeftInterval = leftIntervals.length > 0;
+    const someRightInterval = rightIntervals.length > 0;
+    const min = someLeftInterval ? cargoInRightEdge : cargoInLeftEdge;
+    const max = someRightInterval ? cargoInLeftEdge : cargoInRightEdge;
+    if (!someLeftInterval && !someRightInterval) return cargoPlacementFactory();
     deckMapCoords.y = Math.min(Math.max(deckMapCoords.y, min), max);
-    // Get limit in x displacement for overflowing cargo
-    if (
-      !(
-        (someRightAdjacentLane && !someAdjacentCargoInRightAdjacentLane) ||
-        (someLeftAdjacentLane && !someAdjacentCargoInLeftAdjacentLane)
-      )
-    ) {
-      overflowingXPlacement = placement.LCG;
-      deckMapCoords.y = placement.TCG;
+    if (deckMapCoords.y >= lane.TCG && someRightInterval) {
+      deckMapCoords.x = Math.min(
+        Math.max(deckMapCoords.x, rightIntervals[0].start + cargo.length / 2),
+        rightIntervals[0].end - cargo.length / 2
+      );
+    } else if (deckMapCoords.y <= lane.TCG && someLeftInterval) {
+      deckMapCoords.x = Math.min(
+        Math.max(deckMapCoords.x, leftIntervals[0].start + cargo.length / 2),
+        leftIntervals[0].end - cargo.length / 2
+      );
+    } else {
+      return cargoPlacementFactory();
     }
   } else {
     //Ignore y displacement
     deckMapCoords.y = placement.TCG;
+    //Limit x displacement to the interval. There can only be one for not overflowing cargo
+    deckMapCoords.x = Math.min(
+      Math.max(deckMapCoords.x, intervals[0].start + cargo.length / 2),
+      intervals[0].end - cargo.length / 2
+    );
   }
-  //Set a limit in the x displacement
-  let laneEndpoints = getEndpoints(lane);
-  let max = arrayMin(
-    cargoPlacementsForLane
-      .filter((c) => c.LCG > placement.LCG)
-      .map(getAfterPosition),
-    laneEndpoints.forward
-  );
-  max -=
-    cargo.length / 2 +
-    (isEqual(max, laneEndpoints.forward) ? 0 : bumperToBumperDistance);
-  max = Math.min(max, overflowingXPlacement);
-  let min = arrayMax(
-    cargoPlacementsForLane
-      .filter((c) => c.LCG < placement.LCG)
-      .map(getForwardPosition),
-    laneEndpoints.after
-  );
-  min +=
-    cargo.length / 2 +
-    (isEqual(min, laneEndpoints.after) ? 0 : bumperToBumperDistance);
-  deckMapCoords.x = Math.min(Math.max(deckMapCoords.x, min), max);
 
   if (deckMapCoords.x !== placement.LCG || deckMapCoords.y !== placement.TCG) {
     let newPlacement = {
@@ -301,13 +271,15 @@ const pushIntervalIfValid = (
   intervals: ValidPlacementInterval[],
   start: number,
   end: number,
-  overflowingSide = AdjacentSide.Undefined
+  fromLaneAFT: boolean,
+  overflowingLaneId: string
 ) => {
   if (end - start >= SMALLEST_VALID_PLACEMENT_INTERVAL) {
     intervals.push({
       start: start,
       end: end,
-      overflowingSide: overflowingSide,
+      overflowingLaneId: overflowingLaneId,
+      fromLaneAFT: fromLaneAFT,
     });
   }
 };
@@ -319,21 +291,22 @@ const getIntervals = (
   //This code assumes cargoPlacementsForLane is sorted from least LCG to highest.
   let intervals = [] as ValidPlacementInterval[];
   const laneEndpoints = getEndpoints(lane);
-  const adjacentSide =
-    (<AdjacentLane>lane).adjacentSide ?? AdjacentSide.Undefined;
+  const overflowingLaneId = (lane as AdjacentLane).adjacentSide ? lane.id : "";
   let cargoPlacementForLaneEndpoints = {} as DeckMapElementEndpoints;
   let start = laneEndpoints.after;
+  let fromLaneAFT = true;
   let end;
   for (let cargoPlacementForLane of cargoPlacementsForLane) {
     cargoPlacementForLaneEndpoints = getEndpoints(
       cargoPlacementAsDeckMapElement(cargoPlacementForLane)
     );
     end = cargoPlacementForLaneEndpoints.after - bumperToBumperDistance;
-    pushIntervalIfValid(intervals, start, end, adjacentSide);
+    pushIntervalIfValid(intervals, start, end, fromLaneAFT, overflowingLaneId);
     start = cargoPlacementForLaneEndpoints.forward + bumperToBumperDistance;
+    fromLaneAFT = false;
   }
   end = laneEndpoints.forward;
-  pushIntervalIfValid(intervals, start, end, adjacentSide);
+  pushIntervalIfValid(intervals, start, end, fromLaneAFT, overflowingLaneId);
   return intervals;
 };
 export const intersectIntervals = (
@@ -348,7 +321,13 @@ export const intersectIntervals = (
   while (i < intervals1.length && j < intervals2.length) {
     start = Math.max(intervals1[i].start, intervals2[j].start);
     end = Math.min(intervals1[i].end, intervals2[j].end);
-    pushIntervalIfValid(result, start, end, intervals2[j].overflowingSide);
+    pushIntervalIfValid(
+      result,
+      start,
+      end,
+      intervals1[i].fromLaneAFT,
+      intervals2[j].overflowingLaneId
+    );
 
     if (intervals1[i].end < intervals2[j].end) {
       i++;
@@ -387,20 +366,97 @@ export const getValidPlacementIntervals = (
     );
   }
   intervals = [...notOverflowingIntervals];
-  let leftAdjacentIntervals = overflowingIntervals
-    .filter((oi) => oi.overflowingSide === AdjacentSide.Left)
-    .sort((a, b) => a.start - b.start);
-  let rightAdjacentIntervals = overflowingIntervals
-    .filter((oi) => oi.overflowingSide === AdjacentSide.Right)
-    .sort((a, b) => a.start - b.start);
-  intervals = intervals.concat(
-    intersectIntervals(notOverflowingIntervals, leftAdjacentIntervals)
-  );
-  intervals = intervals.concat(
-    intersectIntervals(notOverflowingIntervals, rightAdjacentIntervals)
-  );
+  for (let overflowingInterval of overflowingIntervals) {
+    //The most efficient solution would be to group by laneId and intersect the intervals in the same group
+    intervals = intervals.concat(
+      intersectIntervals(notOverflowingIntervals, [overflowingInterval])
+    );
+  }
 
   return intervals;
+};
+
+export const getValidPlacementIntervalForLanePlacement = (
+  intervals: ValidPlacementInterval[],
+  isOverflowing: boolean
+) => {
+  const getCorrectIntervals = (interval: ValidPlacementInterval) =>
+    (isOverflowing
+      ? interval.overflowingLaneId !== ""
+      : interval.overflowingLaneId === "") && interval.fromLaneAFT;
+  //Get most forward one first
+  return intervals.sort((a, b) => b.end - a.end).find(getCorrectIntervals);
+};
+
+export const getPlacementFromValidIntervalsForLanePlacement = (
+  intervals: ValidPlacementInterval[],
+  currentCargo: Cargo,
+  lane: Lane,
+  defaultVCG: number
+) => {
+  let interval = getValidPlacementIntervalForLanePlacement(
+    intervals,
+    isOverflowing(currentCargo, lane)
+  );
+  if (!interval) return cargoPlacementFactory();
+  return {
+    cargo: currentCargo,
+    laneId: lane.id,
+    TCG: getOverflowingTCG(
+      lane,
+      currentCargo,
+      getOverflowingSideFromLaneId(lane, interval.overflowingLaneId)
+    ),
+    LCG: interval.end,
+    VCG: getVCG(currentCargo, lane, defaultVCG),
+    overflowingLaneId: interval.overflowingLaneId,
+    replacing: false,
+    discharged: false,
+  } as CargoPlacement;
+};
+export const getValidPlacementIntervalForGridPlacement = (
+  intervals: ValidPlacementInterval[],
+  grid: Grid,
+  cargo: Cargo,
+  isOverflowing: boolean
+) => {
+  const gridEndpoints = getEndpoints(grid);
+  const getCorrectIntervals = (interval: ValidPlacementInterval) =>
+    (isOverflowing
+      ? interval.overflowingLaneId !== ""
+      : interval.overflowingLaneId === "") &&
+    gridEndpoints.forward - cargo.length >= interval.start &&
+    gridEndpoints.forward <= interval.end;
+  return intervals.find(getCorrectIntervals);
+};
+export const getPlacementFromValidIntervalsForGridPlacement = (
+  intervals: ValidPlacementInterval[],
+  currentCargo: Cargo,
+  grid: Grid,
+  lane: Lane | undefined,
+  defaultVCG: number
+) => {
+  let interval = getValidPlacementIntervalForGridPlacement(
+    intervals,
+    grid,
+    currentCargo,
+    isOverflowing(currentCargo, grid)
+  );
+  if (!interval || !lane) return cargoPlacementFactory();
+  return {
+    cargo: currentCargo,
+    laneId: grid.laneId,
+    TCG: getOverflowingTCG(
+      grid,
+      currentCargo,
+      getOverflowingSideFromLaneId(lane, interval.overflowingLaneId)
+    ),
+    LCG: grid.LCG + grid.length / 2,
+    VCG: getVCG(currentCargo, grid, defaultVCG),
+    overflowingLaneId: interval.overflowingLaneId,
+    replacing: false,
+    discharged: false,
+  } as CargoPlacement;
 };
 
 const getDeckMapCoordsFromScreenCoords = (
@@ -542,45 +598,45 @@ export const getAdjacentSide = (
 //   }
 //   return result;
 // };
-export const getMostForwardValidPlacementForLane = (
-  lane: Lane,
-  cargoPlacementsForLane: Array<CargoPlacement>,
-  adjacentCargoPlacementsForLane: Array<CargoPlacement>,
-  currentCargo: Cargo,
-  mostForwardLanePlacement: CargoPlacement,
-  bumperToBumperDistance: number
-): CargoPlacement => {
-  let resultPlacement = { ...mostForwardLanePlacement };
-  // there are no other vehicles blocking the forward most position, just return it
-  if (cargoPlacementsForLane.length === 0 && currentCargo.width <= lane.width)
-    return resultPlacement;
+// export const getMostForwardValidPlacementForLane = (
+//   lane: Lane,
+//   cargoPlacementsForLane: Array<CargoPlacement>,
+//   adjacentCargoPlacementsForLane: Array<CargoPlacement>,
+//   currentCargo: Cargo,
+//   mostForwardLanePlacement: CargoPlacement,
+//   bumperToBumperDistance: number
+// ): CargoPlacement => {
+//   let resultPlacement = { ...mostForwardLanePlacement };
+//   // there are no other vehicles blocking the forward most position, just return it
+//   if (cargoPlacementsForLane.length === 0 && currentCargo.width <= lane.width)
+//     return resultPlacement;
 
-  const afterOfLane = getEndpoints(lane).after;
-  let mostAfterCargoPlacement = arrayMin(
-    cargoPlacementsForLane.map((c) => c.LCG - c.cargo.length / 2),
-    resultPlacement.LCG
-  );
+//   const afterOfLane = getEndpoints(lane).after;
+//   let mostAfterCargoPlacement = arrayMin(
+//     cargoPlacementsForLane.map((c) => c.LCG - c.cargo.length / 2),
+//     resultPlacement.LCG
+//   );
 
-  if (
-    mostAfterCargoPlacement <
-    afterOfLane + currentCargo.length + bumperToBumperDistance
-  ) {
-    // no room in lane
-    return cargoPlacementFactory();
-  }
+//   if (
+//     mostAfterCargoPlacement <
+//     afterOfLane + currentCargo.length + bumperToBumperDistance
+//   ) {
+//     // no room in lane
+//     return cargoPlacementFactory();
+//   }
 
-  resultPlacement.LCG = mostAfterCargoPlacement - bumperToBumperDistance;
+//   resultPlacement.LCG = mostAfterCargoPlacement - bumperToBumperDistance;
 
-  if (isOverflowing(currentCargo, lane)) {
-    return getOverflowingPlacement(
-      lane,
-      currentCargo,
-      resultPlacement,
-      adjacentCargoPlacementsForLane
-    );
-  }
-  return resultPlacement;
-};
+//   if (isOverflowing(currentCargo, lane)) {
+//     return getOverflowingPlacement(
+//       lane,
+//       currentCargo,
+//       resultPlacement,
+//       adjacentCargoPlacementsForLane
+//     );
+//   }
+//   return resultPlacement;
+// };
 
 export const getOverflowingPlacement = (
   placingLane: Lane,
@@ -773,8 +829,8 @@ export const isPlacementOutOfBounds = (
   );
 };
 
-export const isOverflowing = (cargo: Cargo, lane: Lane) => {
-  return cargo.width > lane.width;
+export const isOverflowing = (cargo: Cargo, element: Lane | Grid) => {
+  return cargo.width > element.width;
 };
 
 export const getForwardPosition = (cargoPlacement: CargoPlacement) => {
@@ -795,6 +851,15 @@ export const getOverflowingSide = (
     );
   return cargoPlacement.TCG > lane.TCG ? AdjacentSide.Right : AdjacentSide.Left;
 };
+export const getOverflowingSideFromLaneId = (
+  lane: Lane,
+  overflowingLaneId: string
+) => {
+  return (
+    lane.adjacentLanes.find((al) => al.id === overflowingLaneId)
+      ?.adjacentSide ?? AdjacentSide.Undefined
+  );
+};
 export const getOverflowingLaneId = (
   lane: Lane,
   cargoPlacementAsDeckMapElement: DeckMapElement,
@@ -810,7 +875,20 @@ export const getOverflowingLaneId = (
   return adjacentLanes[0].id;
 };
 
-export const getVCG = (cargo: Cargo, lane: Lane, defaultVCG: number) => {
-  if (!cargo?.id || !lane?.id) return 0;
-  return lane.VCG + cargo.height * defaultVCG;
+export const getOverflowingTCG = (
+  element: Lane | Grid,
+  cargo: Cargo,
+  overflowSide: AdjacentSide
+) => {
+  if (overflowSide === AdjacentSide.Undefined) return element.TCG;
+  return element.TCG + (overflowSide * (cargo.width - element.width)) / 2;
+};
+
+export const getVCG = (
+  cargo: Cargo,
+  element: Lane | Grid,
+  defaultVCG: number
+) => {
+  if (!cargo?.id || !element?.id) return 0;
+  return element.VCG + cargo.height * defaultVCG;
 };

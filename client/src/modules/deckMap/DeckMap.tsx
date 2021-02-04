@@ -8,6 +8,8 @@ import {
   getReplacementBoxOrigin,
   getPlacementFromEvent,
   isValidPlacement,
+  getPlacementFromValidIntervalsForLanePlacement,
+  getPlacementFromValidIntervalsForGridPlacement,
 } from "./DeckMap.functions";
 import { useDispatch } from "react-redux";
 import { setCurrentPlacement } from "../../store/deckMap/deckMapActions";
@@ -15,10 +17,10 @@ import {
   Deck,
   CargoPlacement,
   ViewBoxDimensions,
-  MostForwardValidPlacementForLanes,
-  CargoPlacementsForLanes,
   Lane,
   SuggestedCargoPlacement,
+  ValidPlacementIntervalsForLanes,
+  Grid,
 } from "../../types/deckMap";
 import "./DeckMap.scss";
 import FrameRuler from "./frameRuler";
@@ -33,16 +35,14 @@ interface Props {
   currentCargoPlacement: CargoPlacement;
   isOverview: boolean;
   setInitialCargoPlacement: (d: CargoPlacement) => void;
-  bumperToBumperDistance: number;
   viewBoxDimensions: ViewBoxDimensions | undefined;
-  mostForwardValidPlacementForLanes: MostForwardValidPlacementForLanes;
-  cargoPlacementsForLanes: CargoPlacementsForLanes;
-  adjacentCargoPlacementsForLanes: CargoPlacementsForLanes;
+  validPlacementIntervalsForLanes: ValidPlacementIntervalsForLanes;
   replacingCargoPlacements: CargoPlacement[];
   notReplacingCargoPlacements: CargoPlacement[];
   replaceButtonClick: () => Promise<void>;
   placingLane: Lane;
   suggestedCargoPlacement?: SuggestedCargoPlacement;
+  defaultVCG: number;
 }
 
 const DeckMap: React.FC<Props> = ({
@@ -50,16 +50,14 @@ const DeckMap: React.FC<Props> = ({
   currentCargoPlacement,
   isOverview = false,
   setInitialCargoPlacement,
-  bumperToBumperDistance,
   viewBoxDimensions,
-  mostForwardValidPlacementForLanes,
-  cargoPlacementsForLanes,
-  adjacentCargoPlacementsForLanes,
+  validPlacementIntervalsForLanes,
   replacingCargoPlacements,
   notReplacingCargoPlacements,
   replaceButtonClick,
   placingLane,
   suggestedCargoPlacement,
+  defaultVCG,
 }) => {
   const dispatch = useDispatch();
   const setPlacement = useCallback(
@@ -89,25 +87,45 @@ const DeckMap: React.FC<Props> = ({
 
   const onLaneClick = (
     event: React.MouseEvent | React.TouchEvent | React.PointerEvent,
-    lane: Lane,
-    VCG: number
+    lane: Lane
   ) => {
     if (cargoIsEmpty(currentCargoPlacement.cargo)) return;
     const newPlacement = getPlacementFromEvent(
       event,
       svgRef,
-      cargoPlacementsForLanes[lane.id],
-      adjacentCargoPlacementsForLanes[lane.id],
+      validPlacementIntervalsForLanes[lane.id],
       lane,
-      currentCargoPlacement
-      // bumperToBumperDistance
+      currentCargoPlacement.cargo,
+      defaultVCG
     );
     if (!isValidPlacement(newPlacement)) return;
     setPlacement({
+      ...currentCargoPlacement,
       ...newPlacement,
       deckId: deck.name,
-      VCG: VCG,
     });
+  };
+
+  const onGridClick = (grid: Grid) =>
+    setPlacementFromForward(
+      getPlacementFromValidIntervalsForGridPlacement(
+        validPlacementIntervalsForLanes[grid.laneId],
+        currentCargoPlacement.cargo,
+        grid,
+        deck.lanes.find((l) => l.id === grid.laneId),
+        defaultVCG
+      )
+    );
+
+  const onLaneButtonClick = (lane: Lane) => {
+    setPlacementFromForward(
+      getPlacementFromValidIntervalsForLanePlacement(
+        validPlacementIntervalsForLanes[lane.id],
+        currentCargoPlacement.cargo,
+        lane,
+        defaultVCG
+      )
+    );
   };
 
   if (!viewBoxDimensions) return null;
@@ -141,28 +159,21 @@ const DeckMap: React.FC<Props> = ({
           lanes={deck.lanes}
           rightOrigin={sizeX + originX}
           currentCargo={currentCargoPlacement.cargo}
-          mostForwardValidPlacementForLanes={mostForwardValidPlacementForLanes}
+          validPlacementIntervalsForLanes={validPlacementIntervalsForLanes}
           onLaneClick={onLaneClick}
         />
         <Grids
           grids={deck.grids}
-          setPlacementFromForward={setPlacementFromForward}
+          onClick={onGridClick}
           currentCargo={currentCargoPlacement.cargo}
-          cargoPlacementsForLanes={cargoPlacementsForLanes}
-          adjacentCargoPlacementsForLanes={adjacentCargoPlacementsForLanes}
-          lanes={deck.lanes}
+          validPlacementIntervalsForLanes={validPlacementIntervalsForLanes}
         />
         {deck.lanes.map((lane) => (
           <use
             key={lane.id}
             href={`#arrowButton_${lane.id}`}
             xlinkHref={`#arrowButton_${lane.id}`}
-            onClick={(ev) => {
-              ev.preventDefault();
-              setPlacementFromForward(
-                mostForwardValidPlacementForLanes[lane.id]
-              );
-            }}
+            onClick={() => onLaneButtonClick(lane)}
           />
         ))}
         <FrameRuler frames={deck.frames} originY={getDeckMapBottom(deck)} />
@@ -188,13 +199,11 @@ const DeckMap: React.FC<Props> = ({
         <PlacingCargo
           currentCargoPlacement={currentCargoPlacement}
           placingLane={placingLane}
-          cargoPlacementsForLane={cargoPlacementsForLanes[placingLane.id]}
-          adjacentCargoPlacementsForLane={
-            adjacentCargoPlacementsForLanes[placingLane.id]
+          validPlacementIntervalsForLane={
+            validPlacementIntervalsForLanes[placingLane.id]
           }
           svgRef={svgRef}
           setCurrentCargoPlacement={setPlacement}
-          bumperToBumperDistance={bumperToBumperDistance}
         />
         <SuggestedCargoPlacementIndicator
           currentDeckId={deck.name}

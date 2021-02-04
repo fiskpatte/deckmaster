@@ -146,12 +146,12 @@ export interface Frame {
   distance: number;
 }
 
-export interface MostForwardValidPlacementForLanes {
-  [id: string]: CargoPlacement;
-}
-
 export interface CargoPlacementsForLanes {
   [id: string]: CargoPlacement[];
+}
+
+export interface ValidPlacementIntervalsForLanes {
+  [id: string]: ValidPlacementInterval[];
 }
 
 export interface ViewBoxDimensions {
@@ -176,7 +176,8 @@ export interface SuggestedCargoPlacement {
 export interface ValidPlacementInterval {
   start: number;
   end: number;
-  overflowingSide: AdjacentSide;
+  overflowingLaneId: string;
+  fromLaneAFT: boolean;
 }
 
 export interface DeckMapElementEndpoints {

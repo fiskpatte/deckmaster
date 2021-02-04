@@ -102,7 +102,8 @@ describe("Valid placement intervals", () => {
       {
         start: LCG - length / 2,
         end: LCG + length / 2,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: true,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -148,22 +149,26 @@ describe("Valid placement intervals", () => {
       {
         start: LCG - length / 2,
         end: LCG + length / 2,
-        overflowingSide: AdjacentSide.Undefined,
-      },
-      {
-        start: LCG - length / 2,
-        end: secondLCG + secondLength / 2,
-        overflowingSide: AdjacentSide.Left,
+        overflowingLaneId: "",
+        fromLaneAFT: true,
       },
       {
         start: firstLCG - firstLength / 2,
         end: firstLCG + firstLength / 2,
-        overflowingSide: AdjacentSide.Left,
+        overflowingLaneId: "3",
+        fromLaneAFT: true,
+      },
+      {
+        start: LCG - length / 2,
+        end: secondLCG + secondLength / 2,
+        overflowingLaneId: "4",
+        fromLaneAFT: true,
       },
       {
         start: LCG - length / 2,
         end: LCG + length / 2,
-        overflowingSide: AdjacentSide.Right,
+        overflowingLaneId: "6",
+        fromLaneAFT: true,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -213,7 +218,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.LCG -
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: true,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -263,7 +269,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.LCG -
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: true,
       },
       {
         start:
@@ -274,7 +281,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement1.LCG -
           cargoPlacement1.cargo.length / 2 -
           bumperToBumperDistance,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: false,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -324,7 +332,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.LCG -
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: true,
       },
       {
         start:
@@ -335,7 +344,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement1.LCG -
           cargoPlacement1.cargo.length / 2 -
           bumperToBumperDistance,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: false,
       },
       {
         start:
@@ -343,7 +353,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement1.cargo.length / 2 +
           bumperToBumperDistance,
         end: LCG + length / 2,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: false,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -393,7 +404,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.LCG -
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: true,
       },
       {
         start:
@@ -404,7 +416,8 @@ describe("Valid placement intervals", () => {
           cargoPlacement1.LCG -
           cargoPlacement1.cargo.length / 2 -
           bumperToBumperDistance,
-        overflowingSide: AdjacentSide.Undefined,
+        overflowingLaneId: "",
+        fromLaneAFT: false,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);

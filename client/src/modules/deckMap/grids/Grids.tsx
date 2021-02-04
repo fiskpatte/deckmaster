@@ -3,47 +3,33 @@ import GridComponent from "./Grid";
 import {
   Grid,
   Cargo,
-  Lane,
-  CargoPlacement,
-  laneFactory,
-  CargoPlacementsForLanes,
+  ValidPlacementIntervalsForLanes,
 } from "../../../types/deckMap";
 
 interface Props {
   grids: Array<Grid>;
-  setPlacementFromForward: (placement: CargoPlacement) => void;
+  onClick: (grid: Grid) => void;
   currentCargo: Cargo;
-  cargoPlacementsForLanes: CargoPlacementsForLanes;
-  adjacentCargoPlacementsForLanes: CargoPlacementsForLanes;
-  lanes: Array<Lane>;
+  validPlacementIntervalsForLanes: ValidPlacementIntervalsForLanes;
 }
 
 export const Grids: React.FC<Props> = ({
   grids,
-  setPlacementFromForward,
+  onClick,
   currentCargo,
-  cargoPlacementsForLanes,
-  adjacentCargoPlacementsForLanes,
-  lanes,
+  validPlacementIntervalsForLanes,
 }) => {
   return (
     <>
       {grids.map((grid) => {
-        let lane = lanes.find((l) => l.id === grid.laneId) ?? laneFactory();
-        if (lane.id === "") {
-          console.log(`FATAL ERROR: Can't find lane for grid ${grid}`);
-          return null;
-        }
         return (
           <GridComponent
             grid={grid}
-            setPlacementFromForward={setPlacementFromForward}
+            onClick={onClick}
             key={grid.id}
             currentCargo={currentCargo}
-            lane={lane}
-            cargoPlacementsForLane={cargoPlacementsForLanes[lane.id]}
-            adjacentCargoPlacementsForLane={
-              adjacentCargoPlacementsForLanes[lane.id]
+            validPlacementIntervalsForLane={
+              validPlacementIntervalsForLanes[grid.laneId]
             }
           />
         );

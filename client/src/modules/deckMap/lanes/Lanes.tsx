@@ -4,18 +4,17 @@ import "./Lane.scss";
 import {
   Lane,
   Cargo,
-  MostForwardValidPlacementForLanes,
+  ValidPlacementIntervalsForLanes,
 } from "../../../types/deckMap";
 
 interface Props {
   lanes: Array<Lane>;
   rightOrigin: number;
   currentCargo: Cargo;
-  mostForwardValidPlacementForLanes: MostForwardValidPlacementForLanes;
+  validPlacementIntervalsForLanes: ValidPlacementIntervalsForLanes;
   onLaneClick: (
     event: React.MouseEvent | React.TouchEvent | React.PointerEvent,
-    lane: Lane,
-    VCG: number
+    lane: Lane
   ) => void;
 }
 
@@ -23,7 +22,7 @@ export const Lanes: React.FC<Props> = ({
   lanes,
   rightOrigin,
   currentCargo,
-  mostForwardValidPlacementForLanes,
+  validPlacementIntervalsForLanes,
   onLaneClick,
 }) => {
   return (
@@ -35,8 +34,8 @@ export const Lanes: React.FC<Props> = ({
             lane={lane}
             rightOrigin={rightOrigin}
             currentCargo={currentCargo}
-            mostForwardValidPlacementForLane={
-              mostForwardValidPlacementForLanes[lane.id]
+            validPlacementIntervalsForLane={
+              validPlacementIntervalsForLanes[lane.id]
             }
             onLaneClick={onLaneClick}
           />

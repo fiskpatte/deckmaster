@@ -2,21 +2,21 @@ import React from "react";
 import { ArrowButton } from "../arrowButton";
 import { DECK_MAP } from "../../../constants";
 import { LaneName } from "./laneName";
-import { Lane, Cargo, CargoPlacement } from "../../../types/deckMap";
+import { Lane, Cargo, ValidPlacementInterval } from "../../../types/deckMap";
 import "./Lane.scss";
-import { cargoPlacementIsEmpty } from "../DeckMap.functions";
-import { useSelector } from "react-redux";
-import { getVCGForCargoAndLane } from "../../../store/app/appSelectors";
+import {
+  getValidPlacementIntervalForLanePlacement,
+  isOverflowing,
+} from "../DeckMap.functions";
 
 interface Props {
   lane: Lane;
   rightOrigin: number;
   currentCargo: Cargo;
-  mostForwardValidPlacementForLane: CargoPlacement;
+  validPlacementIntervalsForLane: ValidPlacementInterval[];
   onLaneClick: (
     event: React.MouseEvent | React.TouchEvent | React.PointerEvent,
-    lane: Lane,
-    VCG: number
+    lane: Lane
   ) => void;
 }
 
@@ -24,17 +24,18 @@ const LaneComponent: React.FC<Props> = ({
   lane,
   rightOrigin,
   currentCargo,
-  mostForwardValidPlacementForLane,
+  validPlacementIntervalsForLane,
   onLaneClick,
 }) => {
   const originX = lane.LCG - lane.length / 2;
   const originY = lane.TCG - lane.width / 2;
 
   let lanePlacementButtonVisible = true;
-  let VCG = useSelector(getVCGForCargoAndLane(currentCargo, lane));
   if (
-    cargoPlacementIsEmpty(mostForwardValidPlacementForLane) ||
-    mostForwardValidPlacementForLane.LCG === originX
+    !getValidPlacementIntervalForLanePlacement(
+      validPlacementIntervalsForLane,
+      isOverflowing(currentCargo, lane)
+    )
   )
     lanePlacementButtonVisible = false;
 
@@ -48,7 +49,7 @@ const LaneComponent: React.FC<Props> = ({
         height={lane.width}
         rx={DECK_MAP.LANE_BORDER_RADIUS}
         ry={DECK_MAP.LANE_BORDER_RADIUS}
-        onClick={(event) => onLaneClick(event, lane, VCG)}
+        onClick={(event) => onLaneClick(event, lane)}
       />
       <LaneName lane={lane} rightOrigin={rightOrigin} />
       <defs>

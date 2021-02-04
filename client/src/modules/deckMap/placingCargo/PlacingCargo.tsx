@@ -3,6 +3,7 @@ import {
   CargoPlacement,
   cargoPlacementAsDeckMapElement,
   Lane,
+  ValidPlacementInterval,
 } from "./../../../types/deckMap";
 import {
   getOverflowingLaneId,
@@ -16,26 +17,21 @@ interface Props {
   currentCargoPlacement: CargoPlacement;
   setCurrentCargoPlacement: (cargo: CargoPlacement) => void;
   placingLane: Lane;
-  cargoPlacementsForLane: Array<CargoPlacement>;
-  adjacentCargoPlacementsForLane: Array<CargoPlacement>;
+  validPlacementIntervalsForLane: ValidPlacementInterval[];
   svgRef: React.RefObject<SVGSVGElement>;
-  bumperToBumperDistance: number;
 }
 
 export const PlacingCargo: React.FC<Props> = ({
   currentCargoPlacement,
   setCurrentCargoPlacement,
   placingLane,
-  cargoPlacementsForLane,
-  adjacentCargoPlacementsForLane,
+  validPlacementIntervalsForLane,
   svgRef,
-  bumperToBumperDistance,
 }) => {
   if (
     !currentCargoPlacement.laneId ||
     !placingLane?.id ||
-    !cargoPlacementsForLane ||
-    !adjacentCargoPlacementsForLane ||
+    !validPlacementIntervalsForLane ||
     currentCargoPlacement.replacing
   )
     return null;
@@ -44,11 +40,9 @@ export const PlacingCargo: React.FC<Props> = ({
     let newPlacement = getPlacementFromDragEvent(
       event,
       svgRef,
-      cargoPlacementsForLane,
-      adjacentCargoPlacementsForLane,
+      validPlacementIntervalsForLane,
       placingLane,
-      currentCargoPlacement,
-      bumperToBumperDistance
+      currentCargoPlacement
     );
     if (isValidPlacement(newPlacement)) setCurrentCargoPlacement(newPlacement);
   };
