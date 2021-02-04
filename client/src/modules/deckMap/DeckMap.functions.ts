@@ -336,6 +336,29 @@ const getIntervals = (
   pushIntervalIfValid(intervals, start, end, adjacentSide);
   return intervals;
 };
+export const intersectIntervals = (
+  intervals1: ValidPlacementInterval[],
+  intervals2: ValidPlacementInterval[]
+) => {
+  //This code assumes intervals are disjoint and sorted from least to highest start. Disjoint means that there is no overlap in the lists. i.e. {1, 4} and {5, 6} are disjoint while {1, 4} and {2, 5} are not as 2, 3 and 4 are common to both intervals.
+  let result = [] as ValidPlacementInterval[];
+  let i = 0,
+    j = 0;
+  let start, end;
+  while (i < intervals1.length && j < intervals2.length) {
+    start = Math.max(intervals1[i].start, intervals2[j].start);
+    end = Math.min(intervals1[i].end, intervals2[j].end);
+    pushIntervalIfValid(result, start, end, intervals2[j].overflowingSide);
+
+    if (intervals1[i].end < intervals2[j].end) {
+      i++;
+    } else {
+      j++;
+    }
+  }
+  return result;
+};
+
 export const getValidPlacementIntervals = (
   lane: Lane,
   cargoPlacementsForLane: CargoPlacement[],
@@ -345,16 +368,16 @@ export const getValidPlacementIntervals = (
   let intervals = [] as ValidPlacementInterval[];
 
   //Not overflowing intervals
-  const notOverflowingIntervals = getIntervals(
+  let notOverflowingIntervals = getIntervals(
     lane,
     cargoPlacementsForLane,
     bumperToBumperDistance
   );
   let overflowingIntervals = [] as ValidPlacementInterval[];
   for (let adjacentLane of lane.adjacentLanes) {
-    let cargoPlacementsForAdjacentLane = adjacentCargoPlacementsForLane.filter(
-      (acpl) => acpl.laneId === adjacentLane.id
-    );
+    let cargoPlacementsForAdjacentLane = adjacentCargoPlacementsForLane
+      .filter((acpl) => acpl.laneId === adjacentLane.id)
+      .sort((a, b) => a.LCG - b.LCG);
     overflowingIntervals = overflowingIntervals.concat(
       getIntervals(
         adjacentLane,
@@ -363,23 +386,21 @@ export const getValidPlacementIntervals = (
       )
     );
   }
-  //Overflowing intervals
-  // for (let adjacentLane of lane.adjacentLanes) {
-  //   let adjacentLaneEndpoints = getEndpoints(adjacentLane);
-  //   let cargoPlacementsForAdjacentLane = adjacentCargoPlacementsForLane.filter(
-  //     (acpl) => acpl.laneId === adjacentLane.id
-  //   );
-  //   if (cargoPlacementsForAdjacentLane.length > 0) {
-  //     //TODO
-  //   } else {
-  //     intervals.push({
-  //       start: Math.max(adjacentLaneEndpoints.after, laneEndpoints.after),
-  //       end: Math.min(adjacentLaneEndpoints.forward, laneEndpoints.forward),
-  //       overflowingSide: adjacentLane.adjacentSide,
-  //     });
-  //   }
-  // }
-  return notOverflowingIntervals;
+  intervals = [...notOverflowingIntervals];
+  let leftAdjacentIntervals = overflowingIntervals
+    .filter((oi) => oi.overflowingSide === AdjacentSide.Left)
+    .sort((a, b) => a.start - b.start);
+  let rightAdjacentIntervals = overflowingIntervals
+    .filter((oi) => oi.overflowingSide === AdjacentSide.Right)
+    .sort((a, b) => a.start - b.start);
+  intervals = intervals.concat(
+    intersectIntervals(notOverflowingIntervals, leftAdjacentIntervals)
+  );
+  intervals = intervals.concat(
+    intersectIntervals(notOverflowingIntervals, rightAdjacentIntervals)
+  );
+
+  return intervals;
 };
 
 const getDeckMapCoordsFromScreenCoords = (
