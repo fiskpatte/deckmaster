@@ -64,9 +64,7 @@ export const useResetCargoPlacement = (
 export const useCalculateData = (
   deck: Deck,
   notReplacingCargoPlacements: CargoPlacement[],
-  cargoPlacement: CargoPlacement,
-  bumperToBumperDistance: number,
-  defaultVCG: number
+  bumperToBumperDistance: number
 ) => {
   const {
     updatingViewBoxDimensions,
@@ -78,9 +76,7 @@ export const useCalculateData = (
   } = useCalculateDataForLanes(
     deck,
     notReplacingCargoPlacements,
-    cargoPlacement,
-    bumperToBumperDistance,
-    defaultVCG
+    bumperToBumperDistance
   );
 
   const [updatingData, setupdatingData] = useState(true);
@@ -124,9 +120,7 @@ const useCalculateViewBoxDimensions = (deck: Deck) => {
 const useCalculateDataForLanes = (
   deck: Deck,
   notReplacingCargoPlacements: CargoPlacement[],
-  cargoPlacement: CargoPlacement,
-  bumperToBumperDistance: number,
-  defaultVCG: number
+  bumperToBumperDistance: number
 ) => {
   const [
     validPlacementIntervalsForLanes,
@@ -164,13 +158,7 @@ const useCalculateDataForLanes = (
       setValidPlacementIntervalsForLanes(validPlacementIntervals);
       setUpdating(false);
     }
-  }, [
-    deck,
-    notReplacingCargoPlacements,
-    cargoPlacement,
-    bumperToBumperDistance,
-    defaultVCG,
-  ]);
+  }, [deck, notReplacingCargoPlacements, bumperToBumperDistance]);
   return {
     updatingDataForLanes: updating,
     validPlacementIntervalsForLanes: validPlacementIntervalsForLanes ?? {},

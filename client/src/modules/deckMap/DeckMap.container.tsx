@@ -103,9 +103,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
   } = useCalculateData(
     currentDeck,
     notReplacingCargoPlacements,
-    currentCargoPlacement,
-    bumperToBumperDistance,
-    defaultVCG
+    bumperToBumperDistance
   );
 
   useEffect(() => {

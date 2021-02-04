@@ -11,6 +11,9 @@ const getDeckMap = (state: { deckMapReducer: CargoState }) =>
 const getCurrentCargoPlacement = (state: { deckMapReducer: CargoState }) =>
   state.deckMapReducer.currentCargoPlacement;
 
+const getCurrentCargoId = (state: { deckMapReducer: CargoState }) =>
+  state.deckMapReducer.currentCargoPlacement.cargo.id;
+
 const getCargoPlacements = (state: { deckMapReducer: CargoState }) =>
   state.deckMapReducer.cargoPlacements;
 
@@ -25,13 +28,13 @@ export const getReplacingCargoPlacements = createSelector(
 );
 
 export const getVisibleNotReplacingCargoPlacements = createSelector(
-  [getCurrentDeckId, getCargoPlacements, getCurrentCargoPlacement],
-  (currentDeckId, cargoPlacements, currentCargoPlacement) =>
+  [getCurrentDeckId, getCargoPlacements, getCurrentCargoId],
+  (currentDeckId, cargoPlacements, currentCargoId) =>
     cargoPlacements.filter(
       (cp) =>
         cp.deckId === currentDeckId &&
         !cp.replacing &&
-        cp.cargo.id !== currentCargoPlacement.cargo.id
+        cp.cargo.id !== currentCargoId
     )
 );
 
