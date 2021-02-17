@@ -106,6 +106,7 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
     bumperToBumperDistance
   );
 
+  //This is only temporary until we get correct data from the backend for the suggestedCargoPlacement
   useEffect(() => {
     if (
       suggestedCargoPlacement &&
@@ -113,12 +114,17 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
       Object.keys(validPlacementIntervalsForLanes).length > 0 &&
       !isOverview
     ) {
-      //This is only temporary until we get correct data from the backend
       const { lanes } = deckMap[suggestedCargoPlacement.deckId];
       const { cargo } = currentCargoPlacement;
       let randomLane = laneFactory();
       let cargoPlacement = cargoPlacementFactory();
+      let i = 0;
       do {
+        if (i > 20) {
+          setSuggestedCargoPlacementMocked(false);
+          dispatch(setSuggestedCargoPlacement(undefined));
+          return;
+        }
         randomLane = lanes[Math.floor(Math.random() * lanes.length)];
         cargoPlacement = getPlacementFromValidIntervalsForLanePlacement(
           validPlacementIntervalsForLanes[randomLane.id],
@@ -127,7 +133,9 @@ export const DeckMapContainer: React.FC<Props> = ({ isOverview = false }) => {
           defaultVCG
         );
         cargoPlacement.LCG -= cargo.length / 2;
+        i++;
       } while (!isValidPlacement(cargoPlacement));
+
       let smartSuggestedCargoPlacement = {
         ...suggestedCargoPlacement,
         laneId: randomLane.id,
