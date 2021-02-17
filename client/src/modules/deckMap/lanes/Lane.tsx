@@ -34,6 +34,7 @@ const LaneComponent: React.FC<Props> = ({
   if (
     !getValidPlacementIntervalForLanePlacement(
       validPlacementIntervalsForLane,
+      currentCargo.length,
       isOverflowing(currentCargo, lane)
     )
   )

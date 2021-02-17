@@ -65,12 +65,16 @@ export class CargoService {
       throw new NotFoundException('Cargo not found');
     }
   }
-
+  /*
+   * This function is only for development. In production the data is fetched from the terminal and the SuggestedCargoPlacement is fetched from the algorithm.
+   *
+   */
   async mockCargo(voyageId: string, registrationNumber: string = '') {
     try {
       let dto = getRandomCargo(registrationNumber);
       dto.voyageId = voyageId;
       const cargo = await this.addCargo(dto);
+      //
       this.appGateway.pushSuggestedCargoPlacementToClients(
         { deckId: 'Weather Deck', laneId: '2', LCG: 45.99, TCG: -10.1 },
         voyageId,

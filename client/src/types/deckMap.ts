@@ -177,7 +177,7 @@ export interface ValidPlacementInterval {
   start: number;
   end: number;
   overflowingLaneId: string;
-  fromLaneAFT: boolean;
+  isFirstInterval: boolean;
 }
 
 export interface DeckMapElementEndpoints {

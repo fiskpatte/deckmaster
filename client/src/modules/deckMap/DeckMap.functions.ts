@@ -271,15 +271,15 @@ const pushIntervalIfValid = (
   intervals: ValidPlacementInterval[],
   start: number,
   end: number,
-  fromLaneAFT: boolean,
+  isFirstInterval: boolean,
   overflowingLaneId: string
 ) => {
   if (end - start >= SMALLEST_VALID_PLACEMENT_INTERVAL) {
     intervals.push({
-      start: start,
-      end: end,
-      overflowingLaneId: overflowingLaneId,
-      fromLaneAFT: fromLaneAFT,
+      start,
+      end,
+      overflowingLaneId,
+      isFirstInterval,
     });
   }
 };
@@ -294,19 +294,31 @@ const getIntervals = (
   const overflowingLaneId = (lane as AdjacentLane).adjacentSide ? lane.id : "";
   let cargoPlacementForLaneEndpoints = {} as DeckMapElementEndpoints;
   let start = laneEndpoints.after;
-  let fromLaneAFT = true;
+  let isFirstInterval = true;
   let end;
   for (let cargoPlacementForLane of cargoPlacementsForLane) {
     cargoPlacementForLaneEndpoints = getEndpoints(
       cargoPlacementAsDeckMapElement(cargoPlacementForLane)
     );
     end = cargoPlacementForLaneEndpoints.after - bumperToBumperDistance;
-    pushIntervalIfValid(intervals, start, end, fromLaneAFT, overflowingLaneId);
+    pushIntervalIfValid(
+      intervals,
+      start,
+      end,
+      isFirstInterval,
+      overflowingLaneId
+    );
     start = cargoPlacementForLaneEndpoints.forward + bumperToBumperDistance;
-    fromLaneAFT = false;
+    isFirstInterval = false;
   }
   end = laneEndpoints.forward;
-  pushIntervalIfValid(intervals, start, end, fromLaneAFT, overflowingLaneId);
+  pushIntervalIfValid(
+    intervals,
+    start,
+    end,
+    isFirstInterval,
+    overflowingLaneId
+  );
   return intervals;
 };
 export const intersectIntervals = (
@@ -325,7 +337,7 @@ export const intersectIntervals = (
       result,
       start,
       end,
-      intervals1[i].fromLaneAFT,
+      intervals1[i].isFirstInterval,
       intervals2[j].overflowingLaneId
     );
 
@@ -346,18 +358,18 @@ export const getValidPlacementIntervals = (
 ) => {
   let intervals = [] as ValidPlacementInterval[];
 
-  //Not overflowing intervals
-  let notOverflowingIntervals = getIntervals(
+  let intervalsForNormalCargo = getIntervals(
     lane,
     cargoPlacementsForLane,
     bumperToBumperDistance
   );
-  let overflowingIntervals = [] as ValidPlacementInterval[];
+
+  let intervalsForOverflowingCargo = [] as ValidPlacementInterval[];
   for (let adjacentLane of lane.adjacentLanes) {
     let cargoPlacementsForAdjacentLane = adjacentCargoPlacementsForLane
       .filter((acpl) => acpl.laneId === adjacentLane.id)
       .sort((a, b) => a.LCG - b.LCG);
-    overflowingIntervals = overflowingIntervals.concat(
+    intervalsForOverflowingCargo = intervalsForOverflowingCargo.concat(
       getIntervals(
         adjacentLane,
         cargoPlacementsForAdjacentLane,
@@ -365,11 +377,11 @@ export const getValidPlacementIntervals = (
       )
     );
   }
-  intervals = [...notOverflowingIntervals];
-  for (let overflowingInterval of overflowingIntervals) {
+  intervals = [...intervalsForNormalCargo];
+  for (let overflowingInterval of intervalsForOverflowingCargo) {
     //The most efficient solution would be to group by laneId and intersect the intervals in the same group
     intervals = intervals.concat(
-      intersectIntervals(notOverflowingIntervals, [overflowingInterval])
+      intersectIntervals(intervalsForNormalCargo, [overflowingInterval])
     );
   }
 
@@ -378,12 +390,15 @@ export const getValidPlacementIntervals = (
 
 export const getValidPlacementIntervalForLanePlacement = (
   intervals: ValidPlacementInterval[],
+  cargoLength: number,
   isOverflowing: boolean
 ) => {
   const getCorrectIntervals = (interval: ValidPlacementInterval) =>
     (isOverflowing
       ? interval.overflowingLaneId !== ""
-      : interval.overflowingLaneId === "") && interval.fromLaneAFT;
+      : interval.overflowingLaneId === "") &&
+    interval.isFirstInterval &&
+    interval.end - interval.start >= cargoLength;
   //Get most forward one first
   return intervals.sort((a, b) => b.end - a.end).find(getCorrectIntervals);
 };
@@ -396,6 +411,7 @@ export const getPlacementFromValidIntervalsForLanePlacement = (
 ) => {
   let interval = getValidPlacementIntervalForLanePlacement(
     intervals,
+    currentCargo.length,
     isOverflowing(currentCargo, lane)
   );
   if (!interval) return cargoPlacementFactory();

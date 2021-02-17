@@ -103,7 +103,7 @@ describe("Valid placement intervals", () => {
         start: LCG - length / 2,
         end: LCG + length / 2,
         overflowingLaneId: "",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -150,25 +150,25 @@ describe("Valid placement intervals", () => {
         start: LCG - length / 2,
         end: LCG + length / 2,
         overflowingLaneId: "",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
       {
         start: firstLCG - firstLength / 2,
         end: firstLCG + firstLength / 2,
         overflowingLaneId: "3",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
       {
         start: LCG - length / 2,
         end: secondLCG + secondLength / 2,
         overflowingLaneId: "4",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
       {
         start: LCG - length / 2,
         end: LCG + length / 2,
         overflowingLaneId: "6",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -219,7 +219,7 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
         overflowingLaneId: "",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -270,7 +270,7 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
         overflowingLaneId: "",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
       {
         start:
@@ -282,7 +282,7 @@ describe("Valid placement intervals", () => {
           cargoPlacement1.cargo.length / 2 -
           bumperToBumperDistance,
         overflowingLaneId: "",
-        fromLaneAFT: false,
+        isFirstInterval: false,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -333,7 +333,7 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
         overflowingLaneId: "",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
       {
         start:
@@ -345,7 +345,7 @@ describe("Valid placement intervals", () => {
           cargoPlacement1.cargo.length / 2 -
           bumperToBumperDistance,
         overflowingLaneId: "",
-        fromLaneAFT: false,
+        isFirstInterval: false,
       },
       {
         start:
@@ -354,7 +354,7 @@ describe("Valid placement intervals", () => {
           bumperToBumperDistance,
         end: LCG + length / 2,
         overflowingLaneId: "",
-        fromLaneAFT: false,
+        isFirstInterval: false,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
@@ -405,7 +405,7 @@ describe("Valid placement intervals", () => {
           cargoPlacement2.cargo.length / 2 -
           bumperToBumperDistance,
         overflowingLaneId: "",
-        fromLaneAFT: true,
+        isFirstInterval: true,
       },
       {
         start:
@@ -417,7 +417,7 @@ describe("Valid placement intervals", () => {
           cargoPlacement1.cargo.length / 2 -
           bumperToBumperDistance,
         overflowingLaneId: "",
-        fromLaneAFT: false,
+        isFirstInterval: false,
       },
     ] as ValidPlacementInterval[];
     expect(validPlacementIntervals).toStrictEqual(expectedValue);
