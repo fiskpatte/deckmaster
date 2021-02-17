@@ -15,7 +15,7 @@ export class CargoPlacementService {
     private readonly appGateway: AppGateway,
     private readonly cargoQueueService: CargoQueueService,
     private readonly logService: LogService,
-  ) { }
+  ) {}
 
   async placeCargo(cp: CargoPlacement, username: string) {
     try {
@@ -57,7 +57,6 @@ export class CargoPlacementService {
         cp.cargo.toString(),
         updatedCargoPlacement.voyageId.toString(),
       );
-
     } catch (error) {
       throw new NotFoundException('Cargo not found');
     }
@@ -86,9 +85,11 @@ export class CargoPlacementService {
         .populate('cargo')
         .exec();
 
-      const placements = cargoPlacements.map(model =>
-        transformDbModelAndRefs(model, 'cargo'),
-      ).sort((a, b) => a.updatedAt - b.updatedAt) as CargoPlacement[];
+      const placements = cargoPlacements
+        .map(model => transformDbModelAndRefs(model, 'cargo'))
+        .sort(
+          (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
+        ) as CargoPlacement[];
 
       return placements;
     } catch (error) {

@@ -23,7 +23,7 @@ export class LogService {
       const logs = await this.logModel.find({ voyageId }).exec();
       return logs
         .map(transformDbModel)
-        .sort((a, b) => b.createdAt - a.createdAt) as Log[];
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) as Log[];
     } catch (error) {
       throw error;
     }
