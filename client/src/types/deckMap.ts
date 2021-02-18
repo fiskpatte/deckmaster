@@ -171,6 +171,7 @@ export interface SuggestedCargoPlacement {
   laneId: string;
   TCG: number;
   LCG: number;
+  registrationNumber: string;
 }
 
 export interface ValidPlacementInterval {

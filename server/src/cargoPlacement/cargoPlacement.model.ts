@@ -40,4 +40,5 @@ export interface SuggestedCargoPlacement {
   laneId: string;
   LCG: number;
   TCG: number;
+  registrationNumber: string;
 }

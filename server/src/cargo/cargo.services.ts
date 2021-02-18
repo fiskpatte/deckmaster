@@ -76,7 +76,13 @@ export class CargoService {
       const cargo = await this.addCargo(dto);
       //
       this.appGateway.pushSuggestedCargoPlacementToClients(
-        { deckId: 'Weather Deck', laneId: '2', LCG: 45.99, TCG: -10.1 },
+        {
+          deckId: 'Weather Deck',
+          laneId: '2',
+          LCG: 45.99,
+          TCG: -10.1,
+          registrationNumber: cargo.registrationNumber,
+        },
         voyageId,
       );
       return cargo;
