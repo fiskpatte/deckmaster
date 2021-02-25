@@ -74,17 +74,17 @@ export class CargoService {
       let dto = getRandomCargo(registrationNumber);
       dto.voyageId = voyageId;
       const cargo = await this.addCargo(dto);
-      //
-      this.appGateway.pushSuggestedCargoPlacementToClients(
-        {
-          deckId: 'Weather Deck',
-          laneId: '2',
-          LCG: 45.99,
-          TCG: -10.1,
-          registrationNumber: cargo.registrationNumber,
-        },
-        voyageId,
-      );
+      // Remove cargoSuggestions until further notice
+      // this.appGateway.pushSuggestedCargoPlacementToClients(
+      //   {
+      //     deckId: 'Weather Deck',
+      //     laneId: '2',
+      //     LCG: 45.99,
+      //     TCG: -10.1,
+      //     registrationNumber: cargo.registrationNumber,
+      //   },
+      //   voyageId,
+      // );
       return cargo;
     } catch (error) {
       console.log(error);
