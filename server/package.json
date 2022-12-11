@@ -30,7 +30,7 @@
     "@nestjs/jwt": "^6.1.2",
     "@nestjs/mongoose": "^6.4.0",
     "@nestjs/passport": "^6.2.0",
-    "@nestjs/platform-express": "^6.11.11",
+    "@nestjs/platform-express": "^9.2.1",
     "@nestjs/platform-socket.io": "^7.6.12",
     "@nestjs/websockets": "^7.6.12",
     "@types/bcryptjs": "^2.4.2",
